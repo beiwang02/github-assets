@@ -46,6 +46,11 @@ body.dark .account-panel b { color:var(--ink); }
 .auth-card .btn-github.preview-login { opacity: 1; cursor: pointer; }
 .auth-card .btn-github.preview-login:active { transform: translateY(1px); }
 
+.repo-switcher { position:relative; text-align:left; cursor:pointer; }
+.repo-switcher:focus-visible { outline:2px solid #8d98ff; outline-offset:2px; }
+.repo-label { color:#93a1bd; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+.repo-open-icon { width:17px; height:17px; flex:0 0 17px; fill:none; stroke:#aebaff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; opacity:.8; }
+.repo-switcher:hover .repo-open-icon { opacity:1; transform:translate(1px,-1px); }
 .repo-quick-list { display:flex; flex-wrap:wrap; gap:7px; margin:0 0 12px; }
 .repo-quick { max-width:100%; overflow:hidden; padding:8px 10px; color:#7c89a0; border:1px solid var(--line); border-radius:8px; background:#fbfcfe; font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
 .repo-quick:hover, .repo-quick.active { color:var(--primary); border-color:#bfc6fd; background:#f3f4ff; }

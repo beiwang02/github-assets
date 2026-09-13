@@ -17,9 +17,10 @@
         <button class="sidebar-close" data-action="toggle-sidebar" aria-label="收起侧栏">×</button>
       </div>
 
-      <div class="repo-switcher" aria-label="当前仓库">
+      <div class="repo-switcher" data-action="open-repo" role="button" tabindex="0" aria-label="打开当前仓库">
         <span class="repo-avatar">B</span>
-        <span class="repo-meta"><b id="repoName">未选择仓库</b><small id="repoOwner">当前仓库 · 登录后自动识别</small></span>
+        <span class="repo-meta"><small class="repo-label">当前仓库</small><b id="repoName">未选择仓库</b><small id="repoOwner">登录后自动识别</small></span>
+        <svg class="repo-open-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5m-1-4-7 7m5 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/></svg>
       </div>
 
       <nav class="main-nav">
