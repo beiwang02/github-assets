@@ -103,7 +103,8 @@ body.dark .quick-asset-image {background:#24334b}body.dark .quick-copy{backgroun
 .theme-sun-icon { width:14px; height:14px; display:block; position:relative; border:2px solid currentColor; border-radius:50%; }
 .theme-sun-icon::before, .theme-sun-icon::after { content:""; position:absolute; inset:-5px; background:conic-gradient(from 0deg, currentColor 0 8deg, transparent 8deg 37deg, currentColor 37deg 45deg, transparent 45deg 82deg, currentColor 82deg 90deg, transparent 90deg 127deg, currentColor 127deg 135deg, transparent 135deg 172deg, currentColor 172deg 180deg, transparent 180deg 217deg, currentColor 217deg 225deg, transparent 225deg 262deg, currentColor 262deg 270deg, transparent 270deg 307deg, currentColor 307deg 315deg, transparent 315deg 352deg, currentColor 352deg 360deg); mask:radial-gradient(circle,transparent 0 57%,#000 59% 67%,transparent 69%); }
 .theme-sun-icon::after { transform:rotate(22.5deg); }
-.theme-moon-icon, .theme-system-icon { color:currentColor; font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:21px; line-height:1; }
+.theme-icon, .github-repo-link svg { width:19px; height:19px; display:block; fill:currentColor; stroke:currentColor; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.github-repo-link svg { width:20px; height:20px; stroke:none; }
 .first-use-guide { margin-top:18px; padding:13px 14px; border:1px solid rgba(141,155,177,.24); border-radius:10px; background:rgba(255,255,255,.055); color:#b4bfd3; font-size:11px; line-height:1.65; }
 .first-use-guide strong { display:block; color:#eef2ff; margin-bottom:4px; }
 .first-use-guide p { margin:0 0 3px; color:#b4bfd3; font-size:11px; line-height:1.65; }

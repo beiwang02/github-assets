@@ -22,7 +22,6 @@ function setMetaC() {
   const storageState=S.loading?'正在读取':(S.connected?'已连接':'未连接');
   $c('#storageStatus').textContent=storageState;
   $c('#storageBranch').textContent=S.loading?'正在从 GitHub 读取数据…':(S.connected?`${S.repo.owner}/${S.repo.repo} · ${S.repo.branch}`:'请打开“仓库设置”连接 GitHub');
-  $c('#storageProgress').style.width=S.loading?'38%':(S.connected?'100%':'8%');
   $c('#storageDot').style.background=S.loading?'#ffb45f':(S.connected?'#4dd59d':'#a8b2c3');
   document.querySelectorAll('.nav-item[data-view]').forEach(n=>n.classList.toggle('active', n.dataset.view===(S.view==='library-detail'?'libraries':S.view)));
   const name=S.auth?.login||'GitHub 用户'; document.querySelectorAll('[data-account-name]').forEach(n=>n.textContent=name); document.querySelectorAll('[data-account-avatar]').forEach(n=>{ n.textContent=name.slice(0,1).toUpperCase(); });
@@ -203,7 +202,7 @@ function applyAppearance() {
   document.body.classList.toggle('dark',dark);
   const button=$c('.appearance-button');
   if(button){
-    button.innerHTML=mode==='system'?'<span class="theme-system-icon">◐</span>':(mode==='dark'?'<span class="theme-moon-icon">☾</span>':'<span class="theme-sun-icon" aria-hidden="true"></span>');
+    button.innerHTML=mode==='dark'?'<svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15.3A8.5 8.5 0 0 1 8.7 3 8.5 8.5 0 1 0 21 15.3Z"/></svg>':'<svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>';
     button.title=mode==='system'?'跟随系统（点击切换）':(mode==='dark'?'黑夜模式（点击切换）':'白天模式（点击切换）');
     button.setAttribute('aria-label',button.title);
   }
