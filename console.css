@@ -138,5 +138,5 @@ body.dark .quick-asset-image {background:#24334b}body.dark .quick-copy{backgroun
 }
 body:not(.dark) .auth-screen { background:#f7f9ff; }
 
-.theme-glyph { display:inline-block; color:currentColor; font:500 22px/1 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+.theme-glyph { width:22px; height:22px; display:inline-grid; place-items:center; color:currentColor; font:500 22px/1 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
 .auth-card .btn-github:not(:disabled) { opacity:1; filter:none; color:#182334; background:linear-gradient(135deg,#9deaff,#7885ff); }

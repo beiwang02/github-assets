@@ -200,7 +200,8 @@ overviewView = function() {
 renderC();
 
 function applyAppearance() {
-  const mode=localStorage.getItem('gh-image-theme')||'system';
+  const storedTheme=localStorage.getItem('gh-image-theme');
+  const mode=['system','dark','light'].includes(storedTheme)?storedTheme:'system';
   const dark=mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);
   document.body.classList.toggle('dark',dark);
   const labels={system:'跟随系统（点击切换）',dark:'黑夜模式（点击切换）',light:'白天模式（点击切换）'};
