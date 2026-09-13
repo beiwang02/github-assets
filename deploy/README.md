@@ -25,7 +25,7 @@ sudo nano /etc/github-image-host.env
 ```env
 NODE_ENV=production
 HOST=127.0.0.1
-PORT=8080
+PORT=8765
 PUBLIC_BASE_URL=https://your-domain.example
 GITHUB_CLIENT_ID=你的OAuth_Client_ID
 GITHUB_CLIENT_SECRET=你的OAuth_Client_Secret

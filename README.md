@@ -19,24 +19,6 @@
 - 深色、浅色、跟随系统三种外观
 - 响应式移动端界面
 
-## Docker Compose
-
-```bash
-cp .env.example .env
-# 按需修改 .env
-./install.sh
-```
-
-服务内外统一使用 `8765` 端口，直接访问 `http://服务器IP:8765`。如需更换端口，同时修改 `PORT` 和 `GITHUB_IMAGE_HOST_PORT`：
-
-```env
-HOST=0.0.0.0
-PORT=8080
-GITHUB_IMAGE_HOST_BIND=0.0.0.0
-GITHUB_IMAGE_HOST_PORT=8765
-PUBLIC_BASE_URL=http://your-server-ip:8765
-```
-
 ## 管理员配置
 
 管理员配置全部是可选项。普通用户登录后可以选择自己的仓库或创建新仓库，不需要填写任何“旧仓库”。策略保存在独立 Docker volume，不保存用户业务内容。
