@@ -156,3 +156,12 @@ body:not(.dark) .auth-screen { background:#f7f9ff; }
 body.dark .token-guide-button { color:#c4caff; border-color:#34445f; background:#202e47; }
 body.dark .token-guide-button:hover { background:#293a59; }
 body.dark .token-guide-body { color:#e8edf7; }
+
+/* Keep dashboard sections visually separated on mobile */
+.dashboard-columns { margin-top:28px; }
+.dashboard-columns > section + section { margin-top:0; }
+.overview-assets-section + .dashboard-columns { margin-top:32px; }
+
+.token-guide-button { -webkit-tap-highlight-color:transparent; outline:0; box-shadow:none; }
+.token-guide-button:active,.token-guide-button:focus { background:#f7f8fd; outline:0; box-shadow:none; }
+body.dark .token-guide-button:active,body.dark .token-guide-button:focus { background:#202e47; }

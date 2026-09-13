@@ -381,3 +381,5 @@ body:not(.dark) .auth-theme-button { color:#273a59; border-color:#c7d2e6; backgr
 body.auth-page, body:has(.auth-page) { min-height:100vh; min-height:100dvh; }
 @media (max-width:600px) { body:has(.auth-page) { background:#0d1729; } body:not(.dark):has(.auth-page) { background:#f4f7ff; } .auth-page { min-height:100dvh; padding-top:calc(18px + env(safe-area-inset-top)); padding-bottom:calc(18px + env(safe-area-inset-bottom)); } }
 body:not(.dark) .auth-theme-button:hover { color:#263ab7; border-color:#8797df; background:#fff; }
+
+@media (max-width:700px){.dashboard-columns{margin-top:28px}.dashboard-columns>section+section{margin-top:26px}}
