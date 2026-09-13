@@ -3,7 +3,7 @@
 .auth-screen .sidebar, .auth-screen .topbar { display:none; }
 .auth-screen .main-shell { width:100%; margin-left:0; }
 .auth-screen .content { max-width:none; min-height:100vh; padding:0; }
-.auth-page { min-height:100vh; position:relative; display:grid; place-items:center; overflow:hidden; padding:30px 18px; color:#f6f3e7; background:radial-gradient(circle at 13% 12%,rgba(115,128,255,.18),transparent 29%),radial-gradient(circle at 88% 82%,rgba(51,199,197,.11),transparent 25%),#0d1729; }
+.auth-page { min-height:100vh; min-height:100dvh; position:relative; display:grid; place-items:center; overflow:hidden; padding:calc(30px + env(safe-area-inset-top)) 18px calc(30px + env(safe-area-inset-bottom)); box-sizing:border-box; color:#f6f3e7; background:radial-gradient(circle at 13% 12%,rgba(115,128,255,.18),transparent 29%),radial-gradient(circle at 88% 82%,rgba(51,199,197,.11),transparent 25%),#0d1729; }
 .auth-grid { position:absolute; inset:0; opacity:.28; background-image:linear-gradient(rgba(164,184,215,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(164,184,215,.1) 1px,transparent 1px); background-size:82px 82px; mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 78%,transparent); }
 .auth-card { position:relative; width:min(490px,100%); padding:31px 32px 29px; border:1px solid rgba(156,175,224,.27); border-radius:22px; background:rgba(10,19,35,.76); box-shadow:0 28px 90px rgba(0,0,0,.34); backdrop-filter:blur(12px); }
 .auth-brand { display:flex; align-items:center; gap:11px; margin-bottom:41px; }

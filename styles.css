@@ -378,4 +378,6 @@ body:not(.dark) .first-use-guide { border-color:#d8e0ee; background:#f7f9fd; }
 body:not(.dark) .first-use-guide summary, body:not(.dark) .first-use-guide b { color:#4657ba; }
 body:not(.dark) .first-use-guide ol { color:#53647c; }
 body:not(.dark) .auth-theme-button { color:#273a59; border-color:#c7d2e6; background:rgba(255,255,255,.92); box-shadow:0 8px 24px rgba(52,70,118,.16); }
+body.auth-page, body:has(.auth-page) { min-height:100vh; min-height:100dvh; }
+@media (max-width:600px) { body:has(.auth-page) { background:#0d1729; } body:not(.dark):has(.auth-page) { background:#f4f7ff; } .auth-page { min-height:100dvh; padding-top:calc(18px + env(safe-area-inset-top)); padding-bottom:calc(18px + env(safe-area-inset-bottom)); } }
 body:not(.dark) .auth-theme-button:hover { color:#263ab7; border-color:#8797df; background:#fff; }
