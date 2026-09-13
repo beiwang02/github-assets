@@ -17,7 +17,9 @@ function setMetaC() {
   const meta={overview:['资源工作台','总览'],libraries:['内容管理','JSON 库'],assets:['内容管理','图片资源'],'library-detail':['JSON 库',S.libraries.find(x=>x.id===S.selectedLibrary)?.name||'图标库'],activity:['内容管理','同步记录'],settings:['系统设置','仓库设置'],admin:['系统设置','管理后台']};
   const [eyebrow,title]=meta[S.view]||meta.overview;
   $c('#pageEyebrow').textContent=eyebrow; $c('#pageTitle').textContent=title;
-  $c('#repoName').textContent=S.repo.repo||'未选择仓库'; $c('#repoOwner').textContent=S.repo.owner?`${S.repo.owner} / ${S.repo.branch}`:'请先配置仓库';
+  const repoName=$c('#repoName');
+  if(repoName){ const dot=$c('#storageDot'); repoName.childNodes[0].textContent=`${S.repo.repo||'未选择仓库'} `; if(dot) repoName.appendChild(dot); }
+  $c('#repoOwner').textContent=S.repo.owner?`${S.repo.owner} / ${S.repo.branch}`:'请先配置仓库';
   $c('#libraryCount').textContent=S.connected?S.libraries.length:'0'; $c('#assetCount').textContent=S.connected?S.assets.length:'0';
   const storageState=S.loading?'正在读取':(S.connected?'已连接':'未连接');
   const storageDot=$c('#storageDot');
