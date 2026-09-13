@@ -219,3 +219,9 @@ body.dark .asset-detail-preview img { background:transparent; }
 /* Prevent iOS native pressed highlight on controls */
 button,.btn,.icon-btn,.text-link,.nav-item,.asset-select,.asset-copy,.quick-copy { -webkit-appearance:none; appearance:none; -webkit-tap-highlight-color:rgba(0,0,0,0); touch-action:manipulation; }
 button:active,.btn:active,.icon-btn:active,.text-link:active,.nav-item:active,.asset-select:active,.asset-copy:active,.quick-copy:active { background-color:inherit; filter:none; transform:none; }
+
+.remember-token input { -webkit-appearance:none; appearance:none; position:relative; width:18px; height:18px; margin:0; border:1px solid #aeb8c8; border-radius:5px; background:#fff; vertical-align:middle; }
+.remember-token input:checked { border-color:var(--primary); background:var(--primary); }
+.remember-token input:checked::after { content:""; position:absolute; left:5px; top:2px; width:5px; height:9px; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg); }
+body.dark .remember-token input { border-color:#536681; background:#202e47; }
+body.dark .remember-token input:checked { border-color:#7886ff; background:#5965f2; }
