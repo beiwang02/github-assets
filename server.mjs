@@ -47,7 +47,8 @@ const mime = { html:'text/html; charset=utf-8', css:'text/css; charset=utf-8', j
 function cookies(req) {
   return Object.fromEntries((req.headers.cookie || '').split(';').map(s => s.trim().split('=')).filter(p => p.length === 2));
 }
-function cookie(name, value, age) { return `${name}=${value}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${age}${SECURE ? '; Secure' : ''}`; }
+function cookie(name, value, age, secure = SECURE) { return `${name}=${value}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${age}${secure ? '; Secure' : ''}`; }
+function isSecureRequest(req) { return String(req.headers['x-forwarded-proto'] || (SECURE ? 'https' : 'http')).split(',')[0].trim() === 'https'; }
 function json(res, code, value) { res.writeHead(code, { 'Content-Type':'application/json; charset=utf-8', 'Cache-Control':'no-store' }); res.end(JSON.stringify(value)); }
 function session(req) {
   const id = cookies(req).gh_session, value = sessions.get(id);
@@ -167,14 +168,14 @@ const server = http.createServer(async (req, res) => {
       const permission = accessFor(user.login);
       if (!permission.allowed) return json(res, 403, { message:'这个 GitHub 账号目前没有被允许使用此网站。' });
       const sid = createSession(token, user);
-      res.setHeader('Set-Cookie', cookie('gh_session', sid, 8 * 60 * 60));
+      res.setHeader('Set-Cookie', cookie('gh_session', sid, 8 * 60 * 60, isSecureRequest(req)));
       return json(res, 200, { ok:true, user:{ login:user.login, name:user.name, avatar_url:user.avatar_url } });
     }
     if (url.pathname === '/api/auth/logout' && req.method === 'POST') {
       const auth = session(req);
       if (auth && !requireCSRF(req, res, auth)) return;
       sessions.delete(cookies(req).gh_session);
-      res.setHeader('Set-Cookie', cookie('gh_session', '', 0));
+      res.setHeader('Set-Cookie', cookie('gh_session', '', 0, isSecureRequest(req)));
       return json(res, 200, { ok:true });
     }
     if (url.pathname === '/api/github') {
