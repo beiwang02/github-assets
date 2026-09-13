@@ -308,8 +308,9 @@ body.dark .text-link:hover,body.dark .text-link:focus,body.dark .text-link:activ
   .stat-card { min-height: 100px; padding: 14px; }
   .stat-card strong { font-size: 21px; }
   .library-grid { grid-template-columns: 1fr; }
-  .asset-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .asset-preview { height: 115px; }
+  .asset-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .asset-preview { height: 92px; background:linear-gradient(135deg,#243650,#203d49); }
+  .asset-preview img { width:58px; height:58px; }
   .table-head { display: none; }
   .table-row { grid-template-columns: 38px minmax(0, 1fr) 35px; gap: 9px; padding: 12px; }
   .table-url, .table-date { display: none; }
