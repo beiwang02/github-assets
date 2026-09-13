@@ -166,3 +166,12 @@ body.dark .token-guide-body { color:#e8edf7; }
 .token-guide-button { -webkit-tap-highlight-color:transparent; outline:0; box-shadow:none; }
 .token-guide-button:active,.token-guide-button:focus { background:#f7f8fd; outline:0; box-shadow:none; }
 body.dark .token-guide-button:active,body.dark .token-guide-button:focus { background:#202e47; }
+
+/* Upload modal controls stay consistent across themes and taps */
+.modal button,.modal select { -webkit-tap-highlight-color:transparent; }
+.modal button:active,.modal button:focus { outline:0; }
+.preview-file img { background:linear-gradient(135deg,#f4f6ff,#eef8f7); }
+body.dark .preview-file { background:#202e47; color:#edf1fb; }
+body.dark .preview-file img { background:linear-gradient(135deg,#2b3a55,#243c4a); }
+body.dark .modal-actions { border-top-color:#34445f; }
+body.dark select { color-scheme:dark; }
