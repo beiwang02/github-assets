@@ -259,9 +259,10 @@ kbd { padding: 3px 5px; border: 1px solid #e5e9f0; border-radius: 5px; color: #a
 .drop-zone strong { display: block; margin: 9px 0 5px; color: #5f6d84; font-size: 11px; }
 .drop-zone small { font-size: 9px; }
 .drop-icon { font-size: 25px; }
-.preview-file { display: none; align-items: center; gap: 9px; padding: 9px; margin-top: 9px; border-radius: 9px; background: #f2f4fa; font-size: 10px; }
+.preview-file { display: none; align-items: center; gap: 12px; padding: 10px 12px; margin-top: 10px; border-radius: 10px; background: #f2f4fa; font-size: 10px; }
 .preview-file.show { display: flex; }
-.preview-file img { width: 32px; height: 32px; object-fit: cover; border-radius: 7px; }
+.preview-file img { width: 58px; height: 58px; object-fit: contain; border-radius: 10px; background:#fff; box-shadow:0 3px 10px rgba(31,47,82,.08); }
+.preview-file span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .toast-root { position: fixed; right: 22px; bottom: 22px; z-index: 80; display: grid; gap: 9px; }
 .toast { min-width: 240px; padding: 12px 14px; color: #fff; border-radius: 11px; background: #16233a; box-shadow: 0 12px 25px rgba(19,31,56,.2); font-size: 11px; animation: toastIn .22s ease; }
 .toast.success { border-left: 3px solid #48c990; }
