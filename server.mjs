@@ -11,7 +11,7 @@ const OAUTH_CLIENT_SECRET = String(process.env.GITHUB_CLIENT_SECRET || '').trim(
 const OAUTH_SCOPE = String(process.env.GITHUB_OAUTH_SCOPE || 'public_repo').trim() || 'public_repo';
 const OAUTH_REDIRECT_URI = String(process.env.GITHUB_OAUTH_REDIRECT_URI || new URL('/api/auth/github/callback', BASE)).trim();
 const OAUTH_ENABLED = Boolean(OAUTH_CLIENT_ID && OAUTH_CLIENT_SECRET);
-const TOKEN_LOGIN_ENABLED = process.env.ENABLE_TOKEN_LOGIN === 'true';
+const TOKEN_LOGIN_ENABLED = process.env.ENABLE_TOKEN_LOGIN !== 'false';
 const ADMIN_GITHUB_LOGIN = String(process.env.ADMIN_GITHUB_LOGIN || '').trim().toLowerCase();
 const ADMIN_RESTORE_REPO = String(process.env.ADMIN_RESTORE_REPO || '').trim();
 const ALLOWED_GITHUB_LOGINS = new Set(String(process.env.ALLOWED_GITHUB_LOGINS || '').split(',').map(value => value.trim().toLowerCase()).filter(Boolean));
@@ -66,8 +66,13 @@ function createSession(token, user) {
   sessions.set(sid, { token, csrf:random(), expires:Date.now() + 8 * 60 * 60 * 1000, user:safeUser(user) });
   return sid;
 }
+function requestOrigin(req) {
+  const proto = String(req.headers['x-forwarded-proto'] || (SECURE ? 'https' : 'http')).split(',')[0].trim();
+  const host = String(req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim();
+  return host ? `${proto}://${host}` : BASE.origin;
+}
 function requireCSRF(req, res, auth) {
-  if ((req.headers.origin && req.headers.origin !== BASE.origin) || !equal(req.headers['x-csrf-token'], auth.csrf)) {
+  if ((req.headers.origin && req.headers.origin !== requestOrigin(req)) || !equal(req.headers['x-csrf-token'], auth.csrf)) {
     json(res, 403, { message:'会话校验失败，请刷新页面后重试。' }); return false;
   }
   return true;
@@ -147,9 +152,8 @@ const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === '/api/auth/token' && req.method === 'POST') {
       if (req.headers.origin) {
-        const forwardedProto = String(req.headers['x-forwarded-proto'] || (SECURE ? 'https' : 'http')).split(',')[0].trim();
-        const requestOrigin = `${forwardedProto}://${req.headers.host}`;
-        if (req.headers.origin !== requestOrigin) return json(res, 403, { message:'来源验证失败，请从当前网站页面重新提交。' });
+        const expectedOrigin = requestOrigin(req);
+        if (req.headers.origin !== expectedOrigin) return json(res, 403, { message:'来源验证失败，请从当前网站页面重新提交。' });
       }
       const raw = await readBody(req);
       let input;
