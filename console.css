@@ -105,6 +105,7 @@ body.dark .quick-asset-image {background:#24334b}body.dark .quick-copy{backgroun
 .project-link { display:flex; align-items:center; justify-content:center; gap:8px; margin:14px 0 2px; padding:9px; color:#8d9bb1; border:1px solid rgba(141,155,177,.3); border-radius:9px; font-size:10px; text-decoration:none; }
 .project-link:hover { color:#b7c2ff; border-color:#7885ff; background:rgba(120,133,255,.08); }
 .project-link span { font-size:17px; line-height:1; }
+.project-github-icon { width:18px; height:18px; display:block; fill:currentColor; }
 
 .theme-sun-icon { width:14px; height:14px; display:block; position:relative; border:2px solid currentColor; border-radius:50%; }
 .theme-sun-icon::before, .theme-sun-icon::after { content:""; position:absolute; inset:-5px; background:conic-gradient(from 0deg, currentColor 0 8deg, transparent 8deg 37deg, currentColor 37deg 45deg, transparent 45deg 82deg, currentColor 82deg 90deg, transparent 90deg 127deg, currentColor 127deg 135deg, transparent 135deg 172deg, currentColor 172deg 180deg, transparent 180deg 217deg, currentColor 217deg 225deg, transparent 225deg 262deg, currentColor 262deg 270deg, transparent 270deg 307deg, currentColor 307deg 315deg, transparent 315deg 352deg, currentColor 352deg 360deg); mask:radial-gradient(circle,transparent 0 57%,#000 59% 67%,transparent 69%); }
