@@ -40,6 +40,41 @@ sudo ./install.sh
 
 脚本会自动安装 Docker（如未安装）、复制项目至 `/opt/stacks/github-assets`，并构建、启动服务。
 
+### Compose 编排内容
+
+仓库根目录的 [`compose.yaml`](compose.yaml) 就是部署编排文件，包含一个 `github-assets` 服务和用于保存访问策略的 Docker volume：
+
+```yaml
+services:
+  github-assets:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: github-assets
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: 8765
+    ports:
+      - "${GITHUB_IMAGE_HOST_BIND:-0.0.0.0}:${GITHUB_IMAGE_HOST_PORT:-8765}:8765"
+    volumes:
+      - access-policy:/app/data
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  access-policy:
+    name: github-image-host-access-policy
+```
+
+- `github-assets`：图床控制台服务；容器异常退出后自动重启。
+- `8765:8765`：服务器和容器都使用 `8765`。
+- `access-policy`：只保存管理员访问策略，不保存图片、JSON 或登录 Token。
+- `read_only`：容器根文件系统只读，降低运行风险。
+
 ### 手动 Docker Compose 部署
 
 适合需要自行管理源码或升级流程的用户：

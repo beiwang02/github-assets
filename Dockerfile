@@ -10,6 +10,6 @@ ENV HOST=0.0.0.0
 ENV PORT=8765
 
 USER node
-EXPOSE 8080
+EXPOSE 8765
 
 CMD ["node", "server.mjs"]
