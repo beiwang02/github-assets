@@ -13,7 +13,7 @@ class GitHubClient {
     return data;
   }
   async listRepos() { return this.request('/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator,organization_member'); }
-  async createRepository(name, description = '') { return this.request('/user/repos', 'POST', { name:name.trim(), description:description.trim() || 'GitHub 图片资源和 JSON 图标库', private:false, auto_init:true }); }
+  async createRepository(name, description = '') { return this.request('/user/repos', 'POST', { name:name.trim(), description:description.trim() || 'GitHub 图片资源和 JSON 库', private:false, auto_init:true }); }
   async renameRepository(name) { return this.request(`/repos/${encodeURIComponent(this.config.owner)}/${encodeURIComponent(this.config.repo)}`, 'PATCH', { name:name.trim() }); }
   async deleteRepository() { return this.request(`/repos/${encodeURIComponent(this.config.owner)}/${encodeURIComponent(this.config.repo)}`, 'DELETE'); }
   async projectSignature(repo) {
@@ -99,7 +99,7 @@ class GitHubClient {
       try { value = JSON.parse(GitHubClient.decode(blob.content)); }
       catch { if (entry.path.startsWith('json/')) throw new Error(`JSON 格式错误：${entry.path}，已停止操作。`); continue; }
       if (!value || !Array.isArray(value.icons)) continue;
-      if (value.icons.some(i => !i || typeof i.name !== 'string' || typeof i.url !== 'string')) throw new Error(`图标记录格式异常：${entry.path}，请修复后重试。`);
+      if (value.icons.some(i => !i || typeof i.name !== 'string' || typeof i.url !== 'string')) throw new Error(`图片记录格式异常：${entry.path}，请修复后重试。`);
       docs.push({ path:entry.path, sha:entry.sha, value });
     }
     return { head:ref.object.sha, tree:commit.tree.sha, entries, docs, directories:result.tree.filter(e => e.type === 'tree').map(e => e.path) };
@@ -150,11 +150,11 @@ class GitHubClient {
     const path = `${this.config.assetsPath}/${cleanGroup}/${GitHubClient.filename(cleanName, ext)}`;
     const buffer = await file.arrayBuffer(); if (buffer.byteLength > 10 * 1024 * 1024) throw new Error('图片不能超过 10 MB。');
     const content = GitHubClient.encode(buffer), url = this.raw(path);
-    await this.atomic(`上传图标图片：${cleanName}`, async snap => {
+    await this.atomic(`上传图片：${cleanName}`, async snap => {
       if (snap.entries.some(e => e.path === path)) throw new Error(`同名图片已存在：${path.split('/').at(-1)}`);
       const changes = [{ path, mode:'100644', type:'blob', sha:(await this.request(`${this.base}/git/blobs`, 'POST', { content, encoding:'base64' })).sha }];
       if (libraryPath) {
-        const doc = snap.docs.find(d => d.path === libraryPath); if (!doc) throw new Error('找不到目标 JSON 图标库。');
+        const doc = snap.docs.find(d => d.path === libraryPath); if (!doc) throw new Error('找不到目标 JSON 库。');
         const value = structuredClone(doc.value); if (!value.icons.some(i => i.url === url)) value.icons.push({ name:cleanName, url });
         changes.push(this.jsonChange(doc, value));
       }
@@ -222,17 +222,17 @@ class GitHubClient {
     return this.atomic(`新建图片分组：${name}`, async snap => { if (snap.entries.some(e => e.path === path)) throw new Error('分组已经存在。'); return [{ path, mode:'100644', type:'blob', content:'\n' }]; });
   }
   async appendToLibrary(path, items) {
-    return this.atomic(`批量加入 JSON：${items.length} 张`, async snap => { const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('找不到 JSON 图标库。'); const value = structuredClone(doc.value), urls = new Set(value.icons.map(i => i.url)); for (const item of items) if (!urls.has(item.url)) { value.icons.push({ name:item.name, url:item.url }); urls.add(item.url); } return [this.jsonChange(doc, value)]; });
+    return this.atomic(`批量加入 JSON：${items.length} 张`, async snap => { const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('找不到 JSON 库。'); const value = structuredClone(doc.value), urls = new Set(value.icons.map(i => i.url)); for (const item of items) if (!urls.has(item.url)) { value.icons.push({ name:item.name, url:item.url }); urls.add(item.url); } return [this.jsonChange(doc, value)]; });
   }
   async saveIcon(path, index, name, url, expectedSha) {
     const cleanName = GitHubClient.name(name); const parsed = new URL(url); if (parsed.protocol !== 'https:' || parsed.hostname !== 'raw.githubusercontent.com') throw new Error('这里只允许使用 GitHub Raw HTTPS 图片直链。');
-    return this.atomic(`修改图标：${cleanName}`, async snap => { const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('找不到 JSON 图标库。'); if (!expectedSha || doc.sha !== expectedSha) throw new Error('JSON 已被其他客户端修改，请刷新后重试。'); const value = structuredClone(doc.value); if (index < 0 || !value.icons[index]) throw new Error('图标已经不存在，请刷新。'); if (value.icons.some((i,n) => n !== index && i.name === cleanName)) throw new Error('已经有同名图标了。'); value.icons[index] = { ...value.icons[index], name:cleanName, url:url.trim() }; return [this.jsonChange(doc, value)]; });
+    return this.atomic(`修改图片：${cleanName}`, async snap => { const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('找不到 JSON 库。'); if (!expectedSha || doc.sha !== expectedSha) throw new Error('JSON 已被其他客户端修改，请刷新后重试。'); const value = structuredClone(doc.value); if (index < 0 || !value.icons[index]) throw new Error('图片已经不存在，请刷新。'); if (value.icons.some((i,n) => n !== index && i.name === cleanName)) throw new Error('已经有同名图片了。'); value.icons[index] = { ...value.icons[index], name:cleanName, url:url.trim() }; return [this.jsonChange(doc, value)]; });
   }
   async removeIcons(path, indexes, expectedSha) {
-    const wanted = new Set(indexes.map(Number)); return this.atomic(`从 JSON 移除图标：${wanted.size} 项`, async snap => { const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('找不到 JSON 图标库。'); if (!expectedSha || doc.sha !== expectedSha) throw new Error('JSON 已被其他客户端修改，请刷新后重试。'); const value = structuredClone(doc.value); value.icons = value.icons.filter((_, i) => !wanted.has(i)); return [this.jsonChange(doc, value)]; });
+    const wanted = new Set(indexes.map(Number)); return this.atomic(`从 JSON 移除图片：${wanted.size} 项`, async snap => { const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('找不到 JSON 库。'); if (!expectedSha || doc.sha !== expectedSha) throw new Error('JSON 已被其他客户端修改，请刷新后重试。'); const value = structuredClone(doc.value); value.icons = value.icons.filter((_, i) => !wanted.has(i)); return [this.jsonChange(doc, value)]; });
   }
-  async createLibrary(path, name, description) { const file = GitHubClient.jsonPath(path); return this.atomic(`创建图标库：${name}`, async snap => { if (snap.entries.some(e => e.path === file)) throw new Error('仓库中已经存在同名 JSON 文件。'); return [{ path:file, mode:'100644', type:'blob', content:JSON.stringify({ name:name.trim(), description:description.trim(), icons:[] }, null, 2) + '\n' }]; }); }
-  async saveLibrary(path, nextPath, name, description) { const target = GitHubClient.jsonPath(nextPath); return this.atomic(`修改图标库：${name}`, async snap => { const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('找不到原 JSON 文件，请刷新。'); if (target !== path && snap.entries.some(e => e.path === target)) throw new Error('目标 JSON 文件已经存在。'); const value = structuredClone(doc.value); value.name = name.trim(); value.description = description.trim(); const changes = [this.jsonChange({ ...doc, path:target }, value)]; if (target !== path) changes.push({ path, mode:'100644', type:'blob', sha:null }); return changes; }); }
-  async deleteLibrary(path) { return this.atomic(`删除图标库：${path}`, async snap => { const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('文件已经不存在，请刷新。'); return [{ path, mode:'100644', type:'blob', sha:null }]; }); }
+  async createLibrary(path, name, description) { const file = GitHubClient.jsonPath(path); return this.atomic(`创建 JSON 库：${name}`, async snap => { if (snap.entries.some(e => e.path === file)) throw new Error('仓库中已经存在同名 JSON 文件。'); return [{ path:file, mode:'100644', type:'blob', content:JSON.stringify({ name:name.trim(), description:description.trim(), icons:[] }, null, 2) + '\n' }]; }); }
+  async saveLibrary(path, nextPath, name, description) { const target = GitHubClient.jsonPath(nextPath); return this.atomic(`修改 JSON 库：${name}`, async snap => { const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('找不到原 JSON 文件，请刷新。'); if (target !== path && snap.entries.some(e => e.path === target)) throw new Error('目标 JSON 文件已经存在。'); const value = structuredClone(doc.value); value.name = name.trim(); value.description = description.trim(); const changes = [this.jsonChange({ ...doc, path:target }, value)]; if (target !== path) changes.push({ path, mode:'100644', type:'blob', sha:null }); return changes; }); }
+  async deleteLibrary(path) { return this.atomic(`删除 JSON 库：${path}`, async snap => { const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('文件已经不存在，请刷新。'); return [{ path, mode:'100644', type:'blob', sha:null }]; }); }
 }
 window.GitHubClient = GitHubClient;

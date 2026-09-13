@@ -1,12 +1,12 @@
 # GitHub 图床
 
-一个基于 GitHub 仓库管理图片、分组和 JSON 图标库的轻量网页工具。图片与 JSON 始终存放在用户自己的 GitHub 仓库；服务端不保存业务资源。
+一个基于 GitHub 仓库管理图片、分组和 JSON 库的轻量网页工具。图片与 JSON 始终存放在用户自己的 GitHub 仓库；服务端不保存业务资源。
 
 ## 功能
 
 - GitHub 经典 Token 登录，可选“记住此设备”
 - 自动识别兼容结构的图片仓库，也可创建或手动选择仓库
-- 管理 JSON 图标库、图片资源和图片分组
+- 管理 JSON 库、图片资源和图片分组
 - 上传、改名、删除图片时自动同步 JSON 引用
 - 多选图片批量加入 JSON 或批量删除
 - GitHub SHA 冲突保护和原子 Git 提交
@@ -48,8 +48,8 @@ json/
 
 ```json
 {
-  "name": "我的图标库",
-  "description": "常用图标",
+  "name": "我的 JSON 库",
+  "description": "常用图片",
   "icons": [
     {
       "name": "Netflix",
