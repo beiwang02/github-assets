@@ -131,7 +131,10 @@ kbd { padding: 3px 5px; border: 1px solid #e5e9f0; border-radius: 5px; color: #a
 
 .section-row { display: flex; justify-content: space-between; align-items: center; margin: 0 0 14px; }
 .section-row h3 { margin: 0; font-size: 15px; letter-spacing: -.02em; }
-.text-link { color: var(--primary); font-size: 11px; font-weight: 700; text-decoration: none; cursor: pointer; }
+.text-link { display:inline-flex; align-items:center; gap:4px; padding:3px 0; color:var(--primary); border:0; background:transparent; font-size:11px; font-weight:700; text-decoration:none; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.text-link:hover,.text-link:focus,.text-link:active { color:var(--primary-dark); background:transparent; outline:0; box-shadow:none; }
+body.dark .text-link { color:#aeb8ff; background:transparent; }
+body.dark .text-link:hover,body.dark .text-link:focus,body.dark .text-link:active { color:#d0d5ff; background:transparent; }
 .dashboard-columns { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(310px, .8fr); gap: 18px; }
 .card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-soft); }
 .library-card { overflow: hidden; }
