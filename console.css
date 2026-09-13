@@ -109,3 +109,7 @@ body.dark .quick-asset-image {background:#24334b}body.dark .quick-copy{backgroun
 .first-use-guide p { margin:0 0 3px; color:#b4bfd3; font-size:11px; line-height:1.65; }
 .first-use-guide small { display:block; color:#8998b0; font-size:10px; line-height:1.6; }
 .first-use-guide b { color:#d9deff; }
+.first-use-guide details { margin-top:9px; }
+.first-use-guide summary { color:#bfc8ff; cursor:pointer; font-weight:700; }
+.first-use-guide ol { margin:7px 0 0 18px; padding:0; color:#9eabc2; }
+.first-use-guide li { margin:3px 0; }
