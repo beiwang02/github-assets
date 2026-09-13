@@ -20,9 +20,9 @@ function setMetaC() {
   $c('#repoName').textContent=S.repo.repo||'未选择仓库'; $c('#repoOwner').textContent=S.repo.owner?`${S.repo.owner} / ${S.repo.branch}`:'请先配置仓库';
   $c('#libraryCount').textContent=S.connected?S.libraries.length:'0'; $c('#assetCount').textContent=S.connected?S.assets.length:'0';
   const storageState=S.loading?'正在读取':(S.connected?'已连接':'未连接');
-  $c('#storageStatus').textContent=storageState;
-  $c('#storageBranch').textContent=S.loading?'正在从 GitHub 读取数据…':(S.connected?`${S.repo.owner}/${S.repo.repo} · ${S.repo.branch}`:'请打开“仓库设置”连接 GitHub');
-  $c('#storageDot').style.background=S.loading?'#ffb45f':(S.connected?'#4dd59d':'#a8b2c3');
+  const storageDot=$c('#storageDot');
+  storageDot.style.background=S.loading?'#ffb45f':(S.connected?'#4dd59d':'#a8b2c3');
+  storageDot.title=storageState;
   document.querySelectorAll('.nav-item[data-view]').forEach(n=>n.classList.toggle('active', n.dataset.view===(S.view==='library-detail'?'libraries':S.view)));
   const name=S.auth?.login||'GitHub 用户'; document.querySelectorAll('[data-account-name]').forEach(n=>n.textContent=name); document.querySelectorAll('[data-account-avatar]').forEach(n=>{ n.textContent=name.slice(0,1).toUpperCase(); });
 }

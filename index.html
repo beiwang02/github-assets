@@ -19,7 +19,7 @@
 
       <div class="repo-switcher" data-action="open-repo" role="button" tabindex="0" aria-label="打开当前仓库">
         <span class="repo-avatar">B</span>
-        <span class="repo-meta"><small class="repo-label">当前仓库</small><b id="repoName">未选择仓库</b><small id="repoOwner">登录后自动识别</small></span>
+        <span class="repo-meta"><small class="repo-label">当前仓库</small><b id="repoName">未选择仓库 <i class="repo-status-dot" id="storageDot" title="仓库未连接"></i></b><small id="repoOwner">登录后自动识别</small></span>
         <svg class="repo-open-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5m-1-4-7 7m5 4v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/></svg>
       </div>
 
@@ -35,11 +35,6 @@
       </nav>
 
       <div class="sidebar-bottom">
-        <div class="storage-card">
-          <div class="storage-top"><span>仓库状态</span><span class="status-dot" id="storageDot"></span></div>
-          <strong id="storageStatus">等待连接</strong>
-          <small id="storageBranch">请打开“仓库设置”连接 GitHub</small>
-        </div>
         <div class="user-chip"><div class="user-avatar" data-account-avatar>B</div><div><b data-account-name>GitHub 用户</b><small>GitHub 账户</small></div><button type="button" class="more" data-action="account-menu" aria-label="账号菜单">•••</button></div>
       </div>
     </aside>
