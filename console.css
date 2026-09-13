@@ -55,7 +55,8 @@ body.dark .account-panel b { color:var(--ink); }
 .repo-switcher { position:relative; text-align:left; cursor:pointer; }
 .repo-switcher:focus-visible { outline:2px solid #8d98ff; outline-offset:2px; }
 .repo-label { color:#93a1bd; font-size:9px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
-.repo-status-dot { width:9px; height:9px; display:inline-block; margin:0 0 1px 7px; border-radius:50%; background:#ff4d5f; box-shadow:0 0 0 4px rgba(255,77,95,.12); vertical-align:middle; transition:background .2s,box-shadow .2s; }
+.repo-status-dot { width:9px; height:9px; display:inline-block; margin:0 0 1px 7px; border-radius:50%; background:#ff4d5f; box-shadow:0 0 0 4px rgba(255,77,95,.12),0 0 12px rgba(255,77,95,.3); vertical-align:middle; transition:background .2s,box-shadow .2s; }
+.repo-status-dot.connected { background:#35d48a !important; box-shadow:0 0 0 4px rgba(53,212,138,.14),0 0 12px rgba(53,212,138,.38) !important; }
 .repo-open-icon { width:17px; height:17px; flex:0 0 17px; fill:none; stroke:#aebaff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; opacity:.8; }
 .repo-switcher:hover .repo-open-icon { opacity:1; transform:translate(1px,-1px); }
 .repo-quick-list { display:flex; flex-wrap:wrap; gap:7px; margin:0 0 12px; }
