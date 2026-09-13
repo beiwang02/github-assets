@@ -28,7 +28,7 @@ function setMetaC() {
 }
 function loginView() {
   const problem=new URLSearchParams(location.search).get('auth_error');
-  const message=problem?(problem==='forbidden'?'这个 GitHub 账号目前没有被允许使用此网站。':'登录失败，请重试。'):'使用 GitHub Personal Access Token 登录，Token 只保存在服务器内存会话。';
+  const message=problem==='logged_out'?'已退出登录。':(problem==='forbidden'?'这个 GitHub 账号目前没有被允许使用此网站。':(problem?'登录失败，请重试。':'使用 GitHub Personal Access Token 登录，Token 只保存在服务器内存会话。'));
   return `<div class="auth-page"><div class="auth-grid"></div><div class="auth-card"><div class="auth-brand"><div class="brand-mark"><span>✦</span></div><div><strong>GITHUB 图床</strong><small>RESOURCE CONSOLE</small></div></div><span class="auth-kicker">GITHUB ACCESS</span><h2>登录图床控制台</h2><p>${escC(message)}</p><form id="tokenLoginForm"><div class="modal-field"><label>GitHub Token</label><div class="token-input-wrap"><input name="token" id="mainTokenInput" type="password" autocomplete="off" placeholder="ghp_... 或 github_pat_..." required><button type="button" class="token-eye" data-action="toggle-token" aria-label="显示或隐藏 Token">◉</button></div></div><label class="remember-token"><input type="checkbox" name="rememberToken"> 记住此设备</label><small class="auth-note">Token 只保存在当前浏览器本地（可选）及服务器内存会话，不会写入数据库或 GitHub。</small><details class="first-use-guide"><summary>经典 Token 创建教程</summary><ol><li>GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)。</li><li>点击 Generate new token (classic)，设置有效期。</li><li>权限列表只勾选 <b>repo → public_repo</b>。</li><li>其他权限不要勾选，生成后复制 Token 粘贴到上方。</li></ol></details><a class="project-link" href="https://github.com/beiwang02/github-assets"><span>●</span> 查看项目源码</a><button type="submit" class="btn btn-github"><span class="github-logo">●</span> 验证并登录</button><small class="auth-note">正式使用请启用 HTTPS；测试完成后建议撤销 Token。</small></form></div></div>`;
 }
 
@@ -95,7 +95,7 @@ async function formSubmit(e) {
     if(form.id==='bulkForm') { const data=new FormData(form); const items=S.assets.filter(x=>S.selected.has(x.id)); await currentClient().appendToLibrary(String(data.get('library')),items); S.selected.clear(); closeC(); await refreshRepo(); notify(`已将 ${items.length} 张图片加入 JSON`); return; }
   } catch(error) { notify(error.message||'操作失败','error'); }
 }
-async function logoutC() { try { await fetch('/api/auth/logout',{method:'POST',credentials:'include',headers:{'X-CSRF-Token':S.csrf}}); } finally { localStorage.removeItem('gh-image-remembered-token'); location.href='/'; } }
+async function logoutC() { try { await fetch('/api/auth/logout',{method:'POST',credentials:'include',headers:{'X-CSRF-Token':S.csrf}}); } finally { localStorage.removeItem('gh-image-remembered-token'); location.replace('/?logged_out=1'); } }
 async function autoSelectRepository() {
   if (!S.auth) return;
   try {
@@ -218,7 +218,7 @@ function accountMenu() {
   $c('#sidebar').classList.remove('open');
   const login=S.auth?.login||'当前账号';
   const repoLabel=S.repo.owner&&S.repo.repo?`${S.repo.owner}/${S.repo.repo}`:'尚未连接仓库';
-  openC(`<div class="modal-head"><div><h2>${escC(login)}</h2><p>GitHub 账号</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body choice-menu"><button class="btn" data-action="open-profile">打开 GitHub 主页 <span>↗</span></button><button class="btn" data-action="open-repo">打开当前仓库 <span>↗</span></button><div class="account-repo-path">${escC(repoLabel)}</div>${S.tokenLoginEnabled?'<button class="btn" data-action="forget-token">清除此设备记住的 Token</button>':''}<button class="btn btn-danger" data-action="logout">退出 GitHub 登录</button></div>`);
+  openC(`<div class="modal-head"><div><h2>${escC(login)}</h2><p>GitHub 账号</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body choice-menu"><button class="btn" data-action="open-repo">打开当前仓库 <span>↗</span></button><div class="account-repo-path">${escC(repoLabel)}</div>${S.tokenLoginEnabled?'<button class="btn" data-action="forget-token">清除此设备记住的 Token</button>':''}<button class="btn btn-danger" data-action="logout">退出并返回登录页</button></div>`);
 }
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyAppearance);
 applyAppearance();
