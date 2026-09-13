@@ -19,7 +19,11 @@ function setMetaC() {
   $c('#pageEyebrow').textContent=eyebrow; $c('#pageTitle').textContent=title;
   $c('#repoName').textContent=S.repo.repo||'未选择仓库'; $c('#repoOwner').textContent=S.repo.owner?`${S.repo.owner} / ${S.repo.branch}`:'请先配置仓库';
   $c('#libraryCount').textContent=S.connected?S.libraries.length:'0'; $c('#assetCount').textContent=S.connected?S.assets.length:'0';
-  $c('#storageStatus').textContent=S.connected?'GitHub 已连接':'等待连接'; $c('#storageBranch').textContent=S.connected?`公开仓库 · ${S.repo.branch} 分支`:'请在仓库设置中读取 GitHub'; $c('#storageProgress').style.width=S.connected?'68%':'8%'; $c('#storageDot').style.background=S.connected?'#4dd59d':'#a8b2c3';
+  const storageState=S.loading?'正在读取':(S.connected?'已连接':'未连接');
+  $c('#storageStatus').textContent=storageState;
+  $c('#storageBranch').textContent=S.loading?'正在从 GitHub 读取数据…':(S.connected?`${S.repo.owner}/${S.repo.repo} · ${S.repo.branch}`:'请打开“仓库设置”连接 GitHub');
+  $c('#storageProgress').style.width=S.loading?'38%':(S.connected?'100%':'8%');
+  $c('#storageDot').style.background=S.loading?'#ffb45f':(S.connected?'#4dd59d':'#a8b2c3');
   document.querySelectorAll('.nav-item[data-view]').forEach(n=>n.classList.toggle('active', n.dataset.view===(S.view==='library-detail'?'libraries':S.view)));
   const name=S.auth?.login||'GitHub 用户'; document.querySelectorAll('[data-account-name]').forEach(n=>n.textContent=name); document.querySelectorAll('[data-account-avatar]').forEach(n=>{ n.textContent=name.slice(0,1).toUpperCase(); });
 }
@@ -29,7 +33,7 @@ function loginView() {
   const message=problem?(errors[problem]||'GitHub 登录失败，请重试。'):'使用 GitHub 授权管理自己的图片和 JSON，访问令牌只保存在服务器内存会话。';
   const oauthButton=S.oauthEnabled?'<a class="btn btn-github" href="/api/auth/github"><span class="github-logo">●</span> 使用 GitHub 登录</a>':'<button type="button" class="btn btn-github disabled-link" data-action="oauth-help"><span class="github-logo">●</span> GitHub 登录尚未配置</button>';
   const tokenFallback=S.tokenLoginEnabled?'<button type="button" class="token-login-link" data-action="token-login">使用 Token 临时测试</button>':'';
-  return `<div class="auth-page"><div class="auth-grid"></div><div class="auth-card"><div class="auth-brand"><div class="brand-mark"><span>✦</span></div><div><strong>GITHUB 图床</strong><small>RESOURCE CONSOLE</small></div></div><span class="auth-kicker">GITHUB ACCESS</span><h2>登录图床控制台</h2><p>${escC(message)}</p>${oauthButton}${tokenFallback}<a class="project-link" href="https://github.com/beiwang02/github-assets" target="_blank" rel="noreferrer"><span>●</span> 查看项目源码</a><small class="auth-note">授权后的访问令牌不会写入浏览器、本地文件或数据库。生产环境必须启用 HTTPS，并在 GitHub OAuth App 填写本网站回调地址。</small></div></div>`;
+  return `<div class="auth-page"><div class="auth-grid"></div><div class="auth-card"><div class="auth-brand"><div class="brand-mark"><span>✦</span></div><div><strong>GITHUB 图床</strong><small>RESOURCE CONSOLE</small></div></div><span class="auth-kicker">GITHUB ACCESS</span><h2>登录图床控制台</h2><p>${escC(message)}</p>${oauthButton}${tokenFallback}<div class="first-use-guide"><strong>首次使用</strong><p>无需提前创建密钥，直接点击“使用 GitHub 登录”并授权即可。</p><small>如需使用经典 Token 测试，只需要开启 <b>public_repo</b> 权限。</small></div><a class="project-link" href="https://github.com/beiwang02/github-assets" target="_blank" rel="noreferrer"><span>●</span> 查看项目源码</a><small class="auth-note">授权后的访问令牌不会写入浏览器、本地文件或数据库。生产环境必须启用 HTTPS，并在 GitHub OAuth App 填写本网站回调地址。</small></div></div>`;
 }
 
 function coverStack(lib) { const list=(lib.icons||[]).slice(0,4); return `<div class="cover-stack">${list.map((x,i)=>`<img src="${escC(x.url)}" alt="">`).join('')}</div>`; }
