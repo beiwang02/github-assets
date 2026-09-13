@@ -140,3 +140,9 @@ body:not(.dark) .auth-screen { background:#f7f9ff; }
 
 .theme-glyph { width:22px; height:22px; display:inline-grid; place-items:center; color:currentColor; font:500 22px/1 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
 .auth-card .btn-github:not(:disabled) { opacity:1; filter:none; color:#182334; background:linear-gradient(135deg,#9deaff,#7885ff); }
+/* Consistent navigation and topbar controls */
+.main-nav .nav-icon{width:20px;height:20px;display:inline-grid;place-items:center;font-size:0;flex:0 0 20px}
+.main-nav .nav-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.repo-meta b{overflow:visible;white-space:normal;display:flex;align-items:center}
+.repo-status-dot{width:9px;height:9px;min-width:9px;flex:0 0 9px;overflow:visible}
+.top-actions .appearance-button,.top-actions .github-repo-link{border-radius:10px}

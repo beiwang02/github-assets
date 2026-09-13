@@ -203,7 +203,12 @@ function applyAppearance() {
   const storedTheme=localStorage.getItem('gh-image-theme');
   const mode=['system','dark','light'].includes(storedTheme)?storedTheme:'system';
   const dark=mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.classList.toggle('dark',dark);
   document.body.classList.toggle('dark',dark);
+  document.documentElement.style.backgroundColor=dark?'#0b1629':'#f6f8fc';
+  document.body.style.backgroundColor=dark?'#0b1629':'#f6f8fc';
+  const themeMeta=document.querySelector('meta[name="theme-color"]');
+  if(themeMeta) themeMeta.content=dark?'#0b1629':'#f6f8fc';
   const labels={system:'跟随系统（点击切换）',dark:'黑夜模式（点击切换）',light:'白天模式（点击切换）'};
   const icons={
     system:'<span class="theme-glyph">◐</span>',
@@ -228,8 +233,7 @@ function accountMenu() {
   const login=S.auth?.login||'当前账号';
   const displayName=S.auth?.name||login;
   const avatar=S.auth?.avatar_url||'';
-  const repoLabel=S.repo.owner&&S.repo.repo?`${S.repo.owner}/${S.repo.repo}`:'尚未连接仓库';
-  openC(`<div class="modal-head"><div class="account-modal-head">${avatar?`<img src="${escC(avatar)}" alt="">`:''}<div><h2>${escC(displayName)}</h2><p>@${escC(login)} · GitHub 账号</p></div></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body choice-menu"><button class="btn" data-action="open-repo">打开当前仓库 <span>↗</span></button><div class="account-repo-path">${escC(repoLabel)}</div>${S.tokenLoginEnabled?'<button class="btn" data-action="forget-token">清除此设备记住的 Token</button>':''}<button class="btn btn-danger" data-action="logout">退出并返回登录页</button></div>`);
+  openC(`<div class="modal-head"><div class="account-modal-head">${avatar?`<img src="${escC(avatar)}" alt="">`:''}<div><h2>${escC(displayName)}</h2><p>@${escC(login)}</p></div></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body choice-menu">${S.tokenLoginEnabled?'<button class="btn" data-action="forget-token">清除此设备记住的 Token</button>':''}<button class="btn btn-danger" data-action="logout">退出并返回登录页</button></div>`);
 }
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyAppearance);
 applyAppearance();
