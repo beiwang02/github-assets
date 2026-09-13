@@ -5,7 +5,7 @@
 ## 功能
 
 - GitHub 经典 Token 登录，支持记住此设备
-- 可选的 Token 临时登录模式（默认关闭）
+- Token 只保存在服务端内存会话和用户可选的本地记忆中
 - 管理员恢复指定旧仓库
 - 普通用户创建自己的公开图床仓库
 - 兼容 `assets/`、`icons/` 图片目录
@@ -21,23 +21,54 @@
 
 ## 部署
 
-项目提供 Docker Compose 编排和一键安装脚本。服务器上进入项目目录后执行：
-
-```bash
-chmod +x install.sh
-sudo ./install.sh
-```
-
-脚本会安装 Docker（如尚未安装）、将项目部署到 `/opt/stacks/github-assets`，并启动图床服务。默认访问地址：
+服务内外统一使用 `8765` 端口；部署完成后访问：
 
 ```text
 http://服务器IP:8765
 ```
 
-服务内外统一使用 `8765` 端口。需要自定义域名、访问限制或其他高级配置时，查看 [`deploy/README.md`](deploy/README.md)。
+### 一键安装（推荐）
 
+在 Ubuntu / Debian 服务器执行下面命令，直接从本仓库拉取源码并运行 Docker Compose 编排：
 
-管理员配置全部是可选项。普通用户登录后可以选择自己的仓库或创建新仓库，不需要填写任何“旧仓库”。策略保存在独立 Docker volume，不保存用户业务内容。
+```bash
+git clone https://github.com/beiwang02/github-assets.git
+cd github-assets
+chmod +x install.sh
+sudo ./install.sh
+```
+
+脚本会自动安装 Docker（如未安装）、复制项目至 `/opt/stacks/github-assets`，并构建、启动服务。
+
+### 手动 Docker Compose 部署
+
+适合需要自行管理源码或升级流程的用户：
+
+```bash
+git clone https://github.com/beiwang02/github-assets.git
+cd github-assets
+cp .env.example .env
+docker compose up -d --build
+```
+
+查看运行状态与日志：
+
+```bash
+docker compose ps
+docker compose logs -f github-assets
+```
+
+更新到最新版本：
+
+```bash
+git pull origin main
+docker compose up -d --build --force-recreate
+```
+
+默认端口已是 `8765`，通常不需要编辑 `.env`。需要自定义域名、访问限制或其他高级配置时，查看 [`deploy/README.md`](deploy/README.md)。
+
+## 管理员配置
+普通用户登录后可以选择自己的仓库或创建新仓库，不需要填写任何“旧仓库”。策略保存在独立 Docker volume，不保存用户业务内容。
 
 ```env
 # 只有需要限制访问或使用管理后台时才填写
