@@ -1,10 +1,10 @@
 # GitHub 图床 Web 控制台
 
-一个不保存用户图片和 JSON 的 GitHub 图床管理工具。用户通过 GitHub OAuth 登录，图片和 JSON 始终保存在用户自己的 GitHub 仓库中。OAuth 访问令牌只保存在 Node 进程内存会话中，不写入前端、本地文件或数据库。
+一个不保存用户图片和 JSON 的 GitHub 图床管理工具。用户使用 GitHub 经典 Token 登录，图片和 JSON 始终保存在用户自己的 GitHub 仓库中。Token 只保存在 Node 进程内存会话中，不写入数据库。
 
 ## 功能
 
-- GitHub OAuth 登录，Token 只保存在服务端内存会话
+- GitHub 经典 Token 登录，支持记住此设备
 - 可选的 Token 临时登录模式（默认关闭）
 - 管理员恢复指定旧仓库
 - 普通用户创建自己的公开图床仓库
