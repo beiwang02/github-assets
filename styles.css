@@ -98,8 +98,8 @@ kbd { padding: 3px 5px; border: 1px solid #e5e9f0; border-radius: 5px; color: #a
 .heading-actions { display: flex; align-items: center; gap: 9px; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 38px; padding: 0 15px; color: #5e6b80; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 11px; font-weight: 600; transition: .2s; box-shadow: 0 3px 8px rgba(33,49,78,.02); }
 .btn:hover { color: var(--primary); border-color: #cfd5fd; transform: translateY(-1px); }
-.btn-primary { color: #fff; border-color: var(--primary); background: linear-gradient(135deg, #6671fc, #5860df); box-shadow: 0 8px 16px rgba(89,101,242,.2); }
-.btn-primary:hover { color: #fff; border-color: var(--primary-dark); background: linear-gradient(135deg, #5b67ed, #4b56d1); }
+.btn-primary { color: #fff; border-color: var(--primary); background: linear-gradient(135deg, #6671fc, #5860df); box-shadow:none; }
+.btn-primary:hover { color: #fff; border-color: var(--primary-dark); background: linear-gradient(135deg, #5b67ed, #4b56d1); box-shadow:none; }
 .btn-danger { color: var(--danger); }
 .btn-sm { height: 32px; padding: 0 11px; font-size: 10px; }
 .icon-btn { width: 33px; height: 33px; display: inline-grid; place-items: center; color: #8090a6; border: 1px solid var(--line); border-radius: 9px; background: #fff; font-size: 16px; }
@@ -148,7 +148,7 @@ body.dark .text-link:hover,body.dark .text-link:focus,body.dark .text-link:activ
 .library-list-row:last-child { border-bottom: 0; }
 .library-list-row:hover { background: #fafbff; }
 .cover-stack { display: flex; padding-left: 7px; }
-.cover-stack img { width: 30px; height: 30px; object-fit: cover; margin-left: -7px; border: 2px solid white; border-radius: 9px; background: #eef0f7; }
+.cover-stack img { width: 30px; height: 30px; object-fit: cover; margin-left: -7px; border: 0; border-radius: 9px; background: #eef0f7; }
 .list-info { min-width: 0; flex: 1; }
 .list-info b { display: block; font-size: 11px; }
 .list-info small { display: block; max-width: 280px; margin-top: 4px; overflow: hidden; color: var(--muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
