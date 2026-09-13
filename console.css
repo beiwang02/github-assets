@@ -128,3 +128,12 @@ body.dark .quick-asset-image {background:#24334b}body.dark .quick-copy{backgroun
 .first-use-guide summary { color:#bfc8ff; cursor:pointer; font-weight:700; }
 .first-use-guide ol { margin:7px 0 0 18px; padding:0; color:#9eabc2; }
 .first-use-guide li { margin:3px 0; }
+
+/* Mobile Safari safe-area full-bleed auth background */
+.auth-screen { min-height:100vh; min-height:100dvh; background:#0d1729; }
+.auth-screen .main-shell, .auth-screen .content { min-height:100vh; min-height:100dvh; }
+@media (max-width:700px){
+  .auth-page { min-height:100svh; min-height:100dvh; width:100%; padding-top:max(22px, env(safe-area-inset-top)); padding-bottom:max(22px, env(safe-area-inset-bottom)); }
+  .auth-card { margin:0; }
+}
+body:not(.dark) .auth-screen { background:#f7f9ff; }
