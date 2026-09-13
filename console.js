@@ -226,7 +226,7 @@ function applyAppearance() {
 }
 function cycleAppearance() {
   const current=localStorage.getItem('gh-image-theme')||'system';
-  const next=current==='system'?'dark':(current==='dark'?'light':'system');
+  const next=current==='system'?'light':(current==='light'?'dark':'system');
   localStorage.setItem('gh-image-theme',next);
   applyAppearance();
   notify(next==='system'?'已切换为跟随系统':(next==='dark'?'已切换为黑夜模式':'已切换为白天模式'));
