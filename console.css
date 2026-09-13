@@ -175,3 +175,9 @@ body.dark .preview-file { background:#202e47; color:#edf1fb; }
 body.dark .preview-file img { background:linear-gradient(135deg,#2b3a55,#243c4a); }
 body.dark .modal-actions { border-top-color:#34445f; }
 body.dark select { color-scheme:dark; }
+
+/* Detail previews and icon actions follow the selected theme */
+body.dark .asset-detail-preview { background:linear-gradient(135deg,#253650,#203d49); }
+body.dark .table-icon { background:#273751; }
+button,.btn,.icon-btn,.text-link,.nav-item { -webkit-tap-highlight-color:transparent; }
+button:active,.btn:active,.icon-btn:active,.text-link:active,.nav-item:active { outline:0; box-shadow:none; }

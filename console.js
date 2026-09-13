@@ -181,7 +181,7 @@ document.addEventListener('click', async e => {
   if(action==='manage-group'){if(!S.group)return;const next=prompt(`输入“${S.group}”的新名称；输入 delete 删除整个分组`,S.group);if(!next)return;try{if(next.trim().toLowerCase()==='delete'){if(!confirm(`永久删除分组 ${S.group} 及其中图片？`))return;await currentClient().deleteGroup(S.group);}else await currentClient().renameGroup(S.group,next);await refreshRepo();notify('分组操作已提交');}catch(err){notify(err.message,'error');}return;}
   if(action==='copy-all'){await copyC(JSON.stringify({repository:S.repo,libraries:S.libraries.map(x=>({name:x.name,file:x.file,count:x.count}))},null,2),'仓库索引已复制');return;}
 });
-document.addEventListener('pointerdown',e=>{ const sidebar=$c('#sidebar'); if(sidebar?.classList.contains('open')&&!e.target.closest('#sidebar')&&!e.target.closest('.mobile-menu')) sidebar.classList.remove('open'); });
+document.addEventListener('click',e=>{ const sidebar=$c('#sidebar'); if(sidebar?.classList.contains('open')&&!e.target.closest('#sidebar')&&!e.target.closest('.mobile-menu')){ sidebar.classList.remove('open'); e.preventDefault(); e.stopImmediatePropagation(); } },true);
 document.addEventListener('submit',formSubmit);
 document.addEventListener('input',e=>{const b=e.target.dataset.bind;if(!b)return;if(b==='asset-search')S.assetQuery=e.target.value;if(b==='library-search')S.libraryQuery=e.target.value;if(b==='icon-search')S.iconQuery=e.target.value;const cursor=e.target.selectionStart;renderC();const next=document.querySelector(`[data-bind="${b}"]`);if(next){next.focus();next.setSelectionRange(cursor,cursor);}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeC();if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$c('#globalSearch')?.focus();}});
