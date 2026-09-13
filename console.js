@@ -23,8 +23,8 @@ function setMetaC() {
   $c('#libraryCount').textContent=S.connected?S.libraries.length:'0'; $c('#assetCount').textContent=S.connected?S.assets.length:'0';
   const storageState=S.loading?'正在读取':(S.connected?'已连接':'未连接');
   const storageDot=$c('#storageDot');
-  storageDot.style.background=S.loading?'#ffb45f':(S.connected?'#4dd59d':'#a8b2c3');
-  storageDot.title=storageState;
+  storageDot.style.background=S.connected?'#35d48a':'#ff4d5f';
+  storageDot.title=S.connected?'已连接':'未连接';
   document.querySelectorAll('.nav-item[data-view]').forEach(n=>n.classList.toggle('active', n.dataset.view===(S.view==='library-detail'?'libraries':S.view)));
   const name=S.auth?.login||'GitHub 用户'; document.querySelectorAll('[data-account-name]').forEach(n=>n.textContent=name); document.querySelectorAll('[data-account-avatar]').forEach(n=>{ n.textContent=name.slice(0,1).toUpperCase(); });
 }
