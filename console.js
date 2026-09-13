@@ -203,12 +203,17 @@ function applyAppearance() {
   const mode=localStorage.getItem('gh-image-theme')||'system';
   const dark=mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);
   document.body.classList.toggle('dark',dark);
-  const button=$c('.appearance-button');
-  if(button){
-    button.innerHTML=mode==='system'?'<svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>':(mode==='dark'?'<svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15.3A8.5 8.5 0 0 1 8.7 3 8.5 8.5 0 1 0 21 15.3Z"/></svg>':'<svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>');
-    button.title=mode==='system'?'跟随系统（点击切换）':(mode==='dark'?'黑夜模式（点击切换）':'白天模式（点击切换）');
-    button.setAttribute('aria-label',button.title);
-  }
+  const labels={system:'跟随系统（点击切换）',dark:'黑夜模式（点击切换）',light:'白天模式（点击切换）'};
+  const icons={
+    system:'<svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18V3Z" fill="currentColor" stroke="none"/><path d="M12 3a9 9 0 0 1 0 18" fill="none"/></svg>',
+    dark:'<svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15.3A8.5 8.5 0 0 1 8.7 3 8.5 8.5 0 1 0 21 15.3Z"/></svg>',
+    light:'<svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>'
+  };
+  document.querySelectorAll('.appearance-button').forEach(button=>{
+    button.innerHTML=icons[mode];
+    button.title=labels[mode];
+    button.setAttribute('aria-label',labels[mode]);
+  });
 }
 function cycleAppearance() {
   const current=localStorage.getItem('gh-image-theme')||'system';

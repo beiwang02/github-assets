@@ -356,3 +356,26 @@ body:not(.dark) .user-chip b { color:#26344b; }
   .sidebar-close { position: absolute; top: -3px; right: 1px; width: 31px; height: 31px; display: grid; place-items: center; color: #b7c4d8; border: 1px solid rgba(187,204,230,.2); border-radius: 9px; background: rgba(255,255,255,.07); font-size: 22px; line-height: 1; }
   .sidebar-close:hover { color: #fff; background: rgba(255,255,255,.14); }
 }
+
+/* Light sidebar: preserve contrast for the active blue-violet navigation state. */
+body:not(.dark) .nav-item.active { color:#fff; background:linear-gradient(90deg,#4758d8 0%,#6655c8 100%); box-shadow:0 8px 18px rgba(67,82,200,.28); font-weight:700; }
+body:not(.dark) .nav-item.active .nav-icon, body:not(.dark) .nav-item.active .nav-count { color:#fff; opacity:1; font-weight:800; text-shadow:0 1px 1px rgba(18,25,88,.28); }
+body:not(.dark) .nav-count { color:#5c6b80; font-weight:600; }
+body:not(.dark) .sidebar-bottom { border-top:1px solid #dfe6f0; }
+body:not(.dark) .user-chip { color:#25354d; }
+
+/* Authentication follows the selected appearance and keeps its control outside the card. */
+.auth-theme-button { width:42px; height:42px; display:grid; place-items:center; color:#dce6ff; border:1px solid rgba(179,197,239,.38); border-radius:12px; background:rgba(13,25,48,.72); box-shadow:0 8px 24px rgba(0,0,0,.18); cursor:pointer; }
+.auth-theme-button:hover { color:#fff; border-color:#aab8ff; background:rgba(47,62,112,.84); }
+.auth-theme-button:focus-visible { outline:3px solid #8e9cff; outline-offset:3px; }
+body:not(.dark) .auth-screen, body:not(.dark) .auth-page { color:#1b2a43; background:radial-gradient(circle at 13% 12%,rgba(101,112,255,.17),transparent 29%),radial-gradient(circle at 88% 82%,rgba(38,171,169,.12),transparent 25%),#f4f7ff; }
+body:not(.dark) .auth-grid { opacity:.38; }
+body:not(.dark) .auth-card { background:rgba(255,255,255,.9); border-color:#d8e0f0; box-shadow:0 28px 70px rgba(52,70,118,.18); }
+body:not(.dark) .auth-brand strong, body:not(.dark) .auth-card h2 { color:#17243b; }
+body:not(.dark) .auth-brand small, body:not(.dark) .auth-note { color:#64738b; }
+body:not(.dark) .auth-card p, body:not(.dark) .first-use-guide { color:#42536d; }
+body:not(.dark) .first-use-guide { border-color:#d8e0ee; background:#f7f9fd; }
+body:not(.dark) .first-use-guide summary, body:not(.dark) .first-use-guide b { color:#4657ba; }
+body:not(.dark) .first-use-guide ol { color:#53647c; }
+body:not(.dark) .auth-theme-button { color:#273a59; border-color:#c7d2e6; background:rgba(255,255,255,.92); box-shadow:0 8px 24px rgba(52,70,118,.16); }
+body:not(.dark) .auth-theme-button:hover { color:#263ab7; border-color:#8797df; background:#fff; }
