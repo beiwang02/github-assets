@@ -335,6 +335,20 @@ body.dark .group-pill { background: var(--surface); border-color: var(--line); }
 body.dark .modal { background: #17243a; border-color: #32425d; }
 body.dark .modal-close, body.dark .drop-zone { background: #202e47; border-color: #3b4d69; color: #b7c2d3; }
 body.dark .security-note { background: #222c4b; color: #b8c0da; }
+body:not(.dark) .sidebar { color:#5d6a7f; background:linear-gradient(170deg,#ffffff 0%,#f4f7fc 100%); border-right:1px solid #e3e8f1; }
+body:not(.dark) .brand-copy strong { color:#162033; }
+body:not(.dark) .brand-copy span, body:not(.dark) .nav-label { color:#8793a6; }
+body:not(.dark) .repo-switcher { color:#34435b; border-color:#e2e7f0; background:#fff; }
+body:not(.dark) .repo-meta b { color:#1b273b; }
+body:not(.dark) .repo-meta small, body:not(.dark) .chevron { color:#8491a5; }
+body:not(.dark) .nav-item { color:#68758a; }
+body:not(.dark) .nav-item:hover { color:#34435b; background:#eef2f8; }
+body:not(.dark) .storage-card { border-color:#e1e7f0; background:#fff; }
+body:not(.dark) .storage-card strong { color:#26344b; }
+body:not(.dark) .storage-card small, body:not(.dark) .user-chip small { color:#8793a6; }
+body:not(.dark) .user-chip b { color:#26344b; }
+.auth-theme-button { position:absolute; top:25px; right:25px; z-index:2; }
+.auth-theme-button .theme-icon { width:19px; height:19px; }
 
 .sidebar-close { display: none; }
 @media (max-width: 980px) {
