@@ -35,7 +35,7 @@ cp .env.example .env
 ./install.sh
 ```
 
-默认容器端口为 8080。直接 IP 测试可以在 `.env` 中设置：
+容器内部服务端口固定为 `8080`；Docker Compose 默认将服务器外部端口 `8765` 映射到它，因此直接访问通常使用 `http://服务器IP:8765`。如需更换外部端口，修改 `GITHUB_IMAGE_HOST_PORT`：
 
 ```env
 HOST=0.0.0.0
@@ -47,19 +47,22 @@ PUBLIC_BASE_URL=http://your-server-ip:8765
 
 ## 管理员配置
 
-管理员登录名和访问名单由环境变量提供，网页后台可以修改允许策略；策略保存在独立 Docker volume，不保存用户业务内容。
+管理员配置全部是可选项。普通用户登录后可以选择自己的仓库或创建新仓库，不需要填写任何“旧仓库”。策略保存在独立 Docker volume，不保存用户业务内容。
 
 ```env
+# 只有需要限制访问或使用管理后台时才填写
 ADMIN_GITHUB_LOGIN=你的 GitHub 用户名
-ADMIN_RESTORE_REPO=你的旧图床仓库名
 ALLOWED_GITHUB_LOGINS=
+
+# 可选：管理员登录后自动恢复的旧图床仓库名；不使用就留空或删除这一行
+# ADMIN_RESTORE_REPO=你的旧图床仓库名
 ```
 
-- `ADMIN_GITHUB_LOGIN`：管理员 GitHub 用户名
-- `ADMIN_RESTORE_REPO`：管理员登录后直接恢复的旧仓库名称，可留空
-- `ALLOWED_GITHUB_LOGINS`：逗号分隔的允许名单；留空表示所有登录用户允许访问
+- `ADMIN_GITHUB_LOGIN`：可选，管理员 GitHub 用户名
+- `ADMIN_RESTORE_REPO`：可选，仅用于管理员登录后自动恢复指定旧仓库，不是项目必须项
+- `ALLOWED_GITHUB_LOGINS`：可选，逗号分隔的允许名单；留空表示所有已授权用户允许访问
 
-普通用户不使用管理员的旧仓库。没有自己的图床仓库时，可以在网站内创建公开仓库；已有同结构仓库时，网站只在结构匹配明确时恢复，否则由用户自己选择或创建。
+项目不会固定使用任何仓库名称，也不会要求普通用户使用管理员的旧仓库。网站会按仓库结构自动识别，无法确定时由用户选择或创建。
 
 ## 数据和安全
 
