@@ -29,6 +29,12 @@
 .account-panel > div:last-child { display:grid; gap:4px; }
 .account-panel b { color:var(--ink); font-size:11px; }
 .account-panel small { color:var(--muted); font-size:10px; }
+.account-login { display:block; margin-top:3px; color:#71829e; font-size:10px; font-weight:400; }
+.user-avatar img { width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block; }
+.account-modal-head { display:flex; align-items:center; gap:11px; }
+.account-modal-head img { width:38px; height:38px; object-fit:cover; border-radius:12px; }
+.account-modal-head h2 { margin:0; }
+.account-modal-head p { margin:4px 0 0; }
 .asset-detail-preview { min-height:220px; display:grid; place-items:center; overflow:hidden; border-radius:14px; background:linear-gradient(135deg,#f4f6ff,#eaf8f5); }
 .asset-detail-preview img { width:155px; height:155px; object-fit:contain; border-radius:27px; box-shadow:0 18px 35px rgba(34,54,100,.14); }
 .row-actions { display:flex; justify-content:flex-end; gap:5px; }

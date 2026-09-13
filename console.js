@@ -26,7 +26,7 @@ function setMetaC() {
   storageDot.style.background=S.connected?'#35d48a':'#ff4d5f';
   storageDot.title=S.connected?'已连接':'未连接';
   document.querySelectorAll('.nav-item[data-view]').forEach(n=>n.classList.toggle('active', n.dataset.view===(S.view==='library-detail'?'libraries':S.view)));
-  const name=S.auth?.login||'GitHub 用户'; document.querySelectorAll('[data-account-name]').forEach(n=>n.textContent=name); document.querySelectorAll('[data-account-avatar]').forEach(n=>{ n.textContent=name.slice(0,1).toUpperCase(); });
+  const login=S.auth?.login||''; const name=S.auth?.name||login||'GitHub 用户'; const avatar=S.auth?.avatar_url||''; document.querySelectorAll('[data-account-name]').forEach(n=>n.innerHTML=`${escC(name)}<small class="account-login">@${escC(login)}</small>`); document.querySelectorAll('[data-account-avatar]').forEach(n=>{ if(avatar)n.innerHTML=`<img src="${escC(avatar)}" alt="${escC(name)}">`; else n.textContent=(name||'G').slice(0,1).toUpperCase(); });
 }
 function loginView() {
   const problem=new URLSearchParams(location.search).get('auth_error');
@@ -219,8 +219,10 @@ function cycleAppearance() {
 function accountMenu() {
   $c('#sidebar').classList.remove('open');
   const login=S.auth?.login||'当前账号';
+  const displayName=S.auth?.name||login;
+  const avatar=S.auth?.avatar_url||'';
   const repoLabel=S.repo.owner&&S.repo.repo?`${S.repo.owner}/${S.repo.repo}`:'尚未连接仓库';
-  openC(`<div class="modal-head"><div><h2>${escC(login)}</h2><p>GitHub 账号</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body choice-menu"><button class="btn" data-action="open-repo">打开当前仓库 <span>↗</span></button><div class="account-repo-path">${escC(repoLabel)}</div>${S.tokenLoginEnabled?'<button class="btn" data-action="forget-token">清除此设备记住的 Token</button>':''}<button class="btn btn-danger" data-action="logout">退出并返回登录页</button></div>`);
+  openC(`<div class="modal-head"><div class="account-modal-head">${avatar?`<img src="${escC(avatar)}" alt="">`:''}<div><h2>${escC(displayName)}</h2><p>@${escC(login)} · GitHub 账号</p></div></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body choice-menu"><button class="btn" data-action="open-repo">打开当前仓库 <span>↗</span></button><div class="account-repo-path">${escC(repoLabel)}</div>${S.tokenLoginEnabled?'<button class="btn" data-action="forget-token">清除此设备记住的 Token</button>':''}<button class="btn btn-danger" data-action="logout">退出并返回登录页</button></div>`);
 }
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyAppearance);
 applyAppearance();

@@ -2,8 +2,6 @@
 
 一个基于 GitHub 仓库管理图片、分组和 JSON 图标库的轻量控制台。图片与 JSON 始终存放在用户自己的 GitHub 仓库；服务端不保存业务资源。
 
-源码仓库：[beiwang02/github-assets](https://github.com/beiwang02/github-assets)
-
 ## 功能
 
 - GitHub 经典 Token 登录，可选“记住此设备”
