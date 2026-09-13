@@ -148,3 +148,11 @@ body:not(.dark) .auth-screen { background:#f7f9ff; }
 .repo-meta b{overflow:visible;white-space:normal;display:flex;align-items:center}
 .repo-status-dot{width:9px;height:9px;min-width:9px;flex:0 0 9px;overflow:visible}
 .top-actions .appearance-button,.top-actions .github-repo-link{border-radius:10px}
+
+.token-guide-button { display:block; width:100%; padding:13px 14px; margin-top:18px; color:#4f5bd7; border:1px solid #dce1f1; border-radius:10px; background:#f7f8fd; text-align:left; font-size:11px; font-weight:700; cursor:pointer; }
+.token-guide-button:hover { border-color:#aeb7fa; background:#f0f2ff; }
+.token-guide-body { color:var(--ink); font-size:12px; line-height:1.8; }
+.token-guide-body ol { margin:0; padding-left:20px; }
+body.dark .token-guide-button { color:#c4caff; border-color:#34445f; background:#202e47; }
+body.dark .token-guide-button:hover { background:#293a59; }
+body.dark .token-guide-body { color:#e8edf7; }
