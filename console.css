@@ -7,6 +7,8 @@
 .auth-grid { position:absolute; inset:0; opacity:.28; background-image:linear-gradient(rgba(164,184,215,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(164,184,215,.1) 1px,transparent 1px); background-size:82px 82px; mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 78%,transparent); }
 .auth-card { position:relative; width:min(490px,100%); padding:31px 32px 29px; border:1px solid rgba(156,175,224,.27); border-radius:22px; background:rgba(10,19,35,.76); box-shadow:0 28px 90px rgba(0,0,0,.34); backdrop-filter:blur(12px); }
 .auth-brand { display:flex; align-items:center; gap:11px; margin-bottom:41px; }
+.auth-brand .auth-theme-button { position:static; margin-left:auto; flex:0 0 auto; }
+.auth-brand .brand-mark { width:42px; height:42px; border-radius:13px; font-size:22px; }
 .auth-brand strong { display:block; color:#fff; font-size:14px; letter-spacing:.14em; }
 .auth-brand small { display:block; margin-top:5px; color:#7f90aa; font-size:9px; letter-spacing:.18em; }
 .auth-kicker { display:inline-flex; padding:10px 13px; margin-bottom:18px; color:#9ca8ff; border:1px solid #4e5ca7; border-radius:11px; font-size:10px; font-weight:800; letter-spacing:.15em; }
