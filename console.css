@@ -215,3 +215,7 @@ body.dark .asset-detail-preview img { background:transparent; }
   .library-detail-actions { gap:5px; padding-top:9px; margin-top:9px; }
   .library-detail-actions .icon-btn { width:28px; height:28px; }
 }
+
+/* Prevent iOS native pressed highlight on controls */
+button,.btn,.icon-btn,.text-link,.nav-item,.asset-select,.asset-copy,.quick-copy { -webkit-appearance:none; appearance:none; -webkit-tap-highlight-color:rgba(0,0,0,0); touch-action:manipulation; }
+button:active,.btn:active,.icon-btn:active,.text-link:active,.nav-item:active,.asset-select:active,.asset-copy:active,.quick-copy:active { background-color:inherit; filter:none; transform:none; }
