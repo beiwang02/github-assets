@@ -21,7 +21,7 @@ cd "$APP_DIR"
 if [[ ! -f .env ]]; then
   cp .env.example .env
   sed -i "s/^GITHUB_IMAGE_HOST_PORT=.*/GITHUB_IMAGE_HOST_PORT=$PORT/" .env
-  echo "已创建 $APP_DIR/.env，请先填写配置再执行 docker compose up -d --build。"
+  echo "已创建 $APP_DIR/.env，使用默认 8765 端口启动服务。需要限制访问时可稍后编辑该文件。"
 else
   echo "$APP_DIR/.env 已存在，不覆盖。"
 fi

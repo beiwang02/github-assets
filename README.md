@@ -19,7 +19,23 @@
 - 深色、浅色、跟随系统三种外观
 - 响应式移动端界面
 
-## 管理员配置
+## 部署
+
+项目提供 Docker Compose 编排和一键安装脚本。服务器上进入项目目录后执行：
+
+```bash
+chmod +x install.sh
+sudo ./install.sh
+```
+
+脚本会安装 Docker（如尚未安装）、将项目部署到 `/opt/stacks/github-assets`，并启动图床服务。默认访问地址：
+
+```text
+http://服务器IP:8765
+```
+
+服务内外统一使用 `8765` 端口。需要自定义域名、访问限制或其他高级配置时，查看 [`deploy/README.md`](deploy/README.md)。
+
 
 管理员配置全部是可选项。普通用户登录后可以选择自己的仓库或创建新仓库，不需要填写任何“旧仓库”。策略保存在独立 Docker volume，不保存用户业务内容。
 
