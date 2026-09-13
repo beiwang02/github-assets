@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c1729" />
+  <title>GitHub 图床 · 资源控制台</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="console.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark"><span>✦</span></div>
+        <div class="brand-copy"><strong>GITHUB</strong><span>图床控制台</span></div>
+        <button class="sidebar-close" data-action="toggle-sidebar" aria-label="收起侧栏">×</button>
+      </div>
+
+        <button class="repo-switcher" data-action="repo-menu">
+        <span class="repo-avatar">B</span>
+        <span class="repo-meta"><b id="repoName">未选择仓库</b><small id="repoOwner">登录后自动识别</small></span>
+        <span class="chevron">⌄</span>
+      </button>
+
+      <nav class="main-nav">
+        <div class="nav-label">工作台</div>
+        <button class="nav-item active" data-view="overview"><span class="nav-icon">⌂</span><span>总览</span></button>
+        <button class="nav-item" data-view="libraries"><span class="nav-icon">▦</span><span>JSON 库</span><em class="nav-count" id="libraryCount">2</em></button>
+        <button class="nav-item" data-view="assets"><span class="nav-icon">▧</span><span>图片资源</span><em class="nav-count" id="assetCount">126</em></button>
+        <div class="nav-label nav-label-gap">管理</div>
+        <button class="nav-item" data-view="activity"><span class="nav-icon">◷</span><span>同步记录</span></button>
+        <button class="nav-item" data-view="settings"><span class="nav-icon">▣</span><span>仓库设置</span></button>
+        <button class="nav-item" data-view="admin"><span class="nav-icon">♙</span><span>管理后台</span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="storage-card">
+          <div class="storage-top"><span>仓库状态</span><span class="status-dot" id="storageDot"></span></div>
+          <strong id="storageStatus">等待连接</strong>
+          <div class="storage-progress"><span id="storageProgress" style="width: 8%"></span></div>
+          <small id="storageBranch">请在仓库设置中连接 GitHub</small>
+        </div>
+        <div class="user-chip"><div class="user-avatar" data-account-avatar>B</div><div><b data-account-name>GitHub 用户</b><small>GitHub 账户</small></div><button type="button" class="more" data-action="account-menu" aria-label="账号菜单">•••</button></div>
+      </div>
+    </aside>
+
+    <div class="main-shell">
+      <header class="topbar">
+        <button class="mobile-menu" data-action="toggle-sidebar">☰</button>
+        <div class="top-title"><span class="eyebrow" id="pageEyebrow">资源工作台</span><h1 id="pageTitle">总览</h1></div>
+        <div class="top-actions">
+          <label class="global-search"><span>⌕</span><input id="globalSearch" placeholder="搜索图标、图片或文件…" autocomplete="off" /><kbd>⌘ K</kbd></label>
+          <button class="top-icon appearance-button" data-action="toggle-theme" title="跟随系统（点击切换）" aria-label="跟随系统（点击切换）">◐</button>
+          <button class="top-icon github-repo-link" data-action="open-project" title="打开项目源码仓库" aria-label="打开项目源码仓库">●</button>
+        </div>
+      </header>
+      <main id="app" class="content"></main>
+    </div>
+  </div>
+
+  <div id="modalRoot"></div>
+  <div id="toastRoot" class="toast-root"></div>
+  <script src="github.js?v=oauth-4"></script>
+  <script src="console.js?v=oauth-4"></script>
+</body>
+</html>

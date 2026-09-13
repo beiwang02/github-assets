@@ -1,0 +1,106 @@
+/* OAuth login and real-data controls */
+.auth-screen { background: #0d1729; }
+.auth-screen .sidebar, .auth-screen .topbar { display:none; }
+.auth-screen .main-shell { width:100%; margin-left:0; }
+.auth-screen .content { max-width:none; min-height:100vh; padding:0; }
+.auth-page { min-height:100vh; position:relative; display:grid; place-items:center; overflow:hidden; padding:30px 18px; color:#f6f3e7; background:radial-gradient(circle at 13% 12%,rgba(115,128,255,.18),transparent 29%),radial-gradient(circle at 88% 82%,rgba(51,199,197,.11),transparent 25%),#0d1729; }
+.auth-grid { position:absolute; inset:0; opacity:.28; background-image:linear-gradient(rgba(164,184,215,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(164,184,215,.1) 1px,transparent 1px); background-size:82px 82px; mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 78%,transparent); }
+.auth-card { position:relative; width:min(490px,100%); padding:31px 32px 29px; border:1px solid rgba(156,175,224,.27); border-radius:22px; background:rgba(10,19,35,.76); box-shadow:0 28px 90px rgba(0,0,0,.34); backdrop-filter:blur(12px); }
+.auth-brand { display:flex; align-items:center; gap:11px; margin-bottom:41px; }
+.auth-brand strong { display:block; color:#fff; font-size:14px; letter-spacing:.14em; }
+.auth-brand small { display:block; margin-top:5px; color:#7f90aa; font-size:9px; letter-spacing:.18em; }
+.auth-kicker { display:inline-flex; padding:10px 13px; margin-bottom:18px; color:#9ca8ff; border:1px solid #4e5ca7; border-radius:11px; font-size:10px; font-weight:800; letter-spacing:.15em; }
+.auth-card h2 { margin:0 0 14px; color:#fff; font-size:30px; letter-spacing:-.04em; }
+.auth-card p { margin:0 0 27px; color:#b4bfd3; font-size:13px; line-height:1.8; }
+.auth-card .btn-github { width:100%; height:49px; color:#182334; border:0; border-bottom:4px solid #404fd5; border-radius:12px; background:linear-gradient(135deg,#9deaff,#7885ff); box-shadow:0 13px 27px rgba(93,107,235,.2); text-decoration:none; font-size:13px; }
+.auth-card .btn-github:hover { color:#182334; background:linear-gradient(135deg,#b4efff,#8f9aff); }
+.auth-card .btn-github.disabled-link { opacity:.5; pointer-events:auto; }
+.github-logo { width:22px; height:22px; display:grid; place-items:center; color:#182334; border:2px solid currentColor; border-radius:50%; font-size:9px; }
+.auth-note { display:block; margin-top:17px; color:#74839d; font-size:10px; line-height:1.7; }
+.tile-actions { display:flex; gap:7px; padding-top:11px; margin-top:13px; border-top:1px solid #f0f2f6; }
+.asset-card { position:relative; }
+.asset-card.selected { outline:2px solid rgba(89,101,242,.35); }
+.asset-select { position:absolute; top:8px; right:8px; width:24px; height:24px; display:grid; place-items:center; color:#8794a9; border:1px solid rgba(255,255,255,.82); border-radius:7px; background:rgba(255,255,255,.82); box-shadow:0 3px 9px rgba(30,47,83,.08); font-size:13px; font-weight:800; }
+.asset-card.selected .asset-select { color:#fff; border-color:var(--primary); background:var(--primary); }
+.asset-copy { display:block; width:100%; padding:7px 0 0; color:var(--primary); background:transparent; text-align:left; font-size:9px; }
+.select-counter { color:var(--primary); font-size:10px; font-weight:700; }
+.connection-badge { display:flex; align-items:center; gap:7px; color:#49a77b; font-size:10px; font-weight:700; }
+.account-panel { display:flex; align-items:center; gap:10px; padding:13px; margin:4px 0 16px; border-radius:11px; background:#f4f6fb; }
+.account-panel > div:last-child { display:grid; gap:4px; }
+.account-panel b { color:var(--ink); font-size:11px; }
+.account-panel small { color:var(--muted); font-size:10px; }
+.asset-detail-preview { min-height:220px; display:grid; place-items:center; overflow:hidden; border-radius:14px; background:linear-gradient(135deg,#f4f6ff,#eaf8f5); }
+.asset-detail-preview img { width:155px; height:155px; object-fit:contain; border-radius:27px; box-shadow:0 18px 35px rgba(34,54,100,.14); }
+.row-actions { display:flex; justify-content:flex-end; gap:5px; }
+.row-actions .icon-btn { width:27px; height:27px; font-size:13px; }
+body.dark .tile-actions { border-color:var(--line); }
+body.dark .account-panel { background:#202e47; }
+body.dark .account-panel b { color:var(--ink); }
+@media (max-width:700px) {
+  .auth-card { padding:25px 21px; }
+  .auth-brand { margin-bottom:30px; }
+  .auth-card h2 { font-size:25px; }
+  .row-actions .icon-btn { width:25px; height:25px; }
+}
+
+.auth-card .btn-github.preview-login { opacity: 1; cursor: pointer; }
+.auth-card .btn-github.preview-login:active { transform: translateY(1px); }
+
+.repo-quick-list { display:flex; flex-wrap:wrap; gap:7px; margin:0 0 12px; }
+.repo-quick { max-width:100%; overflow:hidden; padding:8px 10px; color:#7c89a0; border:1px solid var(--line); border-radius:8px; background:#fbfcfe; font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
+.repo-quick:hover, .repo-quick.active { color:var(--primary); border-color:#bfc6fd; background:#f3f4ff; }
+body.dark .repo-quick { background:#202e47; border-color:var(--line); color:#b7c2d3; }
+
+.token-login-link { display:block; margin:15px auto 0; padding:6px 10px; color:#8f9db4; background:transparent; font-size:10px; text-decoration:underline; cursor:pointer; }
+.token-login-link:hover { color:#b6c0ff; }
+
+.admin-code { padding:14px; overflow:auto; color:#cbd6ea; border-radius:10px; background:#111d31; font:11px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace; white-space:pre-wrap; }
+
+.policy-toggle { display:flex; align-items:center; gap:9px; color:var(--ink); font-size:12px; font-weight:700; }
+.policy-toggle input { width:17px; height:17px; accent-color:var(--primary); }
+
+.remember-token { display:flex; align-items:center; gap:8px; margin-top:12px; color:#7f8da4; font-size:10px; cursor:pointer; }
+.remember-token input { width:16px; height:16px; accent-color:var(--primary); }
+
+.token-input-wrap { position:relative; display:flex; align-items:center; }
+.token-input-wrap input { width:100%; padding-right:45px; }
+.token-eye { position:absolute; right:9px; width:30px; height:30px; color:#8b98aa; border-radius:8px; background:transparent; font-size:16px; cursor:pointer; }
+.token-eye:hover { color:var(--primary); background:#f0f2fa; }
+
+.overview-assets-section { margin-top: 25px; }
+.quick-assets-grid { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:14px; padding:16px; }
+.quick-asset { min-width:0; cursor:pointer; }
+.quick-asset-image { position:relative; height:108px; display:grid; place-items:center; overflow:hidden; border-radius:11px; background:#f2f5fb; }
+.quick-asset-image img { width:68px; height:68px; object-fit:contain; border-radius:14px; }
+.quick-asset b,.quick-asset small { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.quick-asset b { margin-top:9px; font-size:10px; }
+.quick-asset small { margin-top:4px; color:var(--muted); font-size:9px; }
+.quick-copy { position:absolute; right:6px; top:6px; width:25px; height:25px; color:var(--primary); border-radius:7px; background:rgba(255,255,255,.9); font-size:12px; }
+.quick-empty { padding:0; }
+@media(max-width:700px){.quick-assets-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.quick-asset-image{height:90px}.quick-asset-image img{width:54px;height:54px}}
+
+.modal-back-link { display:inline-block; margin-bottom:4px; font-size:10px; }
+.quick-asset-image { cursor:pointer; }
+.quick-copy { z-index:2; }
+
+.top-actions .appearance-button, .top-actions .github-repo-link { display:inline-grid!important; place-items:center; width:40px; height:36px; border:1px solid var(--line); border-radius:18px; background:var(--surface); color:var(--ink); font-size:20px; }
+.top-actions .github-repo-link { font-size:17px; }
+.choice-menu { display:grid; gap:12px; }.choice-menu .btn { min-height:44px; justify-content:space-between; }
+.page-back { margin-bottom:16px; }.user-chip button.more { background:transparent; color:#9aa9c0; min-width:40px; min-height:40px; cursor:pointer; }
+body.dark .quick-asset-image {background:#24334b}body.dark .quick-copy{background:#31425e;color:#cbd3ff}body.dark .modal-field input,body.dark .modal-field select{background:#202e47;color:#edf1fb;border-color:#3b4d69}
+
+.top-avatar { border:0; cursor:pointer; }
+.top-avatar:hover { transform:translateY(-1px); filter:brightness(1.06); }
+
+.account-repo-path { padding:10px 12px; color:var(--muted); border:1px solid var(--line); border-radius:9px; background:var(--canvas); font:11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+.appearance-button { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-weight:500; line-height:1; }
+
+.project-link { display:flex; align-items:center; justify-content:center; gap:8px; margin:14px 0 2px; padding:9px; color:#8d9bb1; border:1px solid rgba(141,155,177,.3); border-radius:9px; font-size:10px; text-decoration:none; }
+.project-link:hover { color:#b7c2ff; border-color:#7885ff; background:rgba(120,133,255,.08); }
+.project-link span { font-size:17px; line-height:1; }
+
+.theme-sun-icon { width:14px; height:14px; display:block; position:relative; border:2px solid currentColor; border-radius:50%; }
+.theme-sun-icon::before, .theme-sun-icon::after { content:""; position:absolute; inset:-5px; background:conic-gradient(from 0deg, currentColor 0 8deg, transparent 8deg 37deg, currentColor 37deg 45deg, transparent 45deg 82deg, currentColor 82deg 90deg, transparent 90deg 127deg, currentColor 127deg 135deg, transparent 135deg 172deg, currentColor 172deg 180deg, transparent 180deg 217deg, currentColor 217deg 225deg, transparent 225deg 262deg, currentColor 262deg 270deg, transparent 270deg 307deg, currentColor 307deg 315deg, transparent 315deg 352deg, currentColor 352deg 360deg); mask:radial-gradient(circle,transparent 0 57%,#000 59% 67%,transparent 69%); }
+.theme-sun-icon::after { transform:rotate(22.5deg); }
+.theme-moon-icon, .theme-system-icon { color:currentColor; font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; font-size:21px; line-height:1; }

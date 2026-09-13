@@ -1,0 +1,25 @@
+services:
+  github-assets:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: github-assets
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: 8080
+    ports:
+      # Set GITHUB_IMAGE_HOST_BIND=0.0.0.0 for temporary direct-IP testing.
+      # Keep 127.0.0.1 when using Caddy/Nginx as the public entrypoint.
+      - "${GITHUB_IMAGE_HOST_BIND:-127.0.0.1}:${GITHUB_IMAGE_HOST_PORT:-8765}:8080"
+    volumes:
+      - access-policy:/app/data
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  access-policy:
+    name: github-image-host-access-policy
