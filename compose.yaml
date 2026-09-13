@@ -9,11 +9,9 @@ services:
       - .env
     environment:
       HOST: 0.0.0.0
-      PORT: 8080
+      PORT: 8765
     ports:
-      # Set GITHUB_IMAGE_HOST_BIND=0.0.0.0 for temporary direct-IP testing.
-      # Keep 127.0.0.1 when using Caddy/Nginx as the public entrypoint.
-      - "${GITHUB_IMAGE_HOST_BIND:-127.0.0.1}:${GITHUB_IMAGE_HOST_PORT:-8765}:8080"
+      - "${GITHUB_IMAGE_HOST_BIND:-0.0.0.0}:${GITHUB_IMAGE_HOST_PORT:-8765}:8765"
     volumes:
       - access-policy:/app/data
     read_only: true

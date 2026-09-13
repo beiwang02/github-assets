@@ -19,14 +19,6 @@
 - 深色、浅色、跟随系统三种外观
 - 响应式移动端界面
 
-## 本地运行
-
-```bash
-node server.mjs
-```
-
-打开 `http://127.0.0.1:8080`。Node 18+ 可用，不需要 npm 依赖。
-
 ## Docker Compose
 
 ```bash
@@ -35,7 +27,7 @@ cp .env.example .env
 ./install.sh
 ```
 
-容器内部服务端口固定为 `8080`；Docker Compose 默认将服务器外部端口 `8765` 映射到它，因此直接访问通常使用 `http://服务器IP:8765`。如需更换外部端口，修改 `GITHUB_IMAGE_HOST_PORT`：
+服务内外统一使用 `8765` 端口，直接访问 `http://服务器IP:8765`。如需更换端口，同时修改 `PORT` 和 `GITHUB_IMAGE_HOST_PORT`：
 
 ```env
 HOST=0.0.0.0

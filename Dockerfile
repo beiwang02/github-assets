@@ -7,7 +7,7 @@ COPY index.html styles.css console.css console.js github.js server.mjs ./
 
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
-ENV PORT=8080
+ENV PORT=8765
 
 USER node
 EXPOSE 8080

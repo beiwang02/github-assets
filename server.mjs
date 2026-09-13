@@ -2,7 +2,7 @@ import http from 'node:http';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 
-const PORT = Number(process.env.PORT || 8080);
+const PORT = Number(process.env.PORT || 8765);
 const HOST = process.env.HOST || '127.0.0.1';
 const BASE = new URL(process.env.PUBLIC_BASE_URL || `http://127.0.0.1:${PORT}`);
 const DELETE_REPO = process.env.ENABLE_REPO_DELETE === 'true';
