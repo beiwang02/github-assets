@@ -387,3 +387,7 @@ body.auth-page, body:has(.auth-page) { min-height:100vh; min-height:100dvh; }
 body:not(.dark) .auth-theme-button:hover { color:#263ab7; border-color:#8797df; background:#fff; }
 
 @media (max-width:700px){.dashboard-columns{margin-top:28px}.dashboard-columns>section+section{margin-top:26px}}
+
+/* Keep the translucent topbar and extend its background through the safe area. */
+.topbar::before { content:""; position:absolute; left:0; right:0; bottom:100%; height:env(safe-area-inset-top); background:inherit; border-bottom:inherit; pointer-events:none; }
+body.dark .topbar::before { background:rgba(13,23,41,.84); border-bottom-color:#1c2a40; }
