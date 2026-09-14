@@ -148,7 +148,7 @@ class GitHubClient {
     if (!['png','jpg','jpeg','webp','gif','svg'].includes(ext)) throw new Error('暂不支持这个图片格式。');
     const cleanGroup = GitHubClient.group(group), cleanName = GitHubClient.name(name);
     const path = `${this.config.assetsPath}/${cleanGroup}/${GitHubClient.filename(cleanName, ext)}`;
-    const buffer = await file.arrayBuffer(); if (buffer.byteLength > 10 * 1024 * 1024) throw new Error('图片不能超过 10 MB。');
+    const buffer = await file.arrayBuffer();
     const content = GitHubClient.encode(buffer), url = this.raw(path);
     await this.atomic(`上传图片：${cleanName}`, async snap => {
       if (snap.entries.some(e => e.path === path)) throw new Error(`同名图片已存在：${path.split('/').at(-1)}`);
