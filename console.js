@@ -9,8 +9,8 @@ const $c = s => document.querySelector(s);
 const escC = v => String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const rawLibrary = lib => `https://raw.githubusercontent.com/${encodeURIComponent(S.repo.owner)}/${encodeURIComponent(S.repo.repo)}/${encodeURIComponent(S.repo.branch)}/${lib.file.split('/').map(encodeURIComponent).join('/')}`;
 const currentClient = () => new window.GitHubClient(S.repo, S.csrf);
-function notify(message, type='success', duration=3600) { const n=document.createElement('div'); n.className=`toast ${type}`; n.textContent=message; $c('#toastRoot').appendChild(n); setTimeout(()=>n.remove(),duration); }
-async function copyC(text, message='直链已复制', button=null) { try { await navigator.clipboard.writeText(text); } catch { const a=document.createElement('textarea'); a.value=text; document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove(); } if(button){ button.classList.add('copied'); setTimeout(()=>button.classList.remove('copied'),900); } notify(message,'success',1200); }
+function notify(message, type='success') { const n=document.createElement('div'); n.className=`toast ${type}`; n.textContent=message; $c('#toastRoot').appendChild(n); setTimeout(()=>n.remove(),3600); }
+async function copyC(text, message='直链已复制') { try { await navigator.clipboard.writeText(text); } catch { const a=document.createElement('textarea'); a.value=text; document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove(); } notify(message); }
 function statC(icon,label,value,trend,foot) { return `<div class="stat-card"><div class="stat-card-top"><span>${label}</span><i class="stat-icon">${icon}</i></div><strong>${value}<span class="trend">${trend}</span></strong><div class="stat-foot">${foot}</div></div>`; }
 function emptyC(icon,title,desc,action='',label='') { return `<div class="empty-state"><div class="empty-icon">${icon}</div><h3>${title}</h3><p>${desc}</p>${action?`<button class="btn btn-primary" data-action="${action}">${label}</button>`:''}</div>`; }
 function setMetaC() {
@@ -231,7 +231,7 @@ document.addEventListener('click', async e => {
   if(action==='asset-select'){e.preventDefault();e.stopImmediatePropagation();const id=target.dataset.id;S.selected.has(id)?S.selected.delete(id):S.selected.add(id);syncAssetSelectionUI([id]);target.blur();return;}
   if(action==='asset-open'){const item=S.assets.find(x=>x.id===target.dataset.id);if(item)assetModal(item);return;}
   if(action==='icon-open'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary),index=Number(target.dataset.index),icon=lib?.icons?.[index];if(icon)iconModal({...icon,index});return;}
-  if(action==='copy'){e.stopPropagation();await copyC(target.dataset.copy||'', '直链已复制', target);return;}
+  if(action==='copy'){e.stopPropagation();await copyC(target.dataset.copy||'');return;}
   if(action==='library-detail'){S.selectedLibrary=target.dataset.id;S.iconQuery='';S.view='libraries';renderC();return;}
   if(action==='edit-library'){e.stopPropagation();S.selectedLibrary=target.dataset.id||S.selectedLibrary;libraryModal(true);return;}
   if(action==='edit-icon'){editIconModal(Number(target.dataset.index));return;}

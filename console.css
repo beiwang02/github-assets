@@ -336,3 +336,19 @@ body.dark .reference-select { border-color:#536681; background:#202e47; }
   body.dark .btn.btn-danger, body.dark .section-actions .btn.btn-danger { color:#ff9cac !important; border-color:#70434d !important; background:#30212b !important; }
 }
 body.dark .copied { color:#cbd3ff !important; border-color:#7180e8 !important; background:#303d68 !important; }
+
+/* Final compact controls: no visual copy state, one-row actions. */
+.copied { color:inherit !important; border-color:inherit !important; background:inherit !important; }
+.json-workspace-actions { display:flex !important; flex-direction:row !important; flex-wrap:nowrap !important; align-items:center; justify-content:flex-end; }
+.json-workspace-actions .btn { flex:0 1 auto !important; white-space:nowrap; }
+.json-reference-actions { display:flex !important; flex-direction:row !important; flex-wrap:nowrap !important; align-items:center; }
+.section-actions { display:flex !important; flex-direction:row !important; flex-wrap:nowrap !important; align-items:center; gap:6px; }
+.section-actions .btn { white-space:nowrap; }
+@media(max-width:700px){
+ .json-workspace-actions { gap:6px !important; }
+ .json-workspace-actions .btn { padding-left:8px !important; padding-right:8px !important; }
+ .json-reference-row { gap:6px !important; padding-left:7px !important; padding-right:7px !important; }
+ .json-reference-actions .icon-btn { width:27px !important; height:27px !important; }
+ .section-actions { gap:4px !important; }
+ .section-actions .select-counter { font-size:9px; white-space:nowrap; }
+}
