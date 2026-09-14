@@ -423,3 +423,10 @@ body.dark .cover-thumb { background:#24334b; border-color:rgba(64,81,110,.8); }
 .cover-thumb img { display:block; }
 .list-info { min-width:0; overflow:hidden; }
 .list-meta { flex:0 0 auto; }
+
+/* Stable stacked covers for mixed image shapes. */
+.cover-stack { height:34px; align-items:center; }
+.cover-thumb { z-index:1; overflow:hidden; background:#f4f6ff; box-shadow:0 0 0 1px rgba(220,225,239,.8); }
+.cover-thumb:nth-child(2){z-index:2}.cover-thumb:nth-child(3){z-index:3}.cover-thumb:nth-child(4){z-index:4}
+.cover-thumb img { object-fit:contain!important; }
+body.dark .cover-thumb { background:#24334b; box-shadow:0 0 0 1px rgba(78,96,128,.8); }
