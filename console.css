@@ -320,3 +320,19 @@ body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#5
 .json-reference-row.selected { background:rgba(89,101,242,.07); }
 .json-reference-row.selected .reference-select { border-color:var(--primary); background:var(--primary); }
 body.dark .reference-select { border-color:#536681; background:#202e47; }
+
+/* Short-lived copy feedback and compact mobile actions. */
+.copied { color:var(--primary) !important; border-color:#8d98ff !important; background:#eef0ff !important; }
+.btn.btn-danger { color:#d84f67 !important; border-color:#f0b5c0 !important; background:#fff7f8 !important; }
+.section-actions .btn.btn-danger { color:#d84f67 !important; border-color:#f0b5c0 !important; background:#fff7f8 !important; }
+.json-reference-actions { display:flex !important; flex:0 0 auto; align-items:center; flex-wrap:nowrap !important; white-space:nowrap; }
+.json-reference-actions .icon-btn { flex:0 0 29px; }
+@media(max-width:700px) {
+  .json-reference-actions { gap:4px !important; }
+  .json-reference-actions .icon-btn { width:29px !important; height:29px !important; }
+  .section-actions { flex-wrap:nowrap; gap:6px; }
+  .section-actions .btn { white-space:nowrap; }
+  .section-actions .btn.btn-danger { color:#d84f67 !important; border-color:#f0b5c0 !important; background:#fff7f8 !important; }
+  body.dark .btn.btn-danger, body.dark .section-actions .btn.btn-danger { color:#ff9cac !important; border-color:#70434d !important; background:#30212b !important; }
+}
+body.dark .copied { color:#cbd3ff !important; border-color:#7180e8 !important; background:#303d68 !important; }
