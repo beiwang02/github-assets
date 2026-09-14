@@ -301,3 +301,9 @@ body.dark .auth-head-actions > .auth-theme-button,
 body.dark .auth-head-actions > .project-link { color:#edf1fb; border:1px solid #28364d; background:#17243a; box-shadow:none; }
 body.dark .auth-head-actions > .auth-theme-button:hover,
 body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#586bd8; background:#263857; }
+
+/* Login theme control follows workspace behavior: no sticky touch hover. */
+.auth-head-actions > .auth-theme-button:hover,
+.auth-head-actions > .auth-theme-button:focus,
+.auth-head-actions > .auth-theme-button:active { color:inherit; border-color:inherit; background:inherit; box-shadow:inherit; outline:0; }
+.auth-head-actions > .auth-theme-button:focus-visible { outline:2px solid #8e9cff; outline-offset:2px; }
