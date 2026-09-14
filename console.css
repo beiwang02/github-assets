@@ -397,3 +397,11 @@ body.dark .json-reference-actions [data-action="delete-icon"] { color:#ff9cac!im
 .quick-copy[data-action="copy"]:hover,.quick-copy[data-action="copy"]:focus,.quick-copy[data-action="copy"]:focus-visible,.quick-copy[data-action="copy"]:active { color:var(--primary)!important; border-color:var(--line)!important; background:var(--surface)!important; box-shadow:none!important; transform:none!important; }
 body.dark .btn[data-action="copy"]:hover,body.dark .btn[data-action="copy"]:focus,body.dark .btn[data-action="copy"]:active,body.dark .icon-btn[data-action="copy"]:hover,body.dark .icon-btn[data-action="copy"]:focus,body.dark .icon-btn[data-action="copy"]:active { color:var(--ink)!important; border-color:var(--line)!important; background:var(--surface)!important; }
 body.dark .quick-copy[data-action="copy"]:hover,body.dark .quick-copy[data-action="copy"]:focus,body.dark .quick-copy[data-action="copy"]:active { color:#cbd3ff!important; border-color:var(--line)!important; background:#31425e!important; }
+
+/* Keep preview backplates, but never round the image itself. */
+.quick-asset-image img,.asset-preview img,.json-reference-row>img,.cover-stack img,.table-icon img,.asset-detail-preview img,.json-icon-detail-preview img { border-radius:0!important; }
+.quick-asset-image img,.asset-preview img,.json-reference-row>img,.table-icon img,.asset-detail-preview img,.json-icon-detail-preview img { object-fit:contain!important; }
+/* JSON-row copy controls use the same pale-purple appearance as outer copy controls. */
+.json-reference-actions [data-action="copy"] { color:#6671dc!important; border-color:#cfd3ff!important; background:#f6f5ff!important; }
+.json-reference-actions [data-action="copy"]:hover,.json-reference-actions [data-action="copy"]:focus,.json-reference-actions [data-action="copy"]:focus-visible,.json-reference-actions [data-action="copy"]:active { color:#6671dc!important; border-color:#cfd3ff!important; background:#f6f5ff!important; box-shadow:none!important; transform:none!important; }
+body.dark .json-reference-actions [data-action="copy"],body.dark .json-reference-actions [data-action="copy"]:hover,body.dark .json-reference-actions [data-action="copy"]:focus,body.dark .json-reference-actions [data-action="copy"]:active { color:#cbd3ff!important; border-color:#5867a7!important; background:#303d68!important; }
