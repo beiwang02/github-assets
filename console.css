@@ -370,3 +370,10 @@ body.dark .copied { color:#cbd3ff !important; border-color:#7180e8 !important; b
  .modal-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}
  .modal-actions .btn{min-width:0;width:100%;white-space:nowrap;word-break:keep-all;overflow-wrap:normal}
 }
+
+/* Full, readable URLs and paths in both detail dialogs. */
+.readonly-full { display:block; width:100%; min-height:52px; box-sizing:border-box; padding:11px 12px; color:var(--ink); border:1px solid var(--line); border-radius:9px; background:var(--canvas); font:inherit; font-size:11px; line-height:1.55; resize:none; overflow-wrap:anywhere; word-break:break-word; white-space:pre-wrap; }
+body.dark .readonly-full { color:var(--ink); border-color:#3b4d69; background:#202e47; }
+.asset-detail-preview, .json-icon-detail-preview { aspect-ratio:1 / 1; min-height:0; height:auto; }
+.asset-detail-preview img, .json-icon-detail-preview img { width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; }
+@media(max-width:700px){ .readonly-full { min-height:58px; font-size:10px; } }
