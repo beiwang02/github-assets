@@ -285,3 +285,13 @@ body.dark .library-selector select { color:var(--ink); border-color:#3b4d69; bac
 .library-picker-delete { width:40px; flex:0 0 40px; color:#d66a76; }
 .json-reference-copy small { color:var(--muted); }
 body.dark .library-picker-delete { color:#e58a96; border-color:#513947; background:#202e47; }
+
+/* Keep login header actions visually balanced */
+.auth-head-actions > .auth-theme-button,
+.auth-head-actions > .project-link { width:42px; height:42px; display:grid; place-items:center; margin:0; padding:0; color:#dce6ff; border:1px solid rgba(179,197,239,.38); border-radius:12px; background:rgba(13,25,48,.72); box-shadow:0 8px 24px rgba(0,0,0,.18); }
+.auth-head-actions > .project-link:hover,
+.auth-head-actions > .auth-theme-button:hover { color:#fff; border-color:#aab8ff; background:rgba(47,62,112,.84); }
+.auth-card form > .auth-note:last-child { margin-top:22px; color:#8b9ab3; }
+body:not(.dark) .auth-head-actions > .auth-theme-button,
+body:not(.dark) .auth-head-actions > .project-link { color:#273a59; border-color:#c7d2e6; background:rgba(255,255,255,.92); box-shadow:0 8px 24px rgba(52,70,118,.16); }
+body:not(.dark) .auth-card form > .auth-note:last-child { color:#53647c; }
