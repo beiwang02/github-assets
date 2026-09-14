@@ -298,6 +298,6 @@ body:not(.dark) .auth-card form > .auth-note:last-child { color:#53647c; }
 
 /* Login-card controls match the dark workspace theme control. */
 body.dark .auth-head-actions > .auth-theme-button,
-body.dark .auth-head-actions > .project-link { color:#eef0ff; border:1px solid #394765; background:#1b2a42; box-shadow:none; }
+body.dark .auth-head-actions > .project-link { color:#edf1fb; border:1px solid #28364d; background:#17243a; box-shadow:none; }
 body.dark .auth-head-actions > .auth-theme-button:hover,
 body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#586bd8; background:#263857; }
