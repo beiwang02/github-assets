@@ -310,3 +310,9 @@ body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#5
   .auth-head-actions > .auth-theme-button:hover { color:#fff; border-color:#aab8ff; background:rgba(47,62,112,.84); }
   body:not(.dark) .auth-head-actions > .auth-theme-button:hover { color:#263ab7; border-color:#8797df; background:#fff; }
 }
+
+.section-actions { display:flex; align-items:center; gap:8px; }
+.reference-select { width:24px; height:24px; flex:0 0 24px; border:1px solid #c4ccde; border-radius:7px; background:var(--surface); color:#fff; cursor:pointer; }
+.json-reference-row.selected { background:rgba(89,101,242,.07); }
+.json-reference-row.selected .reference-select { border-color:var(--primary); background:var(--primary); }
+body.dark .reference-select { border-color:#536681; background:#202e47; }
