@@ -302,11 +302,11 @@ body.dark .auth-head-actions > .project-link { color:#edf1fb; border:1px solid #
 body.dark .auth-head-actions > .auth-theme-button:hover,
 body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#586bd8; background:#263857; }
 
-/* Login theme control follows workspace behavior: no sticky touch hover. */
-.auth-head-actions > .auth-theme-button:hover,
-.auth-head-actions > .auth-theme-button:active { color:#edf1fb !important; border-color:#28364d !important; background:#17243a !important; box-shadow:none !important; outline:0 !important; }
-.auth-head-actions > .auth-theme-button:focus { color:#edf1fb !important; border-color:#28364d !important; background:#17243a !important; box-shadow:none !important; outline:0 !important; }
-.auth-head-actions > .auth-theme-button:focus-visible { outline:2px solid #8e9cff !important; outline-offset:2px; }
-body:not(.dark) .auth-head-actions > .auth-theme-button:hover,
-body:not(.dark) .auth-head-actions > .auth-theme-button:active,
-body:not(.dark) .auth-head-actions > .auth-theme-button:focus { color:#273a59 !important; border-color:#c7d2e6 !important; background:rgba(255,255,255,.92) !important; box-shadow:0 8px 24px rgba(52,70,118,.16) !important; }
+/* Keep touch taps from leaving a sticky visual state; keyboard focus remains visible. */
+.auth-head-actions > .auth-theme-button:active { transform:none !important; }
+.auth-head-actions > .auth-theme-button:focus { outline:0; }
+.auth-head-actions > .auth-theme-button:focus-visible { outline:2px solid #8e9cff; outline-offset:2px; }
+@media (hover:hover) {
+  .auth-head-actions > .auth-theme-button:hover { color:#fff; border-color:#aab8ff; background:rgba(47,62,112,.84); }
+  body:not(.dark) .auth-head-actions > .auth-theme-button:hover { color:#263ab7; border-color:#8797df; background:#fff; }
+}
