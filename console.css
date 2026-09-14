@@ -414,3 +414,10 @@ body.dark .json-reference-actions [data-action="copy"],body.dark .json-reference
 body.dark .json-reference-thumb { background:#24334b; }
 body.dark .cover-thumb { background:#24334b; border-color:rgba(64,81,110,.8); }
 @media(max-width:700px){ .json-reference-thumb { width:36px; height:36px; flex-basis:36px; } }
+
+/* Keep the overview library row separated from its header text. */
+.library-list-row { position:relative; }
+.cover-stack { flex:0 0 auto; width:96px; min-width:96px; align-items:center; }
+.cover-thumb { flex:0 0 30px; }
+.list-info { min-width:0; overflow:hidden; }
+.list-meta { flex:0 0 auto; }
