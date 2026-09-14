@@ -7,7 +7,10 @@
 .auth-grid { position:absolute; inset:0; opacity:.28; background-image:linear-gradient(rgba(164,184,215,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(164,184,215,.1) 1px,transparent 1px); background-size:82px 82px; mask-image:linear-gradient(to bottom,transparent,#000 22%,#000 78%,transparent); }
 .auth-card { position:relative; width:min(490px,100%); padding:31px 32px 29px; border:1px solid rgba(156,175,224,.27); border-radius:22px; background:rgba(10,19,35,.76); box-shadow:0 28px 90px rgba(0,0,0,.34); backdrop-filter:blur(12px); }
 .auth-brand { display:flex; align-items:center; gap:11px; margin-bottom:41px; }
-.auth-brand .auth-theme-button { position:static; margin-left:auto; flex:0 0 auto; }
+.auth-head-actions { display:flex; align-items:center; gap:7px; margin-left:auto; flex:0 0 auto; }
+.auth-brand .auth-theme-button { position:static; margin-left:0; flex:0 0 auto; }
+.auth-head-actions .project-link { margin:0; padding:0; width:42px; height:42px; display:grid; place-items:center; border-radius:12px; }
+.auth-head-actions .project-github-icon { width:19px; height:19px; }
 .auth-brand .brand-mark { width:42px; height:42px; border-radius:13px; font-size:22px; }
 .auth-brand strong { display:block; color:#fff; font-size:14px; letter-spacing:.14em; }
 .auth-brand small { display:block; margin-top:5px; color:#7f90aa; font-size:9px; letter-spacing:.18em; }
@@ -22,7 +25,9 @@
 .tile-actions { display:flex; gap:7px; padding-top:11px; margin-top:13px; border-top:1px solid #f0f2f6; }
 .asset-card { position:relative; }
 .asset-card.selected { outline:2px solid rgba(89,101,242,.35); }
-.asset-select { position:absolute; top:8px; right:8px; width:24px; height:24px; display:grid; place-items:center; color:#8794a9; border:1px solid rgba(255,255,255,.82); border-radius:7px; background:rgba(255,255,255,.82); box-shadow:0 3px 9px rgba(30,47,83,.08); font-size:13px; font-weight:800; }
+.asset-select { flex:0 0 auto; width:24px; height:24px; display:grid; place-items:center; color:#8794a9; border:1px solid rgba(196,204,222,.9); border-radius:7px; background:var(--surface); box-shadow:0 3px 9px rgba(30,47,83,.08); font-size:13px; font-weight:800; }
+.asset-name-row { display:flex; align-items:center; gap:6px; min-width:0; }
+.asset-name-row b { min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .asset-card.selected .asset-select { color:#fff; border-color:var(--primary); background:var(--primary); }
 .asset-copy { display:block; width:100%; padding:7px 0 0; color:var(--primary); background:transparent; text-align:left; font-size:9px; }
 .select-counter { color:var(--primary); font-size:10px; font-weight:700; }
@@ -90,13 +95,16 @@ body.dark .repo-quick { background:#202e47; border-color:var(--line); color:#b7c
 .quick-asset b,.quick-asset small { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .quick-asset b { margin-top:9px; font-size:10px; }
 .quick-asset small { margin-top:4px; color:var(--muted); font-size:9px; }
-.quick-copy { position:absolute; right:6px; top:6px; width:25px; height:25px; color:var(--primary); border-radius:7px; background:rgba(255,255,255,.9); font-size:12px; }
+.quick-asset-name-row { display:flex; align-items:center; gap:5px; min-width:0; margin-top:9px; }
+.quick-asset-name-row b { flex:1; min-width:0; margin-top:0; }
+.quick-copy { flex:0 0 auto; width:25px; height:25px; color:var(--primary); border:1px solid var(--line); border-radius:7px; background:var(--surface); font-size:12px; }
 .quick-empty { padding:0; }
 @media(max-width:700px){.quick-assets-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.quick-asset-image{height:90px}.quick-asset-image img{width:54px;height:54px}}
 
 .modal-back-link { display:inline-block; margin-bottom:4px; font-size:10px; }
 .quick-asset-image { cursor:pointer; }
-.quick-copy { z-index:2; }
+.quick-asset-name-row b { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.quick-copy { z-index:2; padding:0; display:grid; place-items:center; }
 
 .top-actions .appearance-button, .top-actions .github-repo-link { display:inline-grid!important; place-items:center; width:40px; height:36px; border:1px solid var(--line); border-radius:18px; background:var(--surface); color:var(--ink); font-size:20px; }
 .top-actions .github-repo-link { font-size:17px; }
