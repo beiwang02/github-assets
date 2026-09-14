@@ -430,3 +430,7 @@ body.dark .cover-thumb { background:#24334b; border-color:rgba(64,81,110,.8); }
 .cover-thumb:nth-child(2){z-index:2}.cover-thumb:nth-child(3){z-index:3}.cover-thumb:nth-child(4){z-index:4}
 .cover-thumb img { object-fit:contain!important; }
 body.dark .cover-thumb { background:#24334b; box-shadow:0 0 0 1px rgba(78,96,128,.8); }
+
+/* Slightly enlarge overview cover stack without changing its layout. */
+.cover-stack { flex-basis:108px; width:108px; height:38px; }
+.cover-thumb { flex-basis:34px; width:34px; height:34px; }
