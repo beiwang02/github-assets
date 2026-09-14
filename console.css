@@ -304,6 +304,9 @@ body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#5
 
 /* Login theme control follows workspace behavior: no sticky touch hover. */
 .auth-head-actions > .auth-theme-button:hover,
-.auth-head-actions > .auth-theme-button:focus,
-.auth-head-actions > .auth-theme-button:active { color:inherit; border-color:inherit; background:inherit; box-shadow:inherit; outline:0; }
-.auth-head-actions > .auth-theme-button:focus-visible { outline:2px solid #8e9cff; outline-offset:2px; }
+.auth-head-actions > .auth-theme-button:active { color:#edf1fb !important; border-color:#28364d !important; background:#17243a !important; box-shadow:none !important; outline:0 !important; }
+.auth-head-actions > .auth-theme-button:focus { color:#edf1fb !important; border-color:#28364d !important; background:#17243a !important; box-shadow:none !important; outline:0 !important; }
+.auth-head-actions > .auth-theme-button:focus-visible { outline:2px solid #8e9cff !important; outline-offset:2px; }
+body:not(.dark) .auth-head-actions > .auth-theme-button:hover,
+body:not(.dark) .auth-head-actions > .auth-theme-button:active,
+body:not(.dark) .auth-head-actions > .auth-theme-button:focus { color:#273a59 !important; border-color:#c7d2e6 !important; background:rgba(255,255,255,.92) !important; box-shadow:0 8px 24px rgba(52,70,118,.16) !important; }
