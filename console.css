@@ -451,3 +451,18 @@ body.dark .cover-thumb { background:#24334b; border-color:rgba(64,81,110,.8); }
 /* Login description is a compact heading-like phrase. */
 .auth-card > p { font-size:16px; font-weight:700; line-height:1.5; letter-spacing:-.02em; color:#253653; }
 body.dark .auth-card > p { color:#f1f4ff; }
+
+/* Keep the product identity present but visually secondary on login. */
+.auth-brand .brand-mark { background:linear-gradient(135deg,#5b61c7,#7660b7); box-shadow:0 5px 14px rgba(77,85,170,.18); }
+.auth-brand strong { font-size:13px; letter-spacing:.11em; opacity:.88; }
+.auth-brand small { color:#8995aa; opacity:.82; letter-spacing:.14em; }
+body:not(.dark) .auth-brand strong { color:#263653; }
+body:not(.dark) .auth-brand small { color:#8490a5; }
+
+/* Final login hierarchy: brand leads, description stays secondary. */
+.auth-brand .brand-mark { background:linear-gradient(135deg,#6672ff,#a47aff); box-shadow:0 7px 18px rgba(102,114,255,.3); }
+.auth-brand strong { font-size:14px; letter-spacing:.14em; opacity:1; }
+.auth-brand small { color:#7f90aa; opacity:1; letter-spacing:.18em; }
+body:not(.dark) .auth-brand strong { color:#263653; }
+.auth-card > p { font-size:13px; font-weight:500; line-height:1.8; letter-spacing:0; color:#42536d; }
+body.dark .auth-card > p { color:#b4bfd3; }
