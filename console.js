@@ -85,6 +85,20 @@ function tokenLoginModal() { openC(`<div class="modal-head"><div><h2>使用 GitH
 
 function closeC() { S.modalConfirm=null; if($c('#groupCreateForm')&&S.uploadDraft){const draft=S.uploadDraft;S.uploadDraft=null;uploadModal(draft);return;} S.uploadDraft=null; $c('#modalRoot').innerHTML=''; }
 function confirmC(title,message,run,label='永久删除') { S.modalConfirm=run; openC(`<div class="modal-head"><div><h2>${escC(title)}</h2><p>${escC(message)}</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><p class="field-help">此操作不可恢复，请确认后继续。</p></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button type="button" class="btn btn-danger" data-action="confirm-exec">${escC(label)}</button></div>`); }
+function confirmRepositoryDeletion() {
+  const fullName=`${S.repo.owner}/${S.repo.repo}`, client=currentClient();
+  confirmC('永久删除仓库',`此操作将删除 ${fullName} 及其中全部内容。`,async()=>{
+    if($c('#repo-delete-confirm')?.value!==fullName) return;
+    if(`${S.repo.owner}/${S.repo.repo}`!==fullName) throw new Error('当前仓库已改变，请重新确认。');
+    await client.deleteRepository(); S.connected=false; S.groups=[]; S.assets=[]; S.libraries=[];
+    S.repo={owner:S.auth?.login||'',repo:'',branch:'main',assetsPath:'assets'};
+    localStorage.removeItem('gh-image-repo'); S.view='overview'; closeC(); renderC(); notify('仓库已删除');
+  },'永久删除仓库');
+  const body=$c('#modalRoot .modal-body'), button=$c('#modalRoot [data-action="confirm-exec"]');
+  body.insertAdjacentHTML('beforeend',`<div class="modal-field"><label for="repo-delete-confirm">请输入 <strong>${escC(fullName)}</strong> 以确认删除</label><input id="repo-delete-confirm" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="输入完整仓库名确认删除"></div>`);
+  const input=$c('#repo-delete-confirm'); button.disabled=true;
+  input.addEventListener('input',()=>{button.disabled=input.value!==fullName||!S.modalConfirm;});
+}
 function nameModal(kind,title,value,description) { openC(`<div class="modal-head"><div><h2>${escC(title)}</h2><p>${escC(description)}</p></div><button class="modal-close" data-action="close-modal">×</button></div><form id="${kind}Form"><div class="modal-body"><div class="modal-field"><label>名称</label><input name="name" value="${escC(value)}" required autofocus></div></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button type="submit" class="btn btn-primary">保存</button></div></form>`); setTimeout(()=>$c(`#${kind}Form input`)?.select(),0); }
 function groupModal(fromUpload=false) { const draft=fromUpload?captureUploadDraft():null; nameModal('groupCreate','新建图片分组','new-group','分组会作为目录创建在 GitHub 图床仓库中。'); S.uploadDraft=draft; }
 function manageGroupModal() { if(!S.group)return; openC(`<div class="modal-head"><div><h2>管理分组</h2><p>重命名会同步移动该分组内的图片。</p></div><button class="modal-close" data-action="close-modal">×</button></div><form id="groupManageForm"><div class="modal-body"><div class="modal-field"><label>分组名称</label><input name="name" value="${escC(S.group)}" required autofocus></div></div><div class="modal-actions"><button type="button" class="btn btn-danger" data-action="confirm-delete-group" data-group="${escC(S.group)}">删除分组</button><button type="button" class="btn" data-action="close-modal">取消</button><button type="submit" class="btn btn-primary">保存改名</button></div></form>`); }
@@ -191,7 +205,7 @@ document.addEventListener('click', async e => {
   if(action==='bulk-library'){if(!S.selected.size)return;bulkModal();return;}
   if(action==='confirm-exec'){const run=S.modalConfirm; S.modalConfirm=null; if(run){const button=target;button.disabled=true;try{await run();}catch(err){notify(err.message||'操作失败','error');}}return;}
   if(action==='rename-repo'){if(S.repo.repo)nameModal('repoRename','重命名 GitHub 仓库',S.repo.repo,'仓库名称会同步更新到 GitHub。');return;}
-  if(action==='delete-repo'){if(!S.repo.repo)return;confirmC('永久删除仓库',`确定永久删除仓库 ${S.repo.owner}/${S.repo.repo} 吗？该操作不可恢复。`,async()=>{await currentClient().deleteRepository();S.connected=false;S.groups=[];S.assets=[];S.libraries=[];S.repo={owner:S.auth?.login||'',repo:'',branch:'main',assetsPath:'assets'};localStorage.removeItem('gh-image-repo');S.view='overview';closeC();renderC();notify('仓库已删除');});return;}
+  if(action==='delete-repo'){if(S.repo.owner&&S.repo.repo)confirmRepositoryDeletion();return;}
   if(action==='delete-library'){e.stopPropagation();const lib=S.libraries.find(x=>x.id===target.dataset.id);if(!lib)return;confirmC('永久删除 JSON 文件',`永久删除 ${lib.name}？
 文件：${lib.file}`,async()=>{await currentClient().deleteLibrary(lib.file);closeC();await refreshRepo();notify('JSON 文件已删除');});return;}
   if(action==='delete-icon'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary),index=Number(target.dataset.index);if(!lib)return;confirmC('移除图片引用',`从 ${lib.name} 中移除这个图片引用？图片文件不会删除。`,async()=>{await currentClient().removeIcons(lib.file,[index],lib.sha);closeC();await refreshRepo();S.view='library-detail';renderC();notify('图片引用已移除');},'移除引用');return;}
