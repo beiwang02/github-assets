@@ -295,3 +295,7 @@ body.dark .library-picker-delete { color:#e58a96; border-color:#513947; backgrou
 body:not(.dark) .auth-head-actions > .auth-theme-button,
 body:not(.dark) .auth-head-actions > .project-link { color:#273a59; border-color:#c7d2e6; background:rgba(255,255,255,.92); box-shadow:0 8px 24px rgba(52,70,118,.16); }
 body:not(.dark) .auth-card form > .auth-note:last-child { color:#53647c; }
+
+/* Match the dark workspace theme control to the login-card moon control. */
+body.dark .top-actions .appearance-button { color:#f2f4ff; border:1px solid #909cff; background:rgba(36,49,93,.76); box-shadow:0 8px 20px rgba(0,0,0,.2); }
+body.dark .top-actions .appearance-button:hover { color:#fff; border-color:#b7c0ff; background:rgba(54,70,124,.9); }
