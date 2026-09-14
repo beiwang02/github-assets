@@ -438,3 +438,12 @@ body.dark .cover-thumb { background:#24334b; box-shadow:0 0 0 1px rgba(78,96,128
 /* Center a lone modal action instead of leaving it in the first column. */
 .modal-actions:has(> :only-child) { display:flex!important; justify-content:center!important; align-items:center; }
 .modal-actions:has(> :only-child) > :only-child { width:auto!important; min-width:180px; }
+
+/* Center each source image inside its stacked rounded backplate. */
+.cover-thumb { display:flex; align-items:center; justify-content:center; }
+.cover-thumb img { width:auto!important; height:auto!important; max-width:100%; max-height:100%; object-fit:contain!important; flex:0 0 auto; }
+
+/* Restore the original stacked backplate; only center the image inside it. */
+.cover-thumb { width:30px; height:30px; flex:0 0 30px; padding:2px; overflow:hidden; border:2px solid rgba(255,255,255,.5); border-radius:9px; background:#eef0f7; box-sizing:border-box; }
+.cover-thumb img { display:block; width:auto!important; height:auto!important; max-width:100%; max-height:100%; object-fit:contain!important; border:0; border-radius:0!important; background:transparent; }
+body.dark .cover-thumb { background:#24334b; border-color:rgba(64,81,110,.8); }
