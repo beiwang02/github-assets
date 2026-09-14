@@ -81,8 +81,6 @@ function renderC() {
 }
 function openC(html) { $c('#modalRoot').innerHTML=`<div class="modal-backdrop" data-action="modal-backdrop"><div class="modal">${html}</div></div>`; }
 function tokenGuideModal() { openC(`<div class="modal-head"><div><h2>经典 Token 创建教程</h2></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body token-guide-body"><ol><li>打开 GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)。</li><li>点击 Generate new token (classic)，设置有效期。</li><li>权限列表只勾选 <b>repo → public_repo</b>。</li><li>其他权限不要勾选，生成后复制 Token 粘贴到登录框。</li></ol></div>`); }
-function tokenLoginModal() { openC(`<div class="modal-head"><div><h2>使用 GitHub Token 登录</h2><p>适合你自己临时测试，Token 只在当前服务器内存会话中使用。</p></div><button class="modal-close" data-action="close-modal">×</button></div><form id="tokenLoginForm"><div class="modal-body"><div class="modal-field"><label>GitHub Token</label><input name="token" type="password" autocomplete="off" placeholder="ghp_... 或 github_pat_..." required></div><p class="field-help" style="line-height:1.7">公开仓库建议使用 classic Token 的 <b>public_repo</b> 权限。不要在 HTTP 公网地址输入 Token；正式使用请启用 HTTPS。</p></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button type="submit" class="btn btn-primary">验证并登录</button></div></form>`); }
-
 function closeC() { S.modalConfirm=null; if($c('#groupCreateForm')&&S.uploadDraft){const draft=S.uploadDraft;S.uploadDraft=null;uploadModal(draft);return;} S.uploadDraft=null; $c('#modalRoot').innerHTML=''; }
 function confirmC(title,message,run,label='永久删除') { S.modalConfirm=run; openC(`<div class="modal-head"><div><h2>${escC(title)}</h2><p>${escC(message)}</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><p class="field-help">此操作不可恢复，请确认后继续。</p></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button type="button" class="btn btn-danger" data-action="confirm-exec">${escC(label)}</button></div>`); }
 function confirmRepositoryDeletion() {
@@ -169,20 +167,16 @@ document.addEventListener('click', async e => {
   const view=target.dataset.view;
   if(view) { S.view=view; S.selected.clear(); $c('#sidebar').classList.remove('open'); renderC(); return; }
   const action=target.dataset.action;
-  if(action==='oauth-help'){ notify('请先在服务器环境变量中配置 GITHUB_CLIENT_ID 和 GITHUB_CLIENT_SECRET','error'); return; }
-  if(action==='token-login'){ tokenLoginModal(); return; }
   if(action==='token-guide'){ tokenGuideModal(); return; }
   if(action==='toggle-token'){ const input=$c('#mainTokenInput'); if(input){input.type=input.type==='password'?'text':'password'; target.textContent=input.type==='password'?'◉':'◎';} return; }
   if(action==='modal-backdrop'){if(e.target===target)closeC();return;}
   if(action==='close-modal'){closeC();return;}
   if(action==='toggle-sidebar'){ $c('#sidebar').classList.toggle('open'); return; }
   if(action==='open-project'){ window.open('https://github.com/beiwang02/github-assets','_blank'); return; }
-  if(action==='open-profile'){ if(S.auth?.login) window.open(`https://github.com/${encodeURIComponent(S.auth.login)}`,'_blank'); return; }
   if(action==='open-repo'){ if(S.repo.owner&&S.repo.repo) window.open(`https://github.com/${encodeURIComponent(S.repo.owner)}/${encodeURIComponent(S.repo.repo)}`,'_blank'); else notify('当前还没有连接仓库','error'); return; }
-  if(action==='toggle-theme'){cycleAppearance();return;}
+  if(action==='toggle-theme'){cycleAppearance();target.blur();return;}
   if(action==='account-menu'){accountMenu();return;}
   if(action==='forget-token'){localStorage.removeItem('gh-image-remembered-token');closeC();notify('已清除此设备记住的 Token，当前会话保留');return;}
-  if(action==='repo-menu'){S.view='settings';$c('#sidebar').classList.remove('open');renderC();return;}
   if(action==='page-back'){if(history.state?.ghView&&history.state.depth>0)history.back();else{S.view='overview';renderC();}return;}
   if(action==='logout'){await logoutC();return;}
   if(action==='create-repo'){if(!S.auth)return notify('请先登录 GitHub','error');createRepoModal();return;}
@@ -216,7 +210,6 @@ document.addEventListener('click', async e => {
   if(action==='new-group-from-upload'){groupModal(true);return;}
   if(action==='manage-group'){manageGroupModal();return;}
   if(action==='confirm-delete-group'){const group=target.dataset.group;if(!group)return;confirmC('永久删除分组',`永久删除分组 ${group} 及其中图片？`,async()=>{await currentClient().deleteGroup(group);S.group='';closeC();await refreshRepo();notify('分组已删除');});return;}
-  if(action==='copy-all'){await copyC(JSON.stringify({repository:S.repo,libraries:S.libraries.map(x=>({name:x.name,file:x.file,count:x.count}))},null,2),'仓库索引已复制');return;}
 });
 document.addEventListener('click',e=>{ const sidebar=$c('#sidebar'); if(sidebar?.classList.contains('open')&&!e.target.closest('#sidebar')&&!e.target.closest('.mobile-menu')){ sidebar.classList.remove('open'); e.preventDefault(); e.stopImmediatePropagation(); } },true);
 document.addEventListener('submit',formSubmit);
