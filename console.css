@@ -447,3 +447,7 @@ body.dark .cover-thumb { background:#24334b; box-shadow:0 0 0 1px rgba(78,96,128
 .cover-thumb { width:30px; height:30px; flex:0 0 30px; padding:2px; overflow:hidden; border:2px solid rgba(255,255,255,.5); border-radius:9px; background:#eef0f7; box-sizing:border-box; }
 .cover-thumb img { display:block; width:auto!important; height:auto!important; max-width:100%; max-height:100%; object-fit:contain!important; border:0; border-radius:0!important; background:transparent; }
 body.dark .cover-thumb { background:#24334b; border-color:rgba(64,81,110,.8); }
+
+/* Login description is a compact heading-like phrase. */
+.auth-card > p { font-size:16px; font-weight:700; line-height:1.5; letter-spacing:-.02em; color:#253653; }
+body.dark .auth-card > p { color:#f1f4ff; }
