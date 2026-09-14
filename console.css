@@ -10,7 +10,7 @@
 .auth-head-actions { display:flex; align-items:center; gap:7px; margin-left:auto; flex:0 0 auto; }
 .auth-brand .auth-theme-button { position:static; margin-left:0; flex:0 0 auto; }
 .auth-head-actions .project-link { margin:0; padding:0; width:42px; height:42px; display:grid; place-items:center; border-radius:12px; }
-.auth-head-actions .project-github-icon { width:19px; height:19px; }
+.auth-head-actions .project-github-icon { width:21px; height:21px; }
 .auth-brand .brand-mark { width:42px; height:42px; border-radius:13px; font-size:22px; }
 .auth-brand strong { display:block; color:#fff; font-size:14px; letter-spacing:.14em; }
 .auth-brand small { display:block; margin-top:5px; color:#7f90aa; font-size:9px; letter-spacing:.18em; }
