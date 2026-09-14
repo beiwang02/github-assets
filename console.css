@@ -415,9 +415,11 @@ body.dark .json-reference-thumb { background:#24334b; }
 body.dark .cover-thumb { background:#24334b; border-color:rgba(64,81,110,.8); }
 @media(max-width:700px){ .json-reference-thumb { width:36px; height:36px; flex-basis:36px; } }
 
-/* Keep the overview library row separated from its header text. */
+/* Keep the overview library cover stack aligned without removing the overlap. */
 .library-list-row { position:relative; }
-.cover-stack { flex:0 0 auto; width:96px; min-width:96px; align-items:center; }
-.cover-thumb { flex:0 0 30px; }
+.cover-stack { display:flex; flex:0 0 100px; width:100px; min-width:100px; align-items:center; padding-left:0; }
+.cover-thumb { position:relative; flex:0 0 30px; width:30px; height:30px; margin-left:-7px; }
+.cover-thumb:first-child { margin-left:0; }
+.cover-thumb img { display:block; }
 .list-info { min-width:0; overflow:hidden; }
 .list-meta { flex:0 0 auto; }
