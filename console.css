@@ -305,7 +305,7 @@ body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#5
 /* Keep touch taps from leaving a sticky visual state; keyboard focus remains visible. */
 .auth-head-actions > .auth-theme-button:active { transform:none !important; }
 .auth-head-actions > .auth-theme-button:focus { outline:0; }
-.auth-head-actions > .auth-theme-button:focus-visible { outline:2px solid #8e9cff; outline-offset:2px; }
+.auth-head-actions > .auth-theme-button:focus-visible { outline:0; outline-offset:0; }
 @media (hover:hover) {
   .auth-head-actions > .auth-theme-button:hover { color:#fff; border-color:#aab8ff; background:rgba(47,62,112,.84); }
   body:not(.dark) .auth-head-actions > .auth-theme-button:hover { color:#263ab7; border-color:#8797df; background:#fff; }
