@@ -26,7 +26,7 @@ class GitHubClient {
     if (tree.truncated) return { score:0, owner, repo:repo.name, branch, reason:'仓库目录过大，无法安全识别' };
     const entries = Array.isArray(tree.tree) ? tree.tree.filter(item => item.type === 'blob') : [];
     const dirs = new Set((Array.isArray(tree.tree) ? tree.tree : []).filter(item => item.type === 'tree').map(item => item.path));
-    const jsonEntries = entries.filter(item => /\\.json$/i.test(item.path));
+    const jsonEntries = entries.filter(item => /\.json$/i.test(item.path));
     let libraryCount = 0, iconCount = 0, rawReferenceCount = 0;
     for (const entry of jsonEntries.slice(0, 20)) {
       try {
@@ -41,7 +41,7 @@ class GitHubClient {
         }).length;
       } catch { /* unrelated or malformed JSON is not a project signature */ }
     }
-    const imageEntries = entries.filter(item => item.path.startsWith('assets/') || item.path.startsWith('icons/')).filter(item => /\\.(png|jpe?g|webp|gif|svg)$/i.test(item.path));
+    const imageEntries = entries.filter(item => item.path.startsWith('assets/') || item.path.startsWith('icons/')).filter(item => /\.(png|jpe?g|webp|gif|svg)$/i.test(item.path));
     const assetRoot = dirs.has('assets') ? 'assets' : (dirs.has('icons') ? 'icons' : '');
     const groupCount = [...dirs].filter(path => assetRoot && path.startsWith(`${assetRoot}/`) && !path.slice(assetRoot.length + 1).includes('/')).length;
     const score = libraryCount * 5 + (imageEntries.length ? 3 : 0) + (groupCount ? 2 : 0) + Math.min(rawReferenceCount, 3) * 2 + (dirs.has('json') ? 1 : 0);

@@ -221,7 +221,7 @@ button:active,.btn:active,.icon-btn:active,.text-link:active,.nav-item:active,.a
 .remember-token input:checked { border-color:var(--primary); background:var(--primary); }
 .remember-token input:checked::after { content:""; position:absolute; left:5px; top:2px; width:5px; height:9px; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg); }
 body.dark .remember-token input { border-color:#536681; background:#202e47; }
-body.dark .remember-token input:checked { border-color:#6672d8; background:#4652a8; box-shadow:none; }
+body.dark .remember-token input:checked { border-color:#6672d8; background:#5260bf; box-shadow:none; }
 body.dark .remember-token input:checked::after { border-color:#dfe3f6; }
 
 body.dark .asset-preview { background:#24334b; }
