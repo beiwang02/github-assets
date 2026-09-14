@@ -159,7 +159,7 @@ body:not(.dark) .auth-screen { background:#f7f9ff; }
 .top-actions .appearance-button,.top-actions .github-repo-link{border-radius:10px}
 
 .token-guide-button { display:inline-flex; align-items:center; gap:5px; padding:3px 0; margin:18px 0 12px; color:#4f5bd7; border:0; border-radius:0; background:transparent; text-align:left; font-size:11px; font-weight:700; cursor:pointer; }
-.token-guide-button span { width:14px; height:14px; display:inline-grid; place-items:center; flex:0 0 14px; font-size:17px; line-height:1; transform:translateY(-.5px); }
+.token-guide-arrow { width:14px; height:14px; display:inline-grid; place-items:center; flex:0 0 14px; font-size:17px; line-height:1; transform:rotate(-90deg); }
 .token-guide-button:hover { color:#3546c5; border-color:transparent; background:transparent; }
 .token-guide-body { color:var(--ink); font-size:12px; line-height:1.8; }
 .token-guide-body ol { margin:0; padding-left:20px; }
