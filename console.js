@@ -73,7 +73,7 @@ function adminPage() {
 
 function renderC() {
   document.body.classList.toggle('auth-screen', !S.auth);
-  if (!S.auth) { $c('#app').innerHTML=loginView(); return; }
+  if (!S.auth) { $c('#app').innerHTML=loginView(); applyAppearance(); return; }
   if(S.view==='library-detail') S.view='libraries';
   const views={overview:overviewView,libraries:librariesView,assets:assetsView,activity:activityPage,settings:settingsPage,admin:adminPage};
   $c('#app').innerHTML=(views[S.view]||overviewView)(); setMetaC();
