@@ -182,39 +182,36 @@ body.dark .table-icon { background:#273751; }
 button,.btn,.icon-btn,.text-link,.nav-item { -webkit-tap-highlight-color:transparent; }
 button:active,.btn:active,.icon-btn:active,.text-link:active,.nav-item:active { outline:0; box-shadow:none; }
 
-/* JSON references use the same visual rhythm as the resource gallery. */
-.library-detail-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:15px; }
-.library-detail-card { min-width:0; overflow:hidden; padding:9px; }
-.library-detail-image { position:relative; height:150px; display:grid; place-items:center; overflow:hidden; border-radius:12px; background:linear-gradient(135deg,#f4f6ff,#eef8f7); }
-.library-detail-image img { width:100%; height:100%; padding:18px; object-fit:contain; }
-.library-detail-status { position:absolute; left:8px; bottom:8px; display:inline-flex; align-items:center; gap:6px; padding:5px 7px; color:#71809a; border-radius:7px; background:rgba(255,255,255,.88); font-size:9px; }
-.library-detail-status .status-dot { width:6px; height:6px; box-shadow:none; }
-.library-detail-copy { min-width:0; padding:12px 3px 0; }
-.library-detail-copy h3 { margin:0; overflow:hidden; font-size:12px; text-overflow:ellipsis; white-space:nowrap; }
-.library-detail-copy p { margin:5px 0 7px; color:var(--muted); font-size:9px; }
-.library-detail-url { display:block; overflow:hidden; color:var(--muted); font-size:9px; text-overflow:ellipsis; white-space:nowrap; }
-.library-detail-actions { display:flex; gap:6px; padding:11px 3px 2px; border-top:1px solid var(--line); margin-top:11px; }
-.library-detail-actions .icon-btn { width:29px; height:29px; font-size:13px; }
-.asset-detail-preview { background:var(--canvas); }
-.asset-detail-preview img { width:min(100%,420px); height:clamp(220px,42vw,360px); padding:18px; object-fit:contain; border-radius:0; box-shadow:none; }
-body.dark .library-detail-image { background:#24334b; }
-body.dark .library-detail-status { color:#c0c9d8; background:rgba(23,36,58,.9); }
-body.dark .asset-detail-preview { background:#202e47; }
-body.dark .asset-detail-preview img { background:transparent; }
-@media (max-width:980px) { .library-detail-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
-@media (max-width:700px) {
-  .library-detail-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
-  .library-detail-image { height:92px; background:#24334b; }
-  .library-detail-image img { padding:8px; }
-  .modal { padding:20px 16px; }
-  .modal-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; align-items:stretch; }
-  .modal-actions .btn { width:100%; min-width:0; min-height:42px; padding:7px 4px; white-space:nowrap; line-height:1.15; font-size:10px; }
-  .asset-detail-preview { min-height:190px; }
-  .asset-detail-preview img { width:min(100%,300px); height:clamp(190px,58vw,280px); padding:12px; }
-  .library-detail-card { padding:7px; }
-  .library-detail-actions { gap:5px; padding-top:9px; margin-top:9px; }
-  .library-detail-actions .icon-btn { width:28px; height:28px; }
-}
+/* JSON workspace only: compact library picker and one-row references. */
+.json-workspace { padding:16px 20px; margin-bottom:18px; }
+.json-workspace-top { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.library-picker { display:flex; min-width:0; flex:1; align-items:center; gap:10px; padding:0; border:0; color:var(--ink); text-align:left; background:transparent; cursor:pointer; }
+.library-picker .library-logo { flex:0 0 auto; }
+.library-picker-copy { display:grid; min-width:0; gap:2px; }
+.library-picker-copy small,.library-picker-copy em { overflow:hidden; color:var(--muted); font-size:10px; font-style:normal; text-overflow:ellipsis; white-space:nowrap; }
+.library-picker-copy b { overflow:hidden; font-size:13px; text-overflow:ellipsis; white-space:nowrap; }
+.library-picker-arrow { margin-left:auto; color:var(--muted); font-size:18px; }
+.json-workspace-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; }
+.json-library-summary { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:11px; margin-top:12px; border-top:1px solid var(--line); }
+.json-library-summary p { margin:0; color:var(--muted); font-size:10px; }
+.json-delete-library { margin-left:auto; color:#d66a76; }
+.json-references .section-row { margin-bottom:12px; }
+.json-reference-toolbar { margin-bottom:18px; }
+.json-reference-list { overflow:hidden; border:1px solid var(--line); border-radius:12px; background:var(--surface); }
+.json-reference-row { display:flex; align-items:center; gap:12px; min-width:0; padding:10px 13px; border-bottom:1px solid var(--line); }
+.json-reference-row:last-child { border-bottom:0; }
+.json-reference-row > img { width:42px; height:42px; flex:0 0 auto; padding:5px; object-fit:contain; border-radius:9px; background:#f4f6ff; }
+.json-reference-copy { display:grid; min-width:0; gap:4px; flex:1; }
+.json-reference-copy b,.json-reference-copy small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.json-reference-copy b { font-size:12px; }.json-reference-copy small { color:var(--muted); font-size:9px; }
+.json-reference-status { display:inline-flex; align-items:center; gap:5px; color:var(--muted); font-size:9px; white-space:nowrap; }
+.json-reference-actions { display:flex; gap:6px; }.json-reference-actions .icon-btn { width:29px; height:29px; font-size:13px; }
+.library-picker-list { display:grid; gap:7px; }
+.library-picker-option { display:flex; align-items:center; gap:10px; width:100%; padding:10px; color:var(--ink); border:1px solid var(--line); border-radius:10px; text-align:left; background:var(--canvas); cursor:pointer; }
+.library-picker-option.selected { border-color:var(--primary); background:#f1f3ff; }.library-picker-option > span:nth-child(2) { display:grid; min-width:0; gap:4px; flex:1; }.library-picker-option b,.library-picker-option small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }.library-picker-option b { font-size:12px; }.library-picker-option small { color:var(--muted); font-size:9px; }.library-picker-option em { padding:3px 6px; color:var(--primary); border-radius:6px; background:#e8ebff; font-size:9px; font-style:normal; }.library-picker-option i { color:var(--muted); font-size:18px; font-style:normal; }
+.library-picker-create { width:100%; margin-top:14px; padding:11px; color:var(--primary); border:1px dashed #aeb7f7; border-radius:10px; background:transparent; font-weight:700; cursor:pointer; }
+body.dark .json-reference-list,.dark .library-picker-option { border-color:#3b4d69; background:#202e47; } body.dark .library-picker-option.selected { background:#29385c; border-color:#7785e8; } body.dark .json-reference-row > img { background:#24334b; }
+@media(max-width:700px) { .json-workspace { padding:13px; }.json-workspace-top { align-items:stretch; flex-direction:column; gap:12px; }.json-workspace-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }.json-workspace-actions .btn { min-width:0; padding:7px 4px; font-size:9px; }.json-reference-row { gap:8px; padding:9px; }.json-reference-row > img { width:36px; height:36px; }.json-reference-status { display:none; }.json-reference-actions { gap:3px; }.json-reference-actions .icon-btn { width:27px; height:27px; }.library-picker-copy em { max-width:220px; } }
 
 /* Prevent iOS native pressed highlight on controls */
 button,.btn,.icon-btn,.text-link,.nav-item,.asset-select,.asset-copy,.quick-copy { -webkit-appearance:none; appearance:none; -webkit-tap-highlight-color:rgba(0,0,0,0); touch-action:manipulation; }
