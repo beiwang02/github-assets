@@ -229,3 +229,47 @@ body.dark .remember-token input:checked::after { border-color:#dfe3f6; }
 
 body.dark .asset-preview { background:#24334b; }
 body.dark .library-detail-image { background:#24334b; }
+
+/* Unified JSON-library workspace and resource gallery parity. */
+.asset-card { padding:9px; overflow:hidden; cursor:pointer; }
+.asset-preview { height:128px; background:linear-gradient(135deg,#f4f6ff,#eef8f7); }
+.asset-preview img { width:74px; height:74px; object-fit:contain; background:transparent; }
+.asset-details { padding:11px 3px 2px; }
+.asset-meta { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:8px; }
+.asset-badge { margin:0; }
+.asset-copy { width:auto; padding:0; font-size:9px; white-space:nowrap; }
+body.dark .asset-preview { background:#24334b; }
+.json-workspace { padding:20px; margin-bottom:18px; }
+.json-workspace-top { display:flex; align-items:end; justify-content:space-between; gap:16px; }
+.library-selector { display:grid; gap:6px; min-width:min(100%,330px); color:var(--muted); font-size:10px; font-weight:700; }
+.library-selector select { width:100%; min-height:38px; padding:0 32px 0 11px; color:var(--ink); border:1px solid var(--line); border-radius:9px; background:var(--canvas); font:inherit; font-size:12px; }
+.json-workspace-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:8px; }
+.json-library-summary { display:flex; align-items:center; gap:13px; padding-top:18px; margin-top:18px; border-top:1px solid var(--line); }
+.json-library-summary .library-logo { flex:0 0 auto; }
+.json-library-summary h3 { margin:0 0 5px; font-size:15px; }
+.json-library-summary p,.json-library-summary small { display:block; margin:0; color:var(--muted); font-size:10px; }
+.json-library-summary small { margin-top:6px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+.json-delete-library { margin-left:auto; color:#d66a76; }
+.json-references .section-row { margin-bottom:12px; }
+.json-reference-toolbar { margin-bottom:18px; }
+body.dark .library-selector select { color:var(--ink); border-color:#3b4d69; background:#202e47; }
+@media(max-width:700px) {
+  .asset-card { padding:7px; }
+  .asset-preview { height:92px; }
+  .asset-preview img { width:58px; height:58px; }
+  .asset-details { padding:9px 2px 1px; }
+  .asset-meta { gap:4px; margin-top:6px; }
+  .asset-copy { font-size:8px; }
+  .asset-badge { padding:3px 5px; font-size:7px; }
+  .json-workspace { padding:14px; }
+  .json-workspace-top { align-items:stretch; flex-direction:column; gap:13px; }
+  .library-selector { min-width:0; }
+  .json-workspace-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); justify-content:stretch; }
+  .json-workspace-actions .btn:last-child { grid-column:span 2; }
+  .json-workspace-actions .btn { min-width:0; padding-left:6px; padding-right:6px; font-size:9px; }
+  .json-library-summary { align-items:flex-start; gap:10px; padding-top:14px; margin-top:14px; }
+  .json-library-summary .library-logo { width:38px; height:38px; font-size:14px; }
+  .json-library-summary h3 { font-size:13px; }
+  .json-library-summary p,.json-library-summary small { font-size:9px; }
+  .json-delete-library { flex:0 0 auto; }
+}
