@@ -322,7 +322,6 @@ body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#5
 body.dark .reference-select { border-color:#536681; background:#202e47; }
 
 /* Short-lived copy feedback and compact mobile actions. */
-.copied { color:var(--primary) !important; border-color:#8d98ff !important; background:#eef0ff !important; }
 .btn.btn-danger { color:#d84f67 !important; border-color:#f0b5c0 !important; background:#fff7f8 !important; }
 .section-actions .btn.btn-danger { color:#d84f67 !important; border-color:#f0b5c0 !important; background:#fff7f8 !important; }
 .json-reference-actions { display:flex !important; flex:0 0 auto; align-items:center; flex-wrap:nowrap !important; white-space:nowrap; }
@@ -335,10 +334,7 @@ body.dark .reference-select { border-color:#536681; background:#202e47; }
   .section-actions .btn.btn-danger { color:#d84f67 !important; border-color:#f0b5c0 !important; background:#fff7f8 !important; }
   body.dark .btn.btn-danger, body.dark .section-actions .btn.btn-danger { color:#ff9cac !important; border-color:#70434d !important; background:#30212b !important; }
 }
-body.dark .copied { color:#cbd3ff !important; border-color:#7180e8 !important; background:#303d68 !important; }
-
-/* Final compact controls: no visual copy state, one-row actions. */
-.copied { color:inherit !important; border-color:inherit !important; background:inherit !important; }
+/* Final compact controls: one-row actions. */
 .json-workspace-actions { display:flex !important; flex-direction:row !important; flex-wrap:nowrap !important; align-items:center; justify-content:flex-end; }
 .json-workspace-actions .btn { flex:0 1 auto !important; white-space:nowrap; }
 .json-reference-actions { display:flex !important; flex-direction:row !important; flex-wrap:nowrap !important; align-items:center; }
@@ -371,9 +367,33 @@ body.dark .copied { color:#cbd3ff !important; border-color:#7180e8 !important; b
  .modal-actions .btn{min-width:0;width:100%;white-space:nowrap;word-break:keep-all;overflow-wrap:normal}
 }
 
-/* Full, readable URLs and paths in both detail dialogs. */
-.readonly-full { display:block; width:100%; min-height:52px; box-sizing:border-box; padding:11px 12px; color:var(--ink); border:1px solid var(--line); border-radius:9px; background:var(--canvas); font:inherit; font-size:11px; line-height:1.55; resize:none; overflow-wrap:anywhere; word-break:break-word; white-space:pre-wrap; }
-body.dark .readonly-full { color:var(--ink); border-color:#3b4d69; background:#202e47; }
-.asset-detail-preview, .json-icon-detail-preview { aspect-ratio:1 / 1; min-height:0; height:auto; }
-.asset-detail-preview img, .json-icon-detail-preview img { width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; }
-@media(max-width:700px){ .readonly-full { min-height:58px; font-size:10px; } }
+/* Shared asset/JSON detail presentation. */
+.detail-readonly { min-width:0; }
+.detail-readonly b { display:block; margin-bottom:5px; color:#768196; font-size:10px; }
+.detail-readonly p { margin:0; color:var(--ink); font:10px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace; overflow-wrap:anywhere; word-break:break-word; white-space:normal; }
+.asset-detail-preview,.json-icon-detail-preview { width:min(100%,260px); aspect-ratio:1/1; min-height:0; height:auto; justify-self:center; padding:14px; box-sizing:border-box; }
+.asset-detail-preview img,.json-icon-detail-preview img { width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; border-radius:0; box-shadow:none; }
+.modal:has(.asset-detail-actions),.modal:has(.icon-detail-actions) { max-height:calc(100dvh - 32px); overflow:hidden; }
+.asset-detail-actions { display:grid!important; grid-template-columns:repeat(3,minmax(0,1fr))!important; gap:7px!important; }
+.icon-detail-actions { display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr))!important; gap:8px!important; }
+.asset-detail-actions .btn,.icon-detail-actions .btn { width:100%; min-width:0; padding:0 7px; white-space:nowrap; }
+.json-reference-actions [data-action="delete-icon"] { color:#d84f67!important; border-color:#f0aebb!important; background:#fff7f8!important; }
+[data-action="copy"]:focus,[data-action="copy"]:focus-visible,[data-action="copy"]:active { outline:0!important; box-shadow:none!important; transform:none!important; }
+body.dark .json-reference-actions [data-action="delete-icon"] { color:#ff9cac!important; border-color:#70434d!important; background:#30212b!important; }
+@media(max-width:700px){
+ .modal:has(.asset-detail-actions),.modal:has(.icon-detail-actions) { padding:18px; }
+ .modal:has(.asset-detail-actions) .modal-head,.modal:has(.icon-detail-actions) .modal-head { margin-bottom:12px; }
+ .modal:has(.asset-detail-actions) .modal-body,.modal:has(.icon-detail-actions) .modal-body { gap:10px; }
+ .asset-detail-preview,.json-icon-detail-preview { width:min(100%,220px); padding:10px; }
+ .asset-detail-actions,.icon-detail-actions { margin-top:12px!important; padding-top:12px!important; }
+ .asset-detail-actions .btn,.icon-detail-actions .btn { height:36px; font-size:9px; }
+}
+
+/* Copy controls never change appearance after tap/click. */
+[data-action="copy"] { transition:none!important; }
+.btn[data-action="copy"]:hover,.btn[data-action="copy"]:focus,.btn[data-action="copy"]:focus-visible,.btn[data-action="copy"]:active { color:#5e6b80!important; border-color:var(--line)!important; background:var(--surface)!important; box-shadow:0 3px 8px rgba(33,49,78,.02)!important; transform:none!important; }
+.icon-btn[data-action="copy"]:hover,.icon-btn[data-action="copy"]:focus,.icon-btn[data-action="copy"]:focus-visible,.icon-btn[data-action="copy"]:active { color:#8090a6!important; border-color:var(--line)!important; background:#fff!important; box-shadow:none!important; transform:none!important; }
+.asset-copy[data-action="copy"]:hover,.asset-copy[data-action="copy"]:focus,.asset-copy[data-action="copy"]:focus-visible,.asset-copy[data-action="copy"]:active { color:var(--primary)!important; border-color:transparent!important; background:transparent!important; box-shadow:none!important; transform:none!important; }
+.quick-copy[data-action="copy"]:hover,.quick-copy[data-action="copy"]:focus,.quick-copy[data-action="copy"]:focus-visible,.quick-copy[data-action="copy"]:active { color:var(--primary)!important; border-color:var(--line)!important; background:var(--surface)!important; box-shadow:none!important; transform:none!important; }
+body.dark .btn[data-action="copy"]:hover,body.dark .btn[data-action="copy"]:focus,body.dark .btn[data-action="copy"]:active,body.dark .icon-btn[data-action="copy"]:hover,body.dark .icon-btn[data-action="copy"]:focus,body.dark .icon-btn[data-action="copy"]:active { color:var(--ink)!important; border-color:var(--line)!important; background:var(--surface)!important; }
+body.dark .quick-copy[data-action="copy"]:hover,body.dark .quick-copy[data-action="copy"]:focus,body.dark .quick-copy[data-action="copy"]:active { color:#cbd3ff!important; border-color:var(--line)!important; background:#31425e!important; }
