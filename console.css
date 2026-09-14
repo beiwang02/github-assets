@@ -401,10 +401,9 @@ body.dark .quick-copy[data-action="copy"]:hover,body.dark .quick-copy[data-actio
 /* Keep preview backplates, but never round the image itself. */
 .quick-asset-image img,.asset-preview img,.json-reference-row>img,.cover-stack img,.table-icon img,.asset-detail-preview img,.json-icon-detail-preview img { border-radius:0!important; }
 .quick-asset-image img,.asset-preview img,.json-reference-row>img,.table-icon img,.asset-detail-preview img,.json-icon-detail-preview img { object-fit:contain!important; }
-/* JSON-row copy controls use the same pale-purple appearance as outer copy controls. */
-.json-reference-actions [data-action="copy"] { color:#6671dc!important; border-color:#cfd3ff!important; background:#f6f5ff!important; }
-.json-reference-actions [data-action="copy"]:hover,.json-reference-actions [data-action="copy"]:focus,.json-reference-actions [data-action="copy"]:focus-visible,.json-reference-actions [data-action="copy"]:active { color:#6671dc!important; border-color:#cfd3ff!important; background:#f6f5ff!important; box-shadow:none!important; transform:none!important; }
-body.dark .json-reference-actions [data-action="copy"],body.dark .json-reference-actions [data-action="copy"]:hover,body.dark .json-reference-actions [data-action="copy"]:focus,body.dark .json-reference-actions [data-action="copy"]:active { color:#cbd3ff!important; border-color:#5867a7!important; background:#303d68!important; }
+/* JSON-row copy controls use neutral gray, with no tap-state color change. */
+.json-reference-actions [data-action="copy"],.json-reference-actions [data-action="copy"]:hover,.json-reference-actions [data-action="copy"]:focus,.json-reference-actions [data-action="copy"]:focus-visible,.json-reference-actions [data-action="copy"]:active { color:#8090a6!important; border-color:var(--line)!important; background:#fff!important; box-shadow:none!important; transform:none!important; }
+body.dark .json-reference-actions [data-action="copy"],body.dark .json-reference-actions [data-action="copy"]:hover,body.dark .json-reference-actions [data-action="copy"]:focus,body.dark .json-reference-actions [data-action="copy"]:active { color:var(--ink)!important; border-color:var(--line)!important; background:var(--surface)!important; }
 
 /* Rounded preview backplates with unrounded source images. */
 .json-reference-thumb { width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center; padding:5px; box-sizing:border-box; overflow:hidden; border-radius:9px; background:#f4f6ff; }
