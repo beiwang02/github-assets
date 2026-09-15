@@ -306,11 +306,10 @@ body.dark .auth-head-actions > .project-link { color:#edf1fb; border:1px solid #
 body.dark .auth-head-actions > .auth-theme-button:hover,
 body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#586bd8; background:#263857; }
 
-/* Keep touch taps from leaving a sticky visual state; keyboard focus remains visible. */
+/* Theme buttons have no persistent tap/focus feedback. */
 .auth-head-actions > .auth-theme-button:active,
 .auth-head-actions > .auth-theme-button:focus,
-.auth-head-actions > .auth-theme-button:focus-visible { transform:none !important; outline:0 !important; color:#edf1fb; border-color:#28364d; background:#17243a; box-shadow:none; }
-.auth-head-actions > .auth-theme-button:focus-visible { outline:0; outline-offset:0; }
+.auth-head-actions > .auth-theme-button:focus-visible { transform:none !important; outline:0 !important; color:inherit !important; border-color:inherit !important; background:inherit !important; box-shadow:none !important; }
 @media (hover:hover) {
   .auth-head-actions > .auth-theme-button:hover { color:#fff; border-color:#aab8ff; background:rgba(47,62,112,.84); }
   body:not(.dark) .auth-head-actions > .auth-theme-button:hover { color:#263ab7; border-color:#8797df; background:#fff; }

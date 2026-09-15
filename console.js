@@ -282,7 +282,6 @@ function cycleAppearance() {
   const next=current==='system'?'light':(current==='light'?'dark':'system');
   localStorage.setItem('gh-image-theme',next);
   applyAppearance();
-  notify(next==='system'?'已切换为跟随系统':(next==='dark'?'已切换为黑夜模式':'已切换为白天模式'));
 }
 function accountMenu() {
   $c('#sidebar').classList.remove('open');
