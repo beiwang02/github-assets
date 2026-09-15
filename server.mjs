@@ -13,7 +13,6 @@ const OAUTH_REDIRECT_URI = String(process.env.GITHUB_OAUTH_REDIRECT_URI || new U
 const OAUTH_ENABLED = Boolean(OAUTH_CLIENT_ID && OAUTH_CLIENT_SECRET);
 const TOKEN_LOGIN_ENABLED = process.env.ENABLE_TOKEN_LOGIN !== 'false';
 const ADMIN_GITHUB_LOGIN = String(process.env.ADMIN_GITHUB_LOGIN || '').trim().toLowerCase();
-const ADMIN_RESTORE_REPO = String(process.env.ADMIN_RESTORE_REPO || '').trim();
 const ALLOWED_GITHUB_LOGINS = new Set(String(process.env.ALLOWED_GITHUB_LOGINS || '').split(',').map(value => value.trim().toLowerCase()).filter(Boolean));
 let accessPolicy = { allowAll: ALLOWED_GITHUB_LOGINS.size === 0, allowed: [...ALLOWED_GITHUB_LOGINS] };
 const POLICY_FILE = process.env.POLICY_FILE || '/app/data/access-policy.json';
@@ -104,7 +103,7 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === '/api/auth/me' && req.method === 'GET') {
       const auth = session(req);
       const permission = accessFor(auth?.user?.login);
-      return json(res, 200, { user:auth?.user || null, csrf:auth?.csrf || null, oauthEnabled:OAUTH_ENABLED, tokenLoginEnabled:TOKEN_LOGIN_ENABLED, repoDelete:DELETE_REPO, adminConfigured:permission.adminConfigured, isAdmin:Boolean(auth && permission.isAdmin), policyConfigured:permission.policyConfigured, restoreRepo:(auth && permission.isAdmin) ? ADMIN_RESTORE_REPO : '' });
+      return json(res, 200, { user:auth?.user || null, csrf:auth?.csrf || null, oauthEnabled:OAUTH_ENABLED, tokenLoginEnabled:TOKEN_LOGIN_ENABLED, repoDelete:DELETE_REPO, adminConfigured:permission.adminConfigured, isAdmin:Boolean(auth && permission.isAdmin), policyConfigured:permission.policyConfigured });
     }
     if (url.pathname === '/api/auth/github' && req.method === 'GET') {
       if (!OAUTH_ENABLED) return redirect(res, oauthError('oauth_not_configured'));

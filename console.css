@@ -405,48 +405,24 @@ body.dark .quick-copy[data-action="copy"]:hover,body.dark .quick-copy[data-actio
 .json-reference-actions [data-action="copy"],.json-reference-actions [data-action="copy"]:hover,.json-reference-actions [data-action="copy"]:focus,.json-reference-actions [data-action="copy"]:focus-visible,.json-reference-actions [data-action="copy"]:active { color:#8090a6!important; border-color:var(--line)!important; background:#fff!important; box-shadow:none!important; transform:none!important; }
 body.dark .json-reference-actions [data-action="copy"],body.dark .json-reference-actions [data-action="copy"]:hover,body.dark .json-reference-actions [data-action="copy"]:focus,body.dark .json-reference-actions [data-action="copy"]:active { color:var(--ink)!important; border-color:var(--line)!important; background:var(--surface)!important; }
 
-/* Rounded preview backplates with unrounded source images. */
+/* JSON 引用缩略图与总览库封面。总览只展示，整行点击后进入库内操作。 */
 .json-reference-thumb { width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center; padding:5px; box-sizing:border-box; overflow:hidden; border-radius:9px; background:#f4f6ff; }
 .json-reference-thumb img { width:100%; height:100%; object-fit:contain; border-radius:0!important; }
-.cover-thumb { width:30px; height:30px; display:grid; place-items:center; margin-left:-7px; padding:2px; box-sizing:border-box; overflow:hidden; border:2px solid rgba(255,255,255,.5); border-radius:9px; background:#eef0f7; }
-.cover-thumb:first-child { margin-left:0; }
-.cover-thumb img { width:100%; height:100%; object-fit:contain; border:0; border-radius:0!important; background:transparent; }
-body.dark .json-reference-thumb { background:#24334b; }
-body.dark .cover-thumb { background:#24334b; border-color:rgba(64,81,110,.8); }
-@media(max-width:700px){ .json-reference-thumb { width:36px; height:36px; flex-basis:36px; } }
-
-/* Keep the overview library cover stack aligned without removing the overlap. */
 .library-list-row { position:relative; }
-.cover-stack { display:flex; flex:0 0 100px; width:100px; min-width:100px; align-items:center; padding-left:0; }
-.cover-thumb { position:relative; flex:0 0 30px; width:30px; height:30px; margin-left:-7px; }
-.cover-thumb:first-child { margin-left:0; }
-.cover-thumb img { display:block; }
+.cover-stack { display:grid; grid-template-columns:repeat(2,16px); grid-template-rows:repeat(2,16px); gap:2px; flex:0 0 34px; width:34px; height:34px; padding:2px; box-sizing:border-box; overflow:hidden; border-radius:10px; background:#edf0f8; }
+.cover-thumb { display:grid; place-items:center; width:16px; height:16px; overflow:hidden; border-radius:4px; background:#fff; }
+.cover-thumb img { display:block; width:100%; height:100%; object-fit:contain!important; border:0; border-radius:0!important; background:transparent; }
+.cover-empty { display:grid; grid-column:1 / -1; grid-row:1 / -1; place-items:center; color:#8290aa; font-size:16px; }
 .list-info { min-width:0; overflow:hidden; }
 .list-meta { flex:0 0 auto; }
-
-/* Stable stacked covers for mixed image shapes. */
-.cover-stack { height:34px; align-items:center; }
-.cover-thumb { z-index:1; overflow:hidden; background:#f4f6ff; box-shadow:0 0 0 1px rgba(220,225,239,.8); }
-.cover-thumb:nth-child(2){z-index:2}.cover-thumb:nth-child(3){z-index:3}.cover-thumb:nth-child(4){z-index:4}
-.cover-thumb img { object-fit:contain!important; }
-body.dark .cover-thumb { background:#24334b; box-shadow:0 0 0 1px rgba(78,96,128,.8); }
-
-/* Slightly enlarge overview cover stack without changing its layout. */
-.cover-stack { flex-basis:108px; width:108px; height:38px; }
-.cover-thumb { flex-basis:34px; width:34px; height:34px; }
+body.dark .json-reference-thumb,body.dark .cover-stack { background:#24334b; }
+body.dark .cover-thumb { background:#31425e; }
+body.dark .cover-empty { color:#aebbe0; }
+@media(max-width:700px){ .json-reference-thumb { width:36px; height:36px; flex-basis:36px; } }
 
 /* Center a lone modal action instead of leaving it in the first column. */
 .modal-actions:has(> :only-child) { display:flex!important; justify-content:center!important; align-items:center; }
 .modal-actions:has(> :only-child) > :only-child { width:auto!important; min-width:180px; }
-
-/* Center each source image inside its stacked rounded backplate. */
-.cover-thumb { display:flex; align-items:center; justify-content:center; }
-.cover-thumb img { width:auto!important; height:auto!important; max-width:100%; max-height:100%; object-fit:contain!important; flex:0 0 auto; }
-
-/* Restore the original stacked backplate; only center the image inside it. */
-.cover-thumb { width:30px; height:30px; flex:0 0 30px; padding:2px; overflow:hidden; border:2px solid rgba(255,255,255,.5); border-radius:9px; background:#eef0f7; box-sizing:border-box; }
-.cover-thumb img { display:block; width:auto!important; height:auto!important; max-width:100%; max-height:100%; object-fit:contain!important; border:0; border-radius:0!important; background:transparent; }
-body.dark .cover-thumb { background:#24334b; border-color:rgba(64,81,110,.8); }
 
 /* Login description is a compact heading-like phrase. */
 .auth-card > p { font-size:16px; font-weight:700; line-height:1.5; letter-spacing:-.02em; color:#253653; }

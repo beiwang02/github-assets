@@ -28,9 +28,6 @@ PUBLIC_BASE_URL=https://img.example.com
 ADMIN_GITHUB_LOGIN=你的GitHub用户名
 ALLOWED_GITHUB_LOGINS=
 
-# 仅管理员登录后自动恢复的默认仓库（可选）
-# ADMIN_RESTORE_REPO=你的旧图床仓库名
-
 # 默认启用经典 Token 登录
 ENABLE_TOKEN_LOGIN=true
 ```

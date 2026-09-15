@@ -4,13 +4,13 @@
 
 ## 功能
 
-- GitHub 经典 Token 登录，可选“记住此设备”
+- GitHub Token 登录，可选“记住此设备”
 - 自动识别兼容结构的图片仓库，也可创建或手动选择仓库
 - 管理 JSON 库、图片资源和图片分组
 - 上传、改名、删除图片时自动同步 JSON 引用
 - 多选图片批量加入 JSON 或批量删除
 - GitHub SHA 冲突保护和原子 Git 提交
-- 管理员访问名单与仓库自动恢复（均为可选）
+- 管理员访问名单等可选功能，按需配置
 - 深色、浅色、跟随系统三种外观；适配移动端
 
 ## 数据流
@@ -22,7 +22,7 @@
 
 ## GitHub Token 权限
 
-本项目使用 **经典 Personal Access Token（classic）**。
+本项目推荐使用 **经典 Personal Access Token（classic）**。
 
 1. GitHub → **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)**。
 2. 选择 **Generate new token (classic)**，设置合理有效期。
@@ -139,19 +139,15 @@ docker compose up -d --build --force-recreate
 
 ## 管理员配置（可选）
 
-普通用户不需要使用管理员的旧仓库。管理员配置只用于限制网站访问或自动恢复管理员自己的仓库：
+管理员配置只用于按需控制网站访问；仓库会按项目规则自动检测，无需额外指定环境变量：
 
 ```env
 ADMIN_GITHUB_LOGIN=你的GitHub用户名
 ALLOWED_GITHUB_LOGINS=
-
-# 可选：管理员登录后自动恢复的仓库
-# ADMIN_RESTORE_REPO=你的旧图床仓库名
 ```
 
-- `ADMIN_GITHUB_LOGIN`：管理员 GitHub 用户名。
-- `ALLOWED_GITHUB_LOGINS`：逗号分隔允许名单；留空表示所有登录用户可访问。
-- `ADMIN_RESTORE_REPO`：仅管理员使用的可选默认仓库，不是项目固定仓库。
+- `ADMIN_GITHUB_LOGIN`：可选的管理员 GitHub 用户名；不配置不影响普通使用。
+- `ALLOWED_GITHUB_LOGINS`：可选的逗号分隔允许名单；留空表示所有登录用户可访问。
 
 ## 文件说明
 
