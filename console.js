@@ -305,7 +305,7 @@ function accountMenu() {
   const login=S.auth?.login||'当前账号';
   const displayName=S.auth?.name||login;
   const avatar=S.auth?.avatar_url||'';
-  openC(`<div class="modal-head"><div class="account-modal-head">${avatar?`<img src="${escC(avatar)}" alt="">`:''}<div><h2>${escC(displayName)}</h2><p>@${escC(login)}</p></div></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body choice-menu">${S.tokenLoginEnabled?'<button class="btn" data-action="forget-token">清除此设备记住的 Token</button>':''}<button class="btn btn-danger" data-action="logout">退出并返回登录页</button></div>`);
+  openC(`<div class="modal-head"><div class="account-modal-head">${avatar?`<img src="${escC(avatar)}" alt="">`:''}<div><h2>${escC(displayName)}</h2><p>@${escC(login)}</p></div></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body choice-menu">${S.tokenLoginEnabled?'<button class="btn" data-action="forget-token">清除此设备记住的 Token</button>':''}<button class="btn" data-action="logout">退出并返回登录页</button></div>`);
 }
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyAppearance);
 applyAppearance();
