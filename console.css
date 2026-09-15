@@ -422,22 +422,29 @@ body.dark .json-reference-actions [data-action="copy"],body.dark .json-reference
 /* JSON 引用缩略图与总览库封面。总览只展示，整行点击后进入库内操作。 */
 .json-reference-thumb { width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center; padding:5px; box-sizing:border-box; overflow:hidden; border-radius:9px; background:#f4f6ff; }
 .json-reference-thumb img { width:100%; height:100%; object-fit:contain; border-radius:0!important; }
-.library-list-row { position:relative; }
-.cover-stack { display:flex; align-items:center; gap:5px; flex:0 0 112px; width:112px; height:38px; overflow:hidden; }
-.cover-thumb { display:grid; place-items:center; flex:0 0 32px; width:32px; height:32px; overflow:hidden; border:1px solid #e3e7f0; border-radius:8px; background:#f7f8fc; }
-.cover-thumb img { display:block; width:100%; height:100%; padding:3px; box-sizing:border-box; object-fit:contain!important; border:0; border-radius:0!important; background:transparent; }
-.cover-thumb.broken::before { content:'?'; color:#7d8ba5; font-size:14px; font-weight:700; }
-.cover-empty { display:grid; width:32px; height:32px; place-items:center; color:#8290aa; border:1px solid #e3e7f0; border-radius:8px; background:#f7f8fc; font-size:14px; }
-.list-info { min-width:0; overflow:hidden; }
-.list-meta { flex:0 0 auto; }
-body.dark .json-reference-thumb,body.dark .cover-stack { background:#24334b; }
-body.dark .cover-thumb { background:#31425e; }
-body.dark .cover-empty { color:#aebbe0; }
+.library-list-row { display:grid; grid-template-columns:44px minmax(0,1fr) auto 34px; align-items:center; gap:13px; min-height:76px; padding:14px 16px; border-top:1px solid var(--line); position:relative; cursor:pointer; }
+.library-row-icon { display:grid; place-items:center; width:40px; height:40px; color:#fff; border-radius:12px; background:linear-gradient(135deg,#6672ff,#8d64e8); box-shadow:0 7px 14px rgba(102,114,255,.18); font-size:18px; }
+.list-info { min-width:0; overflow:hidden; display:grid; gap:4px; }
+.list-info b { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; }
+.list-info small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--muted); font-size:10px; }
+.list-meta { min-width:46px; text-align:right; display:grid; gap:3px; }
+.list-meta strong { font-size:12px; }
+.list-meta span { color:var(--muted); font-size:9px; }
+.library-list-row .tile-arrow { display:grid; place-items:center; width:34px; height:34px; color:#8b96aa; border-radius:10px; background:#f5f6fa; font-size:20px; }
+body.dark .library-row-icon { color:#edf1ff; background:linear-gradient(135deg,#5966c8,#7659b5); }
+body.dark .library-list-row .tile-arrow { background:#263650; color:#b6c1d5; }
+@media(max-width:700px){ .library-list-row { grid-template-columns:40px minmax(0,1fr) auto 30px; gap:10px; padding:13px; } .library-row-icon { width:36px; height:36px; font-size:16px; } .library-list-row .tile-arrow { width:30px; height:30px; } }
 @media(max-width:700px){ .json-reference-thumb { width:36px; height:36px; flex-basis:36px; } }
 
 /* Center a lone modal action instead of leaving it in the first column. */
 .modal-actions:has(> :only-child) { display:flex!important; justify-content:center!important; align-items:center; }
 .modal-actions:has(> :only-child) > :only-child { width:auto!important; min-width:180px; }
+.group-name-label { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:7px; }
+.group-name-label label { margin:0; }
+.group-delete-link { flex:0 0 auto; padding:0; color:#d66a76; font-size:10px; }
+.group-delete-link:hover { color:#c34f61; background:transparent; }
+.groupManageForm .modal-actions { display:grid!important; grid-template-columns:1fr 1fr; gap:10px; }
+.groupManageForm .modal-actions .btn { width:100%; min-width:0; }
 
 /* Login description is a compact heading-like phrase. */
 .auth-card > p { font-size:16px; font-weight:700; line-height:1.5; letter-spacing:-.02em; color:#253653; }
