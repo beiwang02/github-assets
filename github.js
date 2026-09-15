@@ -65,12 +65,13 @@ class GitHubClient {
     try {
       const u = new URL(url);
       if (u.protocol !== 'https:' || u.hostname !== 'raw.githubusercontent.com') return '';
-      const decoded = decodeURIComponent(u.pathname).slice(1);
-      const repos = [this.config.repo];
-      for (const repo of repos) for (const ref of [this.config.branch, `refs/heads/${this.config.branch}`]) {
-        const prefix = `${this.config.owner}/${repo}/${ref}/`;
-        if (decoded.startsWith(prefix)) return decoded.slice(prefix.length);
-      }
+      const parts = decodeURIComponent(u.pathname).slice(1).split('/');
+      if (parts.length < 4) return '';
+      const owner = String(parts.shift()).toLowerCase();
+      const repo = String(parts.shift()).toLowerCase();
+      if (owner !== String(this.config.owner).toLowerCase() || repo !== String(this.config.repo).toLowerCase()) return '';
+      parts.shift();
+      return parts.join('/');
     } catch { /* external or invalid URL */ }
     return '';
   }

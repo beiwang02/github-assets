@@ -293,8 +293,7 @@ body.dark .library-picker-delete { color:#e58a96; border-color:#513947; backgrou
 /* Keep login header actions visually balanced */
 .auth-head-actions > .auth-theme-button,
 .auth-head-actions > .project-link { width:42px; height:42px; display:grid; place-items:center; margin:0; padding:0; color:#dce6ff; border:1px solid rgba(179,197,239,.38); border-radius:12px; background:rgba(13,25,48,.72); box-shadow:0 8px 24px rgba(0,0,0,.18); }
-.auth-head-actions > .project-link:hover,
-.auth-head-actions > .auth-theme-button:hover { color:#fff; border-color:#aab8ff; background:rgba(47,62,112,.84); }
+.auth-head-actions > .project-link:hover { color:#fff; border-color:#aab8ff; background:rgba(47,62,112,.84); }
 .auth-card form > .auth-note:last-child { margin-top:22px; color:#8b9ab3; }
 body:not(.dark) .auth-head-actions > .auth-theme-button,
 body:not(.dark) .auth-head-actions > .project-link { color:#273a59; border-color:#c7d2e6; background:rgba(255,255,255,.92); box-shadow:0 8px 24px rgba(52,70,118,.16); }
@@ -303,7 +302,6 @@ body:not(.dark) .auth-card form > .auth-note:last-child { color:#53647c; }
 /* Login-card controls match the dark workspace theme control. */
 body.dark .auth-head-actions > .auth-theme-button,
 body.dark .auth-head-actions > .project-link { color:#edf1fb; border:1px solid #28364d; background:#17243a; box-shadow:none; }
-body.dark .auth-head-actions > .auth-theme-button:hover,
 body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#586bd8; background:#263857; }
 
 /* Theme button focus never changes its normal appearance. */
@@ -329,8 +327,6 @@ body:not(.dark) .auth-head-actions > .auth-theme-button:focus-visible {
   background:rgba(255,255,255,.92) !important;
 }
 @media (hover:hover) {
-  .auth-head-actions > .auth-theme-button:hover { color:#fff; border-color:#aab8ff; background:rgba(47,62,112,.84); }
-  body:not(.dark) .auth-head-actions > .auth-theme-button:hover { color:#263ab7; border-color:#8797df; background:#fff; }
 }
 
 .section-actions { display:flex; align-items:center; gap:8px; }
@@ -430,6 +426,7 @@ body.dark .json-reference-actions [data-action="copy"],body.dark .json-reference
 .cover-stack { display:flex; align-items:center; gap:5px; flex:0 0 126px; width:126px; height:34px; padding:2px; box-sizing:border-box; overflow:hidden; border-radius:10px; background:#edf0f8; }
 .cover-thumb { display:grid; place-items:center; flex:0 0 27px; width:27px; height:27px; overflow:hidden; border-radius:6px; background:#fff; }
 .cover-thumb img { display:block; width:100%; height:100%; object-fit:contain!important; border:0; border-radius:0!important; background:transparent; }
+.cover-thumb.broken::before { content:'?'; color:#7d8ba5; font-size:14px; font-weight:700; }
 .cover-empty { display:grid; width:100%; height:100%; place-items:center; color:#8290aa; font-size:16px; }
 .list-info { min-width:0; overflow:hidden; }
 .list-meta { flex:0 0 auto; }
