@@ -464,8 +464,3 @@ body:not(.dark) .auth-brand small { color:#8490a5; }
 body:not(.dark) .auth-brand strong { color:#263653; }
 .auth-card > p { font-size:13px; font-weight:500; line-height:1.8; letter-spacing:0; color:#42536d; }
 body.dark .auth-card > p { color:#b4bfd3; }
-
-/* Theme button keeps its normal dark-mode appearance after tapping. */
-.auth-head-actions > .auth-theme-button:focus,
-.auth-head-actions > .auth-theme-button:focus-visible,
-.auth-head-actions > .auth-theme-button:active { color:#edf1fb!important; border-color:#28364d!important; background:#17243a!important; box-shadow:none!important; outline:0!important; transform:none!important; }

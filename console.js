@@ -236,6 +236,8 @@ document.addEventListener('click', async e => {
 });
 document.addEventListener('click',e=>{ const sidebar=$c('#sidebar'); if(sidebar?.classList.contains('open')&&!e.target.closest('#sidebar')&&!e.target.closest('.mobile-menu')){ sidebar.classList.remove('open'); e.preventDefault(); e.stopImmediatePropagation(); } },true);
 document.addEventListener('submit',formSubmit);
+// Clear Safari's sticky button focus after each touch release.
+document.addEventListener('pointerup',e=>{const button=e.target.closest('button');if(button)button.blur();});
 document.addEventListener('input',e=>{const b=e.target.dataset.bind;if(!b)return;if(b==='asset-search')S.assetQuery=e.target.value;if(b==='library-search')S.libraryQuery=e.target.value;if(b==='icon-search')S.iconQuery=e.target.value;const cursor=e.target.selectionStart;renderC();const next=document.querySelector(`[data-bind="${b}"]`);if(next){next.focus();next.setSelectionRange(cursor,cursor);}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeC();if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$c('#globalSearch')?.focus();}});
 renderC(); void bootAuth();
