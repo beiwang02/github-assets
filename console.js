@@ -220,7 +220,7 @@ document.addEventListener('click', async e => {
   if(action==='edit-library'){e.stopPropagation();S.selectedLibrary=target.dataset.id||S.selectedLibrary;libraryModal(true);return;}
   if(action==='edit-icon'){editIconModal(Number(target.dataset.index));return;}
   if(action==='bulk-library'){if(!S.selected.size)return;bulkModal();return;}
-  if(action==='confirm-exec'){const run=S.modalConfirm; S.modalConfirm=null; if(run){const button=target;button.disabled=true;try{await run();}catch(err){notify(err.message||'操作失败','error');}}return;}
+  if(action==='confirm-exec'){const run=S.modalConfirm; S.modalConfirm=null; if(run){const button=target;button.disabled=true;const original=button.textContent;button.textContent='处理中…';try{await run();}catch(err){notify(err.message||'操作失败','error');if(document.body.contains(button)){button.disabled=false;button.textContent=original;}}return;}}
   if(action==='rename-repo'){if(S.repo.repo)nameModal('repoRename','重命名 GitHub 仓库',S.repo.repo,'仓库名称会同步更新到 GitHub。');return;}
   if(action==='delete-repo'){if(S.repo.owner&&S.repo.repo)confirmRepositoryDeletion();return;}
   if(action==='delete-library'){e.stopPropagation();const lib=S.libraries.find(x=>x.id===target.dataset.id);if(!lib)return;confirmC('永久删除 JSON 文件',`永久删除 ${lib.name}？
