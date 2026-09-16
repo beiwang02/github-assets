@@ -390,8 +390,9 @@ body.dark .reference-select { border-color:#536681; background:#202e47; }
 .detail-readonly p { margin:0; color:var(--ink); font:10px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace; overflow-wrap:anywhere; word-break:break-word; white-space:normal; }
 .asset-detail-preview,.json-icon-detail-preview { width:min(100%,260px); aspect-ratio:1/1; min-height:0; height:auto; justify-self:center; padding:14px; box-sizing:border-box; }
 .asset-detail-preview img,.json-icon-detail-preview img { width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; border-radius:0; box-shadow:none; }
-.modal:has(.asset-detail-actions),.modal:has(.icon-detail-actions) { max-height:calc(100dvh - 32px); overflow:hidden; }
-.asset-detail-actions { display:grid!important; grid-template-columns:repeat(3,minmax(0,1fr))!important; gap:7px!important; }
+.modal:has(.asset-detail-actions),.modal:has(.icon-detail-actions),.modal:has(#bulkForm) { max-height:calc(100dvh - 32px); overflow-y:auto; overscroll-behavior:contain; }
+.asset-detail-actions { display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr))!important; gap:7px!important; }
+#bulkForm select { width:100%; min-width:0; max-width:100%; }
 .icon-detail-actions { display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr))!important; gap:8px!important; }
 .asset-detail-actions .btn,.icon-detail-actions .btn { width:100%; min-width:0; padding:0 7px; white-space:nowrap; }
 .json-reference-actions [data-action="delete-icon"] { color:#d84f67!important; border-color:#f0aebb!important; background:#fff7f8!important; }

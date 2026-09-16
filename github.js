@@ -230,7 +230,19 @@ class GitHubClient {
     return this.atomic(`新建图片分组：${name}`, async snap => { if (snap.entries.some(e => e.path === path)) throw new Error('分组已经存在。'); return [{ path, mode:'100644', type:'blob', content:'\n' }]; });
   }
   async appendToLibrary(path, items) {
-    return this.atomic(`批量加入 JSON：${items.length} 张`, async snap => { const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('找不到 JSON 库。'); const value = structuredClone(doc.value), urls = new Set(value.icons.map(i => i.url)); for (const item of items) if (!urls.has(item.url)) { value.icons.push({ name:item.name, url:item.url }); urls.add(item.url); } return [this.jsonChange(doc, value)]; });
+    let added = 0, skipped = 0;
+    const result = await this.atomic(`加入 JSON 库：${items.length} 张`, async snap => {
+      const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('找不到 JSON 库。');
+      const value = structuredClone(doc.value), urls = new Set(value.icons.map(i => i.url));
+      // Recompute on every snapshot, including a concurrent-write retry.
+      added = 0; skipped = 0;
+      for (const item of items) {
+        if (urls.has(item.url)) { skipped++; continue; }
+        value.icons.push({ name:item.name, url:item.url }); urls.add(item.url); added++;
+      }
+      return added ? [this.jsonChange(doc, value)] : [];
+    });
+    return { ...result, added, skipped };
   }
   async saveIcon(path, index, name, url, expectedSha) {
     const cleanName = GitHubClient.name(name); const parsed = new URL(url); if (parsed.protocol !== 'https:' || parsed.hostname !== 'raw.githubusercontent.com') throw new Error('这里只允许使用 GitHub Raw HTTPS 图片直链。');
