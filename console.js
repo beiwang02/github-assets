@@ -1,6 +1,6 @@
 const S = {
   auth:null, csrf:'', oauthEnabled:false, tokenLoginEnabled:false, adminConfigured:false, isAdmin:false, policyConfigured:false, allowAll:true, allowedUsers:[], connectionError:'', view:'overview', connected:false, loading:false, loginBusy:false,
-  repo:{ owner:'', repo:'', branch:'main', assetsPath:'assets' },
+  repo: JSON.parse(localStorage.getItem('gh-image-repo') || 'null') || { owner:'', repo:'', branch:'main', assetsPath:'assets' },
   groups:[], assets:[], libraries:[], repos:[], selected:new Set(), selectedIcons:new Set(), group:'', assetQuery:'', libraryQuery:'', iconQuery:'', activity:[], uploadDraft:null, modalConfirm:null
 };
 const previewMode = location.protocol === 'minis:' && new URLSearchParams(location.search).get('demo') === '1';
@@ -169,7 +169,9 @@ async function autoSelectRepository() {
   try {
     S.repos = await currentClient().listRepos();
     const candidates = await currentClient().findProjectRepositories(S.repos); S.projectCandidates=candidates;
-    S.connectionError = candidates.length ? '' : '没有检测到符合图床结构的仓库，请到仓库设置手动选择或创建。';
+    if(candidates.length) S.connectionError='';
+    else if(S.repo.owner&&S.repo.repo) S.connectionError='暂未检测到图床结构，已保留当前填写的仓库；点击“保存并读取仓库”验证。';
+    else S.connectionError='没有检测到符合图床结构的仓库，请到仓库设置手动选择或创建。';
     renderC();
   } catch (error) { S.connectionError = error?.message || '自动检测仓库失败'; console.warn('自动检测仓库失败', error); renderC(); }
 }
