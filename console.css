@@ -68,6 +68,9 @@ body.dark .account-panel b { color:var(--ink); }
 .repo-switcher:hover .repo-open-icon { opacity:1; transform:translate(1px,-1px); }
 .repo-quick-list { display:flex; flex-wrap:wrap; gap:7px; margin:0 0 12px; }
 .repo-quick { max-width:100%; overflow:hidden; padding:8px 10px; color:#7c89a0; border:1px solid var(--line); border-radius:8px; background:#fbfcfe; font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
+.settings-grid > .settings-card:first-child > .btn { display:inline-flex; margin:2px 6px 14px 0; vertical-align:middle; }
+.settings-grid > .settings-card:first-child > form { clear:both; }
+@media(max-width:700px){ .settings-grid > .settings-card:first-child > .btn { margin-right:4px; margin-bottom:12px; padding-left:10px; padding-right:10px; font-size:10px; } }
 .repo-quick:hover, .repo-quick.active { color:var(--primary); border-color:#bfc6fd; background:#f3f4ff; }
 body.dark .repo-quick { background:#202e47; border-color:var(--line); color:#b7c2d3; }
 
