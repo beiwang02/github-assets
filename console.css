@@ -286,7 +286,7 @@ body.dark .library-selector select { color:var(--ink); border-color:#3b4d69; bac
 
 .library-picker-row { display:flex; align-items:stretch; gap:7px; }
 .library-picker-row .library-picker-option { flex:1; }
-.library-picker-delete { width:40px; flex:0 0 40px; color:#d66a76; }
+.library-picker-delete { width:64px; min-width:64px; flex:0 0 64px; display:grid; place-items:center; padding:0 8px; color:#d66a76; white-space:nowrap; word-break:keep-all; font-size:11px; }
 .json-reference-copy small { color:var(--muted); }
 body.dark .library-picker-delete { color:#e58a96; border-color:#513947; background:#202e47; }
 
