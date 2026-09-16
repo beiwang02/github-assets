@@ -122,6 +122,13 @@ class GitHubClient {
     return { repo, snapshot:snap, root, assets, groups:[...names].sort().map(name => ({ name, count:assets.filter(a => a.group === name).length })), libraries:snap.docs.map(d => ({ id:d.path, file:d.path, ...d, name:d.value.name || d.path.split('/').at(-1), description:d.value.description || '', icons:d.value.icons, count:d.value.icons.length })) };
   }
   jsonChange(doc, value) { return { path:doc.path, mode:'100644', type:'blob', content:JSON.stringify(value, null, 2) + '\n' }; }
+  keepRootEntries(snap, changes) {
+    for (const root of ['assets', 'json']) if (!snap.entries.some(e => e.path === `${root}/.gitkeep`)) changes.push({ path:`${root}/.gitkeep`, mode:'100644', type:'blob', content:'\n' });
+    return changes;
+  }
+  async ensureRootDirectories() {
+    return this.atomic('初始化图床目录结构', async snap => this.keepRootEntries(snap, []));
+  }
   async atomic(message, build) {
     if (GitHubClient.writing) throw new Error('上一项操作尚未完成，请稍候。');
     GitHubClient.writing = true;
