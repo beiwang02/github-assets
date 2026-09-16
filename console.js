@@ -146,8 +146,31 @@ function iconModal(icon) { openC(`<div class="modal-head"><div><h2>${escC(icon.n
 function bulkModal() { openC(`<div class="modal-head"><div><h2>批量加入 JSON</h2><p>所选图片会去重后追加到目标 JSON 库。</p></div><button class="modal-close" data-action="close-modal">×</button></div><form id="bulkForm"><div class="modal-body"><div class="modal-field"><label>目标 JSON 库</label><select name="library" required>${S.libraries.map(l=>`<option value="${escC(l.file)}">${escC(l.name)} · ${l.count} 个</option>`).join('')}</select></div><p class="field-help">已选择 ${S.selected.size} 张图片，图片文件不会被移动或删除。</p></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button type="submit" class="btn btn-primary">加入并提交</button></div></form>`); }
 async function readRepo(form) { const data = form instanceof HTMLFormElement ? new FormData(form) : { get:key => form.elements[key]?.value ?? '' }; S.repo={owner:String(data.get('owner')).trim(),repo:String(data.get('repo')).trim(),branch:String(data.get('branch')).trim()||'main',assetsPath:String(data.get('assetsPath')).trim().replace(/^\/+|\/+$/g,'')||'assets'}; if(!S.repo.owner||!S.repo.repo)return notify('请填写仓库用户名和名称','error'); localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); S.loading=true;renderC();notify('正在读取 GitHub 仓库…'); try { await currentClient().ensureRootDirectories(); const data=await currentClient().load(); S.connected=true; S.repo.assetsPath=data.root; localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); S.groups=data.groups;S.group=S.group&&data.groups.some(g=>g.name===S.group)?S.group:(data.groups[0]?.name||'');S.assets=data.assets;S.libraries=data.libraries.map((x,i)=>({...x,gradient:['linear-gradient(135deg,#7580ff,#8c64e9)','linear-gradient(135deg,#ffb26d,#eb7574)','linear-gradient(135deg,#43cec4,#5aa7e8)'][i%3]})); S.selected.clear();S.activity.unshift({title:'读取了 GitHub 仓库',detail:`${S.repo.owner}/${S.repo.repo} · ${S.libraries.length} 个 JSON、${S.assets.length} 张图片`,time:'刚刚'}); S.view='overview';notify(`读取完成：${S.libraries.length} 个 JSON、${S.assets.length} 张图片`); } catch(e){S.connected=false;notify(e.message||'读取失败','error');} finally{S.loading=false;renderC();} }
 async function refreshRepo() { if(!S.connected)return notify('请先连接你的仓库','error'); const oldView=S.view; const data=await currentClient().load(); S.repo.assetsPath=data.root; localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); S.groups=data.groups;S.group=S.group&&data.groups.some(g=>g.name===S.group)?S.group:(data.groups[0]?.name||'');S.assets=data.assets;S.libraries=data.libraries.map((x,i)=>({...x,gradient:['linear-gradient(135deg,#7580ff,#8c64e9)','linear-gradient(135deg,#ffb26d,#eb7574)','linear-gradient(135deg,#43cec4,#5aa7e8)'][i%3]})); S.view=oldView; S.selected.clear(); renderC(); }
+// One UI operation owns the repository context until its refresh completes.
+let pendingSubmission = false;
+function beginSubmission(scope, label='正在保存…') {
+  if(pendingSubmission || scope.dataset.busy==='1') return null;
+  pendingSubmission=true;
+  const previousBusy=scope.getAttribute('aria-busy');
+  scope.dataset.busy='1'; scope.setAttribute('aria-busy','true');
+  const buttons=scope.matches('button')?[scope]:[...scope.querySelectorAll('button')];
+  const snapshots=buttons.map(button=>({button,disabled:button.disabled,html:button.innerHTML}));
+  buttons.forEach(button=>{button.disabled=true;if(button===scope || button.type==='submit')button.textContent=label;});
+  return ()=>{
+    snapshots.forEach(({button,disabled,html})=>{button.disabled=disabled;button.innerHTML=html;});
+    delete scope.dataset.busy;
+    if(previousBusy===null)scope.removeAttribute('aria-busy');else scope.setAttribute('aria-busy',previousBusy);
+    pendingSubmission=false;
+  };
+}
+async function runSubmission(scope,label,run) {
+  const finish=beginSubmission(scope,label); if(!finish)return;
+  try { await run(); } catch(error) { notify(error.message||'操作失败','error'); } finally { finish(); }
+}
 async function formSubmit(e) {
-  e.preventDefault(); const form=e.target; if(form.dataset.busy==='1')return; const locked=['groupCreateForm','groupManageForm','repoRenameForm','assetRenameForm'].includes(form.id); if(locked){form.dataset.busy='1';form.querySelector('[type=submit]').disabled=true;}
+  e.preventDefault(); const form=e.target;
+  const labels={tokenLoginForm:'正在验证…',createRepoForm:'正在创建…',repoForm:'正在读取…',uploadForm:'正在上传并提交…'};
+  const finish=beginSubmission(form,labels[form.id]||'正在保存…'); if(!finish)return;
   try {
     if(form.id==='adminPolicyForm') return await saveAdminPolicy(form);
     if(form.id==='tokenLoginForm') { const data=new FormData(form), token=String(data.get('token')||'').trim(); if(!token) throw new Error('请先输入 GitHub Token。'); const submit=form.querySelector('[type="submit"]'); if(submit){submit.disabled=true;submit.textContent='正在验证…';} if(data.get('rememberToken')==='on') localStorage.setItem('gh-image-remembered-token',token); else localStorage.removeItem('gh-image-remembered-token'); const response=await fetch('/api/auth/token',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})}); const result=await response.json().catch(()=>({})); if(!response.ok) throw new Error(result.message||`Token 登录失败（HTTP ${response.status}）`); sessionStorage.setItem('gh-login-success','1'); location.reload(); return; }
@@ -161,7 +184,7 @@ async function formSubmit(e) {
     if(form.id==='libraryForm') { const data=new FormData(form), name=String(data.get('name')).trim(), description=String(data.get('description')).trim(), inputPath=String(data.get('path')).trim(), path=inputPath.replace(/\.json$/i,'')+'.json'; if(!name)return notify('请填写 JSON 库名称','error'); if(!inputPath)return notify('请填写 JSON 文件名','error'); const old=S.libraries.find(x=>x.id===S.editingLibrary); if(old) await currentClient().saveLibrary(old.file,path,name,description); else await currentClient().createLibrary(path,name,description); closeC(); await refreshRepo(); notify('JSON 库已提交'); return; }
     if(form.id==='iconForm') { const data=new FormData(form), lib=S.libraries.find(x=>x.id===S.selectedLibrary); await currentClient().saveIcon(lib.file,Number(data.get('index')),String(data.get('name')),String(data.get('url')),lib.sha); closeC(); await refreshRepo(); S.view='libraries'; renderC(); notify('图片引用已更新'); return; }
     if(form.id==='bulkForm') { const data=new FormData(form); const items=S.assets.filter(x=>S.selected.has(x.id)); await currentClient().appendToLibrary(String(data.get('library')),items); S.selected.clear(); closeC(); await refreshRepo(); notify(`已将 ${items.length} 张图片加入 JSON`); return; }
-  } catch(error) { const submit=form?.querySelector?.('[type="submit"]'); if(submit){submit.disabled=false;if(form.id==='tokenLoginForm')submit.textContent='验证并登录';} notify(error.message||'操作失败','error'); } finally { if(locked){delete form.dataset.busy;const b=form.querySelector('[type=submit]');if(b)b.disabled=false;} }
+  } catch(error) { notify(error.message||'操作失败','error'); } finally { finish(); }
 }
 async function logoutC() { try { await fetch('/api/auth/logout',{method:'POST',credentials:'include',headers:{'X-CSRF-Token':S.csrf}}); } finally { localStorage.removeItem('gh-image-remembered-token'); location.replace('/?logged_out=1'); } }
 async function autoSelectRepository() {
@@ -185,6 +208,7 @@ async function bootAuth() { if(location.protocol!=='http:'&&location.protocol!==
 
 document.addEventListener('click', async e => {
   const target=e.target.closest('[data-action],[data-view]'); if(!target)return;
+  if(pendingSubmission){e.preventDefault();return;}
   const view=target.dataset.view;
   if(view) { S.view=view; S.selected.clear(); $c('#sidebar').classList.remove('open'); renderC(); return; }
   const action=target.dataset.action;
@@ -199,11 +223,11 @@ document.addEventListener('click', async e => {
   if(action==='account-menu'){accountMenu();return;}
   if(action==='forget-token'){localStorage.removeItem('gh-image-remembered-token');closeC();notify('已清除此设备记住的 Token，当前会话保留');return;}
   if(action==='page-back'){if(history.state?.ghView&&history.state.depth>0)history.back();else{S.view='overview';renderC();}return;}
-  if(action==='logout'){await logoutC();return;}
+  if(action==='logout'){await runSubmission(target,'正在退出…',logoutC);return;}
   if(action==='create-repo'){if(!S.auth)return notify('请先登录 GitHub','error');createRepoModal();return;}
   if(action==='use-repo'){S.repo={owner:target.dataset.owner,repo:target.dataset.repo,branch:target.dataset.branch||'main',assetsPath:target.dataset.assetsPath||'assets'};renderC();return;}
   if(action==='settings'){closeC();S.view='settings';renderC();return;}
-  if(action==='refresh'){await refreshRepo();return;}
+  if(action==='refresh'){await runSubmission(target,'正在刷新…',refreshRepo);return;}
   if(action==='upload'){if(!S.connected)return notify('请先连接你的仓库','error');uploadModal();return;}
   if(action==='new-library'){if(!S.connected)return notify('请先连接你的仓库','error');libraryModal(false);return;}
   if(action==='new-icon'){if(!S.connected)return notify('请先连接你的仓库','error');uploadModal();return;}
@@ -222,7 +246,7 @@ document.addEventListener('click', async e => {
   if(action==='edit-library'){e.stopPropagation();S.selectedLibrary=target.dataset.id||S.selectedLibrary;libraryModal(true);return;}
   if(action==='edit-icon'){editIconModal(Number(target.dataset.index));return;}
   if(action==='bulk-library'){if(!S.selected.size)return;bulkModal();return;}
-  if(action==='confirm-exec'){const run=S.modalConfirm; S.modalConfirm=null; if(run){const button=target;button.disabled=true;const original=button.textContent;button.textContent='处理中…';try{await run();}catch(err){notify(err.message||'操作失败','error');if(document.body.contains(button)){button.disabled=false;button.textContent=original;}}return;}}
+  if(action==='confirm-exec'){const run=S.modalConfirm;if(run)await runSubmission(target,'正在处理…',async()=>{await run();if(S.modalConfirm===run)S.modalConfirm=null;});return;}
   if(action==='rename-repo'){if(S.repo.repo)nameModal('repoRename','重命名 GitHub 仓库',S.repo.repo,'仓库名称会同步更新到 GitHub。');return;}
   if(action==='delete-repo'){if(S.repo.owner&&S.repo.repo)confirmRepositoryDeletion();return;}
   if(action==='delete-library'){e.stopPropagation();const lib=S.libraries.find(x=>x.id===target.dataset.id);if(!lib)return;confirmC('永久删除 JSON 文件',`永久删除 ${lib.name}？
@@ -241,7 +265,7 @@ document.addEventListener('submit',formSubmit);
 // Clear Safari's sticky button focus after each touch release.
 document.addEventListener('pointerup',e=>{const button=e.target.closest('button');if(button)button.blur();});
 document.addEventListener('input',e=>{const b=e.target.dataset.bind;if(!b)return;if(b==='asset-search')S.assetQuery=e.target.value;if(b==='library-search')S.libraryQuery=e.target.value;if(b==='icon-search')S.iconQuery=e.target.value;const cursor=e.target.selectionStart;renderC();const next=document.querySelector(`[data-bind="${b}"]`);if(next){next.focus();next.setSelectionRange(cursor,cursor);}});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeC();if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$c('#globalSearch')?.focus();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!pendingSubmission)closeC();if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$c('#globalSearch')?.focus();}});
 renderC(); void bootAuth();
 
 /* Overview quick asset panel */
