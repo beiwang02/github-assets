@@ -41,7 +41,8 @@ function compareTimedC(a,b,field,direction){const x=timeC(a[field]),y=timeC(b[fi
 function sortedAssetsC(items,mode=S.assetSort){return [...items].sort((a,b)=>mode==='name-asc'?collatorC.compare(a.name,b.name):mode==='name-desc'?collatorC.compare(b.name,a.name):compareTimedC(a,b,'createdAt',mode==='oldest'?1:-1)||collatorC.compare(a.path,b.path));}
 function sortedLibrariesC(items){return [...items].sort((a,b)=>S.librarySort==='name-asc'?collatorC.compare(a.name,b.name):S.librarySort==='name-desc'?collatorC.compare(b.name,a.name):compareTimedC(a,b,'updatedAt',S.librarySort==='updated-asc'?1:-1)||collatorC.compare(a.file,b.file));}
 function sortedIconsC(lib,items){return [...items].sort((a,b)=>S.iconSort==='name-asc'?collatorC.compare(a.name,b.name):S.iconSort==='name-desc'?collatorC.compare(b.name,a.name):compareTimedC(a,b,'addedAt',S.iconSort==='oldest'?1:-1)||(a.index-b.index));}
-function sortSelectC(kind,value,options){return `<label class="sort-control"><span>排序</span><select data-sort="${kind}">${options.map(([v,l])=>`<option value="${v}" ${value===v?'selected':''}>${l}</option>`).join('')}</select></label>`;}
+function closeSortMenus(){document.querySelectorAll('[data-sort-menu].open').forEach(menu=>{menu.classList.remove('open');menu.querySelector('[data-action="toggle-sort"]')?.setAttribute('aria-expanded','false');});}
+function sortSelectC(kind,value,options){const current=options.find(([v])=>v===value)?.[1]||options[0]?.[1]||'';return `<div class="sort-control" data-sort-menu="${kind}"><span>排序</span><button type="button" class="sort-trigger" data-action="toggle-sort" aria-haspopup="menu" aria-expanded="false">${escC(current)} <b aria-hidden="true">⌄</b></button><div class="sort-menu" role="menu">${options.map(([v,l])=>`<button type="button" role="menuitemradio" aria-checked="${value===v}" class="sort-option ${value===v?'active':''}" data-action="choose-sort" data-sort-kind="${kind}" data-sort-value="${v}">${value===v?'<span aria-hidden="true">✓</span>':'<span aria-hidden="true"></span>'}${escC(l)}</button>`).join('')}</div></div>`;}
 function coverStack(lib) { const list=(lib.icons||[]).slice(0,3); return `<div class="library-preview-strip" aria-hidden="true">${list.length?list.map(x=>`<span class="library-preview-tile"><img src="${escC(x.url)}" alt="" onerror="this.closest('.library-preview-tile').classList.add('broken');this.remove()"></span>`).join(''):'<span class="library-row-icon">▦</span>'}</div>`; }
 function activityView(limit=20) { return S.activity.length?S.activity.slice(0,limit).map(a=>`<div class="activity-item"><div class="activity-line"><i class="activity-dot"></i></div><div class="activity-copy"><b>${escC(a.title)}</b><small>${escC(a.detail)} · ${a.time}</small></div></div>`).join(''):emptyC('◷','暂无同步记录','读取仓库或提交操作后会显示在这里。'); }
 function overviewView() {
@@ -242,7 +243,9 @@ document.addEventListener('click', async e => {
   if(action==='toggle-sidebar'){ $c('#sidebar').classList.toggle('open'); return; }
   if(action==='open-project'){ window.open('https://github.com/beiwang02/github-assets','_blank'); return; }
   if(action==='open-repo'){ if(S.repo.owner&&S.repo.repo) window.open(`https://github.com/${encodeURIComponent(S.repo.owner)}/${encodeURIComponent(S.repo.repo)}`,'_blank'); else notify('当前还没有连接仓库','error'); return; }
+  if(action==='toggle-sort'){const menu=target.closest('[data-sort-menu]');if(!menu)return;const open=menu.classList.toggle('open');target.setAttribute('aria-expanded',String(open));return;}
   if(action==='toggle-theme'){cycleAppearance();target.blur();return;}
+  if(action==='choose-sort'){const kind=target.dataset.sortKind,value=target.dataset.sortValue;const map={assets:['assetSort','gh-assets-sort'],libraries:['librarySort','gh-libraries-sort'],icons:['iconSort','gh-icons-sort']},pair=map[kind];if(!pair)return;S[pair[0]]=value;localStorage.setItem(pair[1],value);closeSortMenus();if(kind==='libraries')libraryPickerModal();else renderC();return;}
   if(action==='account-menu'){accountMenu();return;}
   if(action==='forget-token'){localStorage.removeItem('gh-image-remembered-token');closeC();notify('已清除此设备记住的 Token，当前会话保留');return;}
   if(action==='page-back'){if(history.state?.ghView&&history.state.depth>0)history.back();else{S.view='overview';renderC();}return;}
@@ -284,8 +287,7 @@ document.addEventListener('click', async e => {
   if(action==='manage-group'){manageGroupModal();return;}
   if(action==='confirm-delete-group'){const group=target.dataset.group;if(!group)return;confirmC('永久删除分组',`永久删除分组 ${group} 及其中图片？`,async()=>{await currentClient().deleteGroup(group);S.group='';closeC();await refreshRepo();notify('分组已删除');});return;}
 });
-document.addEventListener('click',e=>{ const sidebar=$c('#sidebar'); if(sidebar?.classList.contains('open')&&!e.target.closest('#sidebar')&&!e.target.closest('.mobile-menu')){ sidebar.classList.remove('open'); e.preventDefault(); e.stopImmediatePropagation(); } },true);
-document.addEventListener('change',e=>{const kind=e.target.dataset.sort;if(!kind)return;const map={assets:['assetSort','gh-assets-sort'],libraries:['librarySort','gh-libraries-sort'],icons:['iconSort','gh-icons-sort']},pair=map[kind];if(!pair)return;S[pair[0]]=e.target.value;localStorage.setItem(pair[1],e.target.value);if(kind==='libraries')libraryPickerModal();else renderC();});
+document.addEventListener('click',e=>{ const sidebar=$c('#sidebar'); if(sidebar?.classList.contains('open')&&!e.target.closest('#sidebar')&&!e.target.closest('.mobile-menu')){ sidebar.classList.remove('open'); e.preventDefault(); e.stopImmediatePropagation(); } if(!e.target.closest('[data-sort-menu]'))closeSortMenus(); },true);
 document.addEventListener('submit',formSubmit);
 // Clear Safari's sticky button focus after each touch release.
 document.addEventListener('pointerup',e=>{const button=e.target.closest('button');if(button)button.blur();});
