@@ -332,6 +332,13 @@ body.dark .top-actions .appearance-button.tap-flash,
 body.dark .top-actions .github-repo-link.tap-flash,
 body.dark .auth-head-actions > .auth-theme-button.tap-flash,
 body.dark .auth-head-actions > .project-link.tap-flash { border-color:#8d99ff !important; }
+/* Top controls: tap feedback is deliberately border-only. */
+.top-actions .appearance-button.tap-flash,
+.top-actions .github-repo-link.tap-flash { background:var(--surface) !important; box-shadow:none !important; filter:none !important; }
+.auth-head-actions > .auth-theme-button.tap-flash,
+.auth-head-actions > .project-link.tap-flash { background:rgba(255,255,255,.92) !important; box-shadow:none !important; filter:none !important; }
+body.dark .auth-head-actions > .auth-theme-button.tap-flash,
+body.dark .auth-head-actions > .project-link.tap-flash { background:#17243a !important; box-shadow:none !important; filter:none !important; }
 
 @media (hover:hover) {
 }
@@ -521,3 +528,7 @@ body.dark :where(button,.btn,.icon-btn,.text-link,.nav-item,.repo-quick,.library
 .detail-readonly { width:100%; }
 .detail-readonly p { text-align:left; font-size:clamp(9px,2.5vw,10px); letter-spacing:-.025em; line-height:1.42; overflow-wrap:anywhere; word-break:normal; hyphens:none; }
 .detail-readonly b { text-align:left; }
+
+/* Final unified tap feedback: every bordered control changes border only. */
+.tap-flash { border-color:var(--primary) !important; box-shadow:none !important; filter:none !important; transform:none !important; }
+body.dark .tap-flash { border-color:#8d99ff !important; box-shadow:none !important; filter:none !important; transform:none !important; }
