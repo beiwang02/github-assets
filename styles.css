@@ -107,7 +107,6 @@ kbd { padding: 3px 5px; border: 1px solid #e5e9f0; border-radius: 5px; color: #a
 
 .hero { min-height: 206px; position: relative; overflow: hidden; padding: 30px 33px; margin-bottom: 25px; border-radius: 22px; color: #fff; background: radial-gradient(circle at 84% 8%, rgba(117,139,255,.65), transparent 31%), radial-gradient(circle at 72% 120%, rgba(58,196,198,.34), transparent 35%), linear-gradient(122deg, #202b63, #363f99 62%, #4b75c7); box-shadow: 0 14px 30px rgba(50,64,173,.21); }
 .hero::before { content: ""; width: 220px; height: 220px; position: absolute; right: 95px; top: -112px; border: 1px solid rgba(255,255,255,.13); border-radius: 50%; box-shadow: 0 0 0 25px rgba(255,255,255,.035), 0 0 0 51px rgba(255,255,255,.025); }
-.hero::after { content: "✦"; position: absolute; right: 57px; top: 43px; color: rgba(255,255,255,.24); font-size: 66px; transform: rotate(14deg); }
 .hero-content { position: relative; z-index: 1; max-width: 570px; }
 .hero .mini-label { color: #aebdff; font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
 .hero h2 { margin: 11px 0 9px; max-width: 490px; font-size: 25px; letter-spacing: -.04em; line-height: 1.25; }
