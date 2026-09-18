@@ -87,7 +87,7 @@ async function readBody(req) {
 function allowedAPI(url, method) {
   if (url.origin !== 'https://api.github.com' || url.username || url.password || url.hash) return false;
   const p = url.pathname;
-  if (method === 'GET') return p === '/user' || p === '/user/repos' || /^\/repos\/[^/]+\/[^/]+(?:\/git\/(?:ref|refs|commits|trees|blobs)\/.*|\/contents(?:\/.*)?)?$/.test(p);
+  if (method === 'GET') return p === '/user' || p === '/user/repos' || /^\/repos\/[^/]+\/[^/]+(?:\/commits|\/git\/(?:ref|refs|commits|trees|blobs)\/.*|\/contents(?:\/.*)?)?$/.test(p);
   if (method === 'POST') return p === '/user/repos' || /^\/repos\/[^/]+\/[^/]+\/git\/(?:trees|commits|blobs)$/.test(p);
   if (method === 'PATCH') return /^\/repos\/[^/]+\/[^/]+\/git\/refs\/heads\/.+/.test(p) || /^\/repos\/[^/]+\/[^/]+$/.test(p);
   if (method === 'DELETE') return DELETE_REPO && (/^\/repos\/[^/]+\/[^/]+$/.test(p) || /^\/repos\/[^/]+\/[^/]+\/contents(?:\/.*)?$/.test(p));
