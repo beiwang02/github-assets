@@ -230,6 +230,8 @@ async function createRepositoryFromModal(form) {
 
 async function bootAuth() { if(location.protocol!=='http:'&&location.protocol!=='https:'){ renderC(); return; } try { const r=await fetch('/api/auth/me',{credentials:'include'}), data=await r.json(); S.auth=data.user||null; S.csrf=data.csrf||''; S.oauthEnabled=Boolean(data.oauthEnabled); S.tokenLoginEnabled=Boolean(data.tokenLoginEnabled); S.adminConfigured=Boolean(data.adminConfigured); S.isAdmin=Boolean(data.isAdmin); S.policyConfigured=Boolean(data.policyConfigured); if(S.auth) { await loadAdminPolicy(); renderC(); if(sessionStorage.getItem('gh-login-success')==='1'){ sessionStorage.removeItem('gh-login-success'); notify('已登录'); } await autoSelectRepository(); } } catch { S.auth=null; } renderC(); }
 
+function flashTopAction(button){if(!button)return;button.classList.remove('tap-flash');void button.offsetWidth;button.classList.add('tap-flash');clearTimeout(button._tapFlashTimer);button._tapFlashTimer=setTimeout(()=>button.classList.remove('tap-flash'),240);}
+
 document.addEventListener('click', async e => {
   const target=e.target.closest('[data-action],[data-view]'); if(!target)return;
   if(pendingSubmission){e.preventDefault();return;}
@@ -241,10 +243,10 @@ document.addEventListener('click', async e => {
   if(action==='modal-backdrop'){if(e.target===target)closeC();return;}
   if(action==='close-modal'){closeC();return;}
   if(action==='toggle-sidebar'){ $c('#sidebar').classList.toggle('open'); return; }
-  if(action==='open-project'){ window.open('https://github.com/beiwang02/github-assets','_blank'); return; }
+  if(action==='open-project'){ flashTopAction(target); window.open('https://github.com/beiwang02/github-assets','_blank'); return; }
   if(action==='open-repo'){ if(S.repo.owner&&S.repo.repo) window.open(`https://github.com/${encodeURIComponent(S.repo.owner)}/${encodeURIComponent(S.repo.repo)}`,'_blank'); else notify('当前还没有连接仓库','error'); return; }
   if(action==='toggle-sort'){const menu=target.closest('[data-sort-menu]');if(!menu)return;const open=menu.classList.toggle('open');target.setAttribute('aria-expanded',String(open));return;}
-  if(action==='toggle-theme'){cycleAppearance();target.blur();return;}
+  if(action==='toggle-theme'){flashTopAction(target);cycleAppearance();target.blur();return;}
   if(action==='choose-sort'){const kind=target.dataset.sortKind,value=target.dataset.sortValue;const map={assets:['assetSort','gh-assets-sort'],libraries:['librarySort','gh-libraries-sort'],icons:['iconSort','gh-icons-sort']},pair=map[kind];if(!pair)return;S[pair[0]]=value;localStorage.setItem(pair[1],value);closeSortMenus();if(kind==='libraries')libraryPickerModal();else renderC();return;}
   if(action==='account-menu'){accountMenu();return;}
   if(action==='forget-token'){localStorage.removeItem('gh-image-remembered-token');closeC();notify('已清除此设备记住的 Token，当前会话保留');return;}
