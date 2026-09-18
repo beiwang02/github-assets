@@ -40,7 +40,7 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .brand { display: flex; align-items: center; gap: 11px; padding: 0 10px 30px; }
 .brand-mark { width: 35px; height: 35px; border-radius: 11px; color: white; display: grid; place-items: center; background: linear-gradient(135deg, #6672ff, #a47aff); box-shadow: 0 7px 18px rgba(102,114,255,.3); font-size: 19px; }
 .brand-copy { display: grid; line-height: 1.1; letter-spacing: .02em; }
-.brand-copy strong { font-size: 16px; color: #fff; letter-spacing: .02em; white-space: nowrap; }
+.brand-copy strong { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 16px; font-weight: 600; color: #fff; letter-spacing: 0; white-space: nowrap; }
 .brand-copy span { font-size: 11px; color: #7f90aa; margin-top: 5px; }
 .repo-switcher { width: 100%; color: #dae2ee; padding: 11px; border: 1px solid rgba(183,202,231,.15); border-radius: 14px; display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.065); text-align: left; transition: .2s; }
 .repo-switcher:hover { background: rgba(255,255,255,.11); border-color: rgba(183,202,231,.28); }
