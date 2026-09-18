@@ -176,9 +176,7 @@ body.dark .token-guide-body { color:#e8edf7; }
 .dashboard-columns > section + section { margin-top:0; }
 .overview-assets-section + .dashboard-columns { margin-top:32px; }
 
-.token-guide-button { -webkit-tap-highlight-color:transparent; outline:0; box-shadow:none; }
-.token-guide-button:active,.token-guide-button:focus { background:#f7f8fd; outline:0; box-shadow:none; }
-body.dark .token-guide-button:active,body.dark .token-guide-button:focus { background:#202e47; }
+.token-guide-button { -webkit-tap-highlight-color:transparent; }
 
 /* Upload modal controls stay consistent across themes and taps */
 .modal button,.modal select { -webkit-tap-highlight-color:transparent; }
@@ -192,9 +190,6 @@ body.dark select { color-scheme:dark; }
 /* Detail previews and icon actions follow the selected theme */
 body.dark .asset-detail-preview { background:linear-gradient(135deg,#253650,#203d49); }
 body.dark .table-icon { background:#273751; }
-button,.btn,.icon-btn,.text-link,.nav-item { -webkit-tap-highlight-color:transparent; }
-button:active,.btn:active,.icon-btn:active,.text-link:active,.nav-item:active { outline:0; box-shadow:none; }
-
 /* JSON workspace only: compact library picker and one-row references. */
 .json-workspace { padding:16px 20px; margin-bottom:18px; }
 .json-workspace-top { display:flex; align-items:center; justify-content:space-between; gap:16px; }
@@ -232,7 +227,6 @@ body.dark .json-reference-list,.dark .library-picker-option { border-color:#3b4d
 
 /* Prevent iOS native pressed highlight on controls */
 button,.btn,.icon-btn,.text-link,.nav-item,.asset-select,.asset-copy,.quick-copy { -webkit-appearance:none; appearance:none; -webkit-tap-highlight-color:rgba(0,0,0,0); touch-action:manipulation; }
-button:active,.btn:active,.icon-btn:active,.text-link:active,.nav-item:active,.asset-select:active,.asset-copy:active,.quick-copy:active { background-color:inherit; filter:none; transform:none; }
 
 .remember-token input { -webkit-appearance:none; appearance:none; position:relative; width:18px; height:18px; margin:0; border:1px solid #aeb8c8; border-radius:5px; background:#fff; vertical-align:middle; }
 .remember-token input:checked { border-color:var(--primary); background:var(--primary); }
@@ -308,28 +302,6 @@ body.dark .auth-head-actions > .auth-theme-button,
 body.dark .auth-head-actions > .project-link { color:#edf1fb; border:1px solid #28364d; background:#17243a; box-shadow:none; }
 body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#586bd8; background:#263857; }
 
-/* Theme button focus never changes its normal appearance. */
-.auth-head-actions > .auth-theme-button:active,
-.auth-head-actions > .auth-theme-button:focus,
-.auth-head-actions > .auth-theme-button:focus-visible {
-  outline:0 !important;
-  box-shadow:none !important;
-  transform:none !important;
-}
-body.dark .auth-head-actions > .auth-theme-button:active,
-body.dark .auth-head-actions > .auth-theme-button:focus,
-body.dark .auth-head-actions > .auth-theme-button:focus-visible {
-  color:#edf1fb !important;
-  border-color:#28364d !important;
-  background:#17243a !important;
-}
-body:not(.dark) .auth-head-actions > .auth-theme-button:active,
-body:not(.dark) .auth-head-actions > .auth-theme-button:focus,
-body:not(.dark) .auth-head-actions > .auth-theme-button:focus-visible {
-  color:#273a59 !important;
-  border-color:#c7d2e6 !important;
-  background:rgba(255,255,255,.92) !important;
-}
 @media (hover:hover) {
 }
 
@@ -414,7 +386,6 @@ body.dark .sort-trigger,body.dark .sort-menu{color:var(--ink);border-color:#3b4d
 .icon-detail-actions { display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr))!important; gap:8px!important; }
 .asset-detail-actions .btn,.icon-detail-actions .btn { width:100%; min-width:0; padding:0 7px; white-space:nowrap; }
 .json-reference-actions [data-action="delete-icon"] { color:#d84f67!important; border-color:#f0aebb!important; background:#fff7f8!important; }
-[data-action="copy"]:focus,[data-action="copy"]:focus-visible,[data-action="copy"]:active { outline:0!important; box-shadow:none!important; transform:none!important; }
 body.dark .json-reference-actions [data-action="delete-icon"] { color:#ff9cac!important; border-color:#70434d!important; background:#30212b!important; }
 @media(max-width:700px){
  .modal:has(.asset-detail-actions),.modal:has(.icon-detail-actions) { padding:18px; }
@@ -425,21 +396,12 @@ body.dark .json-reference-actions [data-action="delete-icon"] { color:#ff9cac!im
  .asset-detail-actions .btn,.icon-detail-actions .btn { height:36px; font-size:9px; }
 }
 
-/* Copy controls never change appearance after tap/click. */
-[data-action="copy"] { transition:none!important; }
-.btn[data-action="copy"]:hover,.btn[data-action="copy"]:focus,.btn[data-action="copy"]:focus-visible,.btn[data-action="copy"]:active { color:#5e6b80!important; border-color:var(--line)!important; background:var(--surface)!important; box-shadow:0 3px 8px rgba(33,49,78,.02)!important; transform:none!important; }
-.icon-btn[data-action="copy"]:hover,.icon-btn[data-action="copy"]:focus,.icon-btn[data-action="copy"]:focus-visible,.icon-btn[data-action="copy"]:active { color:#8090a6!important; border-color:var(--line)!important; background:#fff!important; box-shadow:none!important; transform:none!important; }
-.asset-copy[data-action="copy"]:hover,.asset-copy[data-action="copy"]:focus,.asset-copy[data-action="copy"]:focus-visible,.asset-copy[data-action="copy"]:active { color:var(--primary)!important; border-color:transparent!important; background:transparent!important; box-shadow:none!important; transform:none!important; }
-.quick-copy[data-action="copy"]:hover,.quick-copy[data-action="copy"]:focus,.quick-copy[data-action="copy"]:focus-visible,.quick-copy[data-action="copy"]:active { color:var(--primary)!important; border-color:var(--line)!important; background:var(--surface)!important; box-shadow:none!important; transform:none!important; }
-body.dark .btn[data-action="copy"]:hover,body.dark .btn[data-action="copy"]:focus,body.dark .btn[data-action="copy"]:active,body.dark .icon-btn[data-action="copy"]:hover,body.dark .icon-btn[data-action="copy"]:focus,body.dark .icon-btn[data-action="copy"]:active { color:var(--ink)!important; border-color:var(--line)!important; background:var(--surface)!important; }
-body.dark .quick-copy[data-action="copy"]:hover,body.dark .quick-copy[data-action="copy"]:focus,body.dark .quick-copy[data-action="copy"]:active { color:#cbd3ff!important; border-color:var(--line)!important; background:#31425e!important; }
-
 /* Keep preview backplates, but never round the image itself. */
 .quick-asset-image img,.asset-preview img,.json-reference-row>img,.cover-stack img,.table-icon img,.asset-detail-preview img,.json-icon-detail-preview img { border-radius:0!important; }
 .quick-asset-image img,.asset-preview img,.json-reference-row>img,.table-icon img,.asset-detail-preview img,.json-icon-detail-preview img { object-fit:contain!important; }
-/* JSON-row copy controls use neutral gray, with no tap-state color change. */
-.json-reference-actions [data-action="copy"],.json-reference-actions [data-action="copy"]:hover,.json-reference-actions [data-action="copy"]:focus,.json-reference-actions [data-action="copy"]:focus-visible,.json-reference-actions [data-action="copy"]:active { color:#8090a6!important; border-color:var(--line)!important; background:#fff!important; box-shadow:none!important; transform:none!important; }
-body.dark .json-reference-actions [data-action="copy"],body.dark .json-reference-actions [data-action="copy"]:hover,body.dark .json-reference-actions [data-action="copy"]:focus,body.dark .json-reference-actions [data-action="copy"]:active { color:var(--ink)!important; border-color:var(--line)!important; background:var(--surface)!important; }
+/* JSON-row copy controls keep their neutral gray identity while receiving the shared press/focus feedback. */
+.json-reference-actions [data-action="copy"] { color:#8090a6; }
+body.dark .json-reference-actions [data-action="copy"] { color:var(--ink); }
 
 /* JSON 引用缩略图与总览库封面。总览只展示，整行点击后进入库内操作。 */
 .json-reference-thumb { width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center; padding:5px; box-sizing:border-box; overflow:hidden; border-radius:9px; background:#f4f6ff; }
@@ -508,3 +470,20 @@ body.dark .auth-brand strong,body.dark .brand-copy strong { color:#d8e3ff; }
 .auth-brand small { color:#7f90aa; opacity:1; letter-spacing:.18em; }
 .auth-card > p { font-size:13px; font-weight:500; line-height:1.8; letter-spacing:0; color:#42536d; }
 body.dark .auth-card > p { color:#b4bfd3; }
+
+/* Unified interaction feedback: hover only on hover-capable pointers; press never reflows. */
+:where(button,.btn,.icon-btn,.text-link,.nav-item,.repo-quick,.library-picker,.library-picker-option,.library-picker-create,.quick-asset,.json-reference-row,.asset-select,.asset-copy,.quick-copy,.modal-close,.top-icon,.project-link,.token-eye,.token-guide-button) { -webkit-tap-highlight-color: transparent; }
+@media (hover:hover) and (pointer:fine) {
+  :where(button,.btn,.icon-btn,.text-link,.nav-item,.repo-quick,.library-picker,.library-picker-option,.library-picker-create,.quick-asset,.json-reference-row,.asset-select,.asset-copy,.quick-copy,.modal-close,.top-icon,.project-link,.token-eye,.token-guide-button):not(:disabled):not(.active):hover { filter:brightness(.985); }
+  body.dark :where(button,.btn,.icon-btn,.text-link,.nav-item,.repo-quick,.library-picker,.library-picker-option,.library-picker-create,.quick-asset,.json-reference-row,.asset-select,.asset-copy,.quick-copy,.modal-close,.top-icon,.project-link,.token-eye,.token-guide-button):not(:disabled):not(.active):hover { filter:brightness(1.1); }
+}
+:where(button,.btn,.icon-btn,.text-link,.nav-item,.repo-quick,.library-picker,.library-picker-option,.library-picker-create,.quick-asset,.json-reference-row,.asset-select,.asset-copy,.quick-copy,.modal-close,.top-icon,.project-link,.token-eye,.token-guide-button):not(:disabled):active { filter:brightness(.96); box-shadow:inset 0 0 0 999px rgba(40,55,90,.055); transform:none; }
+body.dark :where(button,.btn,.icon-btn,.text-link,.nav-item,.repo-quick,.library-picker,.library-picker-option,.library-picker-create,.quick-asset,.json-reference-row,.asset-select,.asset-copy,.quick-copy,.modal-close,.top-icon,.project-link,.token-eye,.token-guide-button):not(:disabled):active { filter:brightness(1.12); box-shadow:inset 0 0 0 999px rgba(180,200,255,.07); }
+:where(button,.btn,.icon-btn,.text-link,.nav-item,.repo-quick,.library-picker,.library-picker-option,.library-picker-create,.asset-select,.asset-copy,.quick-copy,.modal-close,.top-icon,.project-link,.token-eye,.token-guide-button):focus-visible { outline:2px solid color-mix(in srgb,var(--primary) 62%,transparent); outline-offset:2px; box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 14%,transparent); }
+:where(input,select,textarea):focus-visible { outline:2px solid color-mix(in srgb,var(--primary) 55%,transparent); outline-offset:1px; }
+/* Do not neutralize press/focus feedback on copy controls. */
+[data-action="copy"] { transition:filter .12s ease,box-shadow .12s ease; }
+/* Long Raw URLs remain left-aligned, dense, and safely breakable. */
+.detail-readonly { width:100%; }
+.detail-readonly p { text-align:left; font-size:clamp(9px,2.5vw,10px); letter-spacing:-.025em; line-height:1.42; overflow-wrap:anywhere; word-break:normal; hyphens:none; }
+.detail-readonly b { text-align:left; }

@@ -393,3 +393,12 @@ body:not(.dark) .auth-theme-button:hover { color:#263ab7; border-color:#8797df; 
 /* Keep the translucent topbar and extend its background through the safe area. */
 .topbar::before { content:""; position:absolute; left:0; right:0; bottom:100%; height:env(safe-area-inset-top); background:inherit; border-bottom:inherit; pointer-events:none; }
 body.dark .topbar::before { background:rgba(13,23,41,.84); border-bottom-color:#1c2a40; }
+
+/* Settings info rows use the same quiet theme divider in both modes. */
+.info-list { gap:0; padding:4px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.info-row { min-height:42px; box-sizing:border-box; padding:11px 0; border-bottom:1px solid var(--line); }
+.info-row:last-child { border-bottom:0; }
+.info-list > .btn { display:inline-flex; margin:10px 0; }
+body.dark .info-list { border-color:#2a3952; }
+body.dark .info-row { border-color:#2a3952; }
+@media(max-width:700px){ .info-row { gap:12px; padding:11px 0; } .info-row b { max-width:58%; } .info-list > .btn { width:100%; justify-content:center; margin:12px 0; } }
