@@ -35,6 +35,8 @@ function clearOAuthCookie() { return cookie('gh_oauth_state', '', 0); }
 const equal = (a, b) => typeof a === 'string' && typeof b === 'string' && a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
 const ROOT = new URL('./', import.meta.url);
 const assets = new Map([
+  ['/fonts/inter-latin-600-normal.woff2','fonts/inter-latin-600-normal.woff2'],
+  ['/fonts/OFL.txt','fonts/OFL.txt'],
   ['/','index.html'], ['/index.html','index.html'], ['/styles.css','styles.css'],
   ['/console.css','console.css'], ['/console.js','console.js'], ['/github.js','github.js'],
   ['/source/index.html','index.html'], ['/source/styles.css','styles.css'], ['/source/console.css','console.css'],
@@ -42,7 +44,7 @@ const assets = new Map([
   ['/source/Dockerfile','Dockerfile'], ['/source/compose.yaml','compose.yaml'], ['/source/.env.example','.env.example'],
   ['/source/install.sh','install.sh']
 ]);
-const mime = { html:'text/html; charset=utf-8', css:'text/css; charset=utf-8', js:'text/javascript; charset=utf-8' };
+const mime = { woff2:'font/woff2', html:'text/html; charset=utf-8', css:'text/css; charset=utf-8', js:'text/javascript; charset=utf-8' };
 function cookies(req) {
   return Object.fromEntries((req.headers.cookie || '').split(';').map(s => s.trim().split('=')).filter(p => p.length === 2));
 }
