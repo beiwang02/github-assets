@@ -35,6 +35,8 @@ function clearOAuthCookie() { return cookie('gh_oauth_state', '', 0); }
 const equal = (a, b) => typeof a === 'string' && typeof b === 'string' && a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
 const ROOT = new URL('./', import.meta.url);
 const assets = new Map([
+  ['/popup.js','popup.js'], ['/source/popup.js','popup.js'],
+  ...['core-1.8.0.umd.min.js','dom-1.8.0.umd.min.js','LICENSE','README.md'].flatMap(name => [[`/vendor/floating-ui/${name}`,`vendor/floating-ui/${name}`],[`/source/vendor/floating-ui/${name}`,`vendor/floating-ui/${name}`]]),
   ['/fonts/inter-latin-600-normal.woff2','fonts/inter-latin-600-normal.woff2'],
   ['/fonts/OFL.txt','fonts/OFL.txt'],
   ['/','index.html'], ['/index.html','index.html'], ['/styles.css','styles.css'],

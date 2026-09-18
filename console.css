@@ -346,7 +346,10 @@ body.dark .reference-select { border-color:#536681; background:#202e47; }
 .sort-control.open .sort-trigger{box-shadow:none}
 .sort-control.open .sort-trigger b{transform:translateY(-50%) rotate(180deg)}
 .sort-menu{position:absolute;z-index:35;top:calc(100% + 7px);left:0;grid-column:2;display:none;width:max-content;min-width:148px;padding:6px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:0 16px 36px rgba(31,45,75,.16)}
-.sort-control.open .sort-menu{display:grid;gap:2px}
+.sort-menu.floating-menu{position:fixed;z-index:1200;display:grid;gap:2px;min-width:0;width:148px;box-sizing:border-box;overflow:auto;overscroll-behavior:contain;white-space:normal}
+.sort-menu.floating-menu:focus-visible,.sort-menu.floating-menu button:focus-visible{box-shadow:none;outline:2px solid var(--muted);outline-offset:-2px}
+.modal-head .library-picker-delete{margin-top:9px;min-height:28px;padding:3px 0;color:#d84f67}
+body.dark .modal-head .library-picker-delete{color:#ef8799}
 .sort-option{width:100%;min-height:36px;display:grid;grid-template-columns:18px 1fr;align-items:center;gap:6px;padding:0 10px;color:var(--ink);border:0;border-radius:8px;background:transparent;text-align:left;font-size:11px;font-weight:650;cursor:pointer}
 .sort-option span{color:var(--primary);font-weight:900}.sort-option.active{color:var(--primary);background:rgba(89,101,242,.09)}
 body.dark .sort-trigger,body.dark .sort-menu{color:var(--ink);border-color:#3b4d69;background:#202e47}body.dark .sort-option.active{background:#29385c}
