@@ -327,11 +327,11 @@ body.dark .auth-head-actions > .project-link:active { border-color:#a0aaff !impo
 .top-actions .appearance-button.tap-flash,
 .top-actions .github-repo-link.tap-flash,
 .auth-head-actions > .auth-theme-button.tap-flash,
-.auth-head-actions > .project-link.tap-flash { border-color:#7482ff !important; box-shadow:0 0 0 4px rgba(89,101,242,.34), inset 0 0 0 999px rgba(89,101,242,.12) !important; }
+.auth-head-actions > .project-link.tap-flash { color:var(--primary) !important; border-color:#7482ff !important; background:rgba(89,101,242,.1) !important; box-shadow:none !important; }
 body.dark .top-actions .appearance-button.tap-flash,
 body.dark .top-actions .github-repo-link.tap-flash,
 body.dark .auth-head-actions > .auth-theme-button.tap-flash,
-body.dark .auth-head-actions > .project-link.tap-flash { border-color:#a0aaff !important; box-shadow:0 0 0 4px rgba(160,170,255,.42), inset 0 0 0 999px rgba(160,170,255,.14) !important; }
+body.dark .auth-head-actions > .project-link.tap-flash { color:#a0aaff !important; border-color:#8d99ff !important; background:rgba(141,153,255,.14) !important; box-shadow:none !important; }
 
 @media (hover:hover) {
 }
