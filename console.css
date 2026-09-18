@@ -303,6 +303,28 @@ body.dark .auth-head-actions > .auth-theme-button,
 body.dark .auth-head-actions > .project-link { color:#edf1fb; border:1px solid #28364d; background:#17243a; box-shadow:none; }
 body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#586bd8; background:#263857; }
 
+/* Top theme and GitHub controls share the same visible press ring in both themes. */
+.top-actions .appearance-button:hover,
+.top-actions .github-repo-link:hover,
+.auth-head-actions > .auth-theme-button:hover,
+.auth-head-actions > .project-link:hover { border-color:#8792ff; color:var(--primary); box-shadow:0 0 0 3px rgba(89,101,242,.14); }
+.top-actions .appearance-button:active,
+.top-actions .github-repo-link:active,
+.auth-head-actions > .auth-theme-button:active,
+.auth-head-actions > .project-link:active { border-color:#7482ff !important; box-shadow:0 0 0 4px rgba(89,101,242,.28), inset 0 0 0 999px rgba(89,101,242,.1) !important; filter:brightness(.98); transform:none; }
+body.dark .top-actions .appearance-button:hover,
+body.dark .top-actions .github-repo-link:hover,
+body.dark .auth-head-actions > .auth-theme-button:hover,
+body.dark .auth-head-actions > .project-link:hover { border-color:#8995ff; color:#fff; box-shadow:0 0 0 3px rgba(137,149,255,.2); }
+body.dark .top-actions .appearance-button:active,
+body.dark .top-actions .github-repo-link:active,
+body.dark .auth-head-actions > .auth-theme-button:active,
+body.dark .auth-head-actions > .project-link:active { border-color:#a0aaff !important; box-shadow:0 0 0 4px rgba(160,170,255,.38), inset 0 0 0 999px rgba(160,170,255,.12) !important; filter:brightness(1.08); }
+.auth-head-actions > .auth-theme-button:focus-visible,
+.auth-head-actions > .project-link:focus-visible,
+.top-actions .appearance-button:focus-visible,
+.top-actions .github-repo-link:focus-visible { outline:2px solid #8e9cff !important; outline-offset:3px; }
+
 @media (hover:hover) {
 }
 
