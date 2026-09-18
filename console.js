@@ -230,7 +230,9 @@ async function createRepositoryFromModal(form) {
 
 async function bootAuth() { if(location.protocol!=='http:'&&location.protocol!=='https:'){ renderC(); return; } try { const r=await fetch('/api/auth/me',{credentials:'include'}), data=await r.json(); S.auth=data.user||null; S.csrf=data.csrf||''; S.oauthEnabled=Boolean(data.oauthEnabled); S.tokenLoginEnabled=Boolean(data.tokenLoginEnabled); S.adminConfigured=Boolean(data.adminConfigured); S.isAdmin=Boolean(data.isAdmin); S.policyConfigured=Boolean(data.policyConfigured); if(S.auth) { await loadAdminPolicy(); renderC(); if(sessionStorage.getItem('gh-login-success')==='1'){ sessionStorage.removeItem('gh-login-success'); notify('已登录'); } await autoSelectRepository(); } } catch { S.auth=null; } renderC(); }
 
-function flashTopAction(button){if(!button)return;button.classList.remove('tap-flash');void button.offsetWidth;button.classList.add('tap-flash');clearTimeout(button._tapFlashTimer);button._tapFlashTimer=setTimeout(()=>button.classList.remove('tap-flash'),240);}
+function flashTopAction(button){if(!button)return;button.classList.remove('tap-flash');void button.offsetWidth;button.classList.add('tap-flash');clearTimeout(button._tapFlashTimer);button._tapFlashTimer=setTimeout(()=>button.classList.remove('tap-flash'),320);}
+const topActionSelector='.top-actions .appearance-button,.top-actions .github-repo-link,.auth-head-actions .auth-theme-button,.auth-head-actions .project-link';
+document.addEventListener('pointerdown',e=>{const button=e.target.closest(topActionSelector);if(button)flashTopAction(button);},true);
 
 document.addEventListener('click', async e => {
   const target=e.target.closest('[data-action],[data-view]'); if(!target)return;
