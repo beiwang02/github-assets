@@ -156,3 +156,7 @@ ALLOWED_GITHUB_LOGINS=
 - `console.js`：控制台页面交互
 - `compose.yaml`、`Dockerfile`、`install.sh`：Docker Compose 部署
 - `deploy/README.md`：域名反向代理和高级部署说明
+
+## UI Refresh 正式版
+
+当前界面版本 `ui-refresh-15`，沿用原生业务与认证。测试夹具与生产隔离，范围及验证限制见 [发布说明](README-UI-REFRESH.md)。
