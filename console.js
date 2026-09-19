@@ -6,7 +6,12 @@ const S = {
 const $c = s => document.querySelector(s);
 const escC = v => String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const rawLibrary = lib => `https://raw.githubusercontent.com/${encodeURIComponent(S.repo.owner)}/${encodeURIComponent(S.repo.repo)}/${encodeURIComponent(S.repo.branch)}/${lib.file.split('/').map(encodeURIComponent).join('/')}`;
-const currentClient = () => new window.GitHubClient(S.repo, S.csrf);
+let repositoryClient=null, repositoryKey='', repositoryEpoch=0;
+const currentClient = () => {
+  const key=JSON.stringify([S.repo.owner,S.repo.repo,S.repo.branch,S.repo.assetsPath,S.csrf]);
+  if(key!==repositoryKey){repositoryKey=key;repositoryEpoch++;repositoryClient=new window.GitHubClient(S.repo,S.csrf);}
+  return repositoryClient;
+};
 function notify(message, type='success') { const n=document.createElement('div'); n.className=`toast ${type}`; n.textContent=message; $c('#toastRoot').appendChild(n); setTimeout(()=>n.remove(),3600); }
 async function copyC(text, message='直链已复制') { try { await navigator.clipboard.writeText(text); } catch { const a=document.createElement('textarea'); a.value=text; document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove(); } notify(message); }
 function statC(icon,label,value,trend,foot) { return `<div class="stat-card"><div class="stat-card-top"><span>${label}</span><i class="stat-icon">${icon}</i></div><strong>${value}<span class="trend">${trend}</span></strong><div class="stat-foot">${foot}</div></div>`; }
@@ -159,8 +164,50 @@ function bulkModal(item=null) {
   openC(`<div class="modal-head"><div><h2>加入 JSON 库</h2><p>所选图片会去重后追加到目标 JSON 库。</p></div><button class="modal-close" data-action="close-modal">×</button></div><form id="bulkForm"><div class="modal-body">${S.libraries.length?`<div class="modal-field"><label>目标 JSON 库</label><select name="library" required>${S.libraries.map(l=>`<option value="${escC(l.file)}">${escC(l.name)} · ${l.count} 个</option>`).join('')}</select></div>`:'<p class="field-help">暂无 JSON 库，请先新建 JSON 库后再加入图片。</p><button type="button" class="btn" data-action="new-library">＋ 新建 JSON 库</button>'}<p class="field-help">已选择 ${items.length} 张图片，图片文件不会被移动或删除。</p></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button type="submit" class="btn btn-primary" ${S.libraries.length?'':'disabled'}>加入 JSON 库</button></div></form>`);
   const form=$c('#bulkForm'); form.libraryItems=items; form.singleAsset=!!item;
 }
-async function readRepo(form) { const data = form instanceof HTMLFormElement ? new FormData(form) : { get:key => form.elements[key]?.value ?? '' }; S.repo={owner:String(data.get('owner')).trim(),repo:String(data.get('repo')).trim(),branch:String(data.get('branch')).trim()||'main',assetsPath:String(data.get('assetsPath')).trim().replace(/^\/+|\/+$/g,'')||'assets'}; if(!S.repo.owner||!S.repo.repo)return notify('请填写仓库用户名和名称','error'); localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); S.loading=true;renderC();notify('正在读取 GitHub 仓库…'); try { await currentClient().ensureRootDirectories(); const data=await currentClient().load(); S.connected=true; S.repo.assetsPath=data.root; localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); S.groups=data.groups;S.group=S.group&&data.groups.some(g=>g.name===S.group)?S.group:(data.groups[0]?.name||'');S.assets=data.assets;S.libraries=data.libraries.map((x,i)=>({...x,gradient:['linear-gradient(135deg,#7580ff,#8c64e9)','linear-gradient(135deg,#ffb26d,#eb7574)','linear-gradient(135deg,#43cec4,#5aa7e8)'][i%3]})); S.selected.clear();S.activity.unshift({title:'读取了 GitHub 仓库',detail:`${S.repo.owner}/${S.repo.repo} · ${S.libraries.length} 个 JSON、${S.assets.length} 张图片`,time:'刚刚'}); S.view='overview';notify(`读取完成：${S.libraries.length} 个 JSON、${S.assets.length} 张图片`); } catch(e){S.connected=false;notify(e.message||'读取失败','error');} finally{S.loading=false;renderC();} }
-async function refreshRepo() { if(!S.connected)return notify('请先连接你的仓库','error'); const oldView=S.view; const data=await currentClient().load(); S.repo.assetsPath=data.root; localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); S.groups=data.groups;S.group=S.group&&data.groups.some(g=>g.name===S.group)?S.group:(data.groups[0]?.name||'');S.assets=data.assets;S.libraries=data.libraries.map((x,i)=>({...x,gradient:['linear-gradient(135deg,#7580ff,#8c64e9)','linear-gradient(135deg,#ffb26d,#eb7574)','linear-gradient(135deg,#43cec4,#5aa7e8)'][i%3]})); S.view=oldView; S.selected.clear(); renderC(); }
+async function readRepo(form) { const data = form instanceof HTMLFormElement ? new FormData(form) : { get:key => form.elements[key]?.value ?? '' }; S.repo={owner:String(data.get('owner')).trim(),repo:String(data.get('repo')).trim(),branch:String(data.get('branch')).trim()||'main',assetsPath:String(data.get('assetsPath')).trim().replace(/^\/+|\/+$/g,'')||'assets'}; if(!S.repo.owner||!S.repo.repo)return notify('请填写仓库用户名和名称','error'); localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); S.loading=true;renderC();notify('正在读取 GitHub 仓库…'); const client=currentClient(), epoch=repositoryEpoch; try { const data=await client.load(); if(currentClient()!==client||epoch!==repositoryEpoch)return; S.connected=true; scheduleRepositorySyncC(); S.repo.assetsPath=data.root; localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); S.groups=data.groups;S.group=S.group&&data.groups.some(g=>g.name===S.group)?S.group:(data.groups[0]?.name||'');S.assets=data.assets;S.libraries=data.libraries.map((x,i)=>({...x,gradient:['linear-gradient(135deg,#7580ff,#8c64e9)','linear-gradient(135deg,#ffb26d,#eb7574)','linear-gradient(135deg,#43cec4,#5aa7e8)'][i%3]})); S.selected.clear();S.activity.unshift({title:'读取了 GitHub 仓库',detail:`${S.repo.owner}/${S.repo.repo} · ${S.libraries.length} 个 JSON、${S.assets.length} 张图片`,time:'刚刚'}); S.view='overview';notify(`读取完成：${S.libraries.length} 个 JSON、${S.assets.length} 张图片`); } catch(e){if(currentClient()===client&&epoch===repositoryEpoch){S.connected=false;notify(e.message||'读取失败','error');}} finally{if(currentClient()===client&&epoch===repositoryEpoch){S.loading=false;renderC();}} }
+let refreshFlight=null, refreshTimer=null, refreshDebounce=null, syncDisposed=false;
+function syncBusyC() { return GitHubClient.writing || pendingSubmission || !!$c('#modalRoot')?.firstElementChild || S.loading || S.view==='settings'; }
+function syncStatusC(message='') { S.syncError=message; const dot=$c('#storageDot'); if(dot){dot.title=message||'已连接';dot.setAttribute('aria-label',message||'已连接');} }
+async function refreshRepo(background=false) {
+  if(!S.connected)return;
+  if(GitHubClient.writing || (background&&syncBusyC()))return;
+  const client=currentClient(), epoch=repositoryEpoch;
+  if(refreshFlight?.client===client){try{return await refreshFlight.promise;}catch(e){if(!background)throw e;return;}}
+  const flight={client};
+  flight.promise=(async()=>{
+    const previous=client.cached;
+    const data=await client.load();
+    if(currentClient()!==client || repositoryEpoch!==epoch || !S.connected || syncDisposed)return;
+    if(background&&syncBusyC()){if(client.cached===data)client.cached=previous;return;}
+    syncStatusC();
+    if(data===previous)return;
+    const oldLibrary=S.libraries.find(x=>x.id===S.selectedLibrary);
+    S.repo.assetsPath=data.root;
+    localStorage.setItem('gh-image-repo',JSON.stringify(S.repo));
+    S.groups=data.groups;S.group=S.group&&data.groups.some(g=>g.name===S.group)?S.group:(data.groups[0]?.name||'');
+    S.assets=data.assets;
+    S.selected=new Set([...S.selected].filter(id=>data.assets.some(a=>a.id===id)));
+    S.libraries=data.libraries.map((x,i)=>({...x,gradient:['linear-gradient(135deg,#7580ff,#8c64e9)','linear-gradient(135deg,#ffb26d,#eb7574)','linear-gradient(135deg,#43cec4,#5aa7e8)'][i%3]}));
+    const library=S.libraries.find(x=>x.id===S.selectedLibrary);
+    // Index selections cannot safely survive JSON reorder/duplicate edits.
+    if(!library || library.sha!==oldLibrary?.sha)S.selectedIcons.clear();
+    if(!library&&S.selectedLibrary){S.selectedLibrary=S.libraries[0]?.id||'';if(S.view==='library-detail')S.view='libraries';}
+    renderC();
+  })();
+  refreshFlight=flight;
+  try { await flight.promise; } catch(e) { if(background){if(currentClient()===client&&repositoryEpoch===epoch&&S.connected&&!syncDisposed){const message=`同步暂缓：${e.message}`;if(S.syncError!==message)notify(message,'error');syncStatusC(message);}}else throw e; }
+  finally { if(refreshFlight===flight)refreshFlight=null; }
+}
+function scheduleRepositorySyncC() {
+  clearTimeout(refreshTimer);clearTimeout(refreshDebounce);
+  if(syncDisposed||document.hidden||!S.auth||!S.connected)return;
+  refreshDebounce=setTimeout(async()=>{await refreshRepo(true); if(!syncDisposed&&!document.hidden&&S.auth&&S.connected){clearTimeout(refreshTimer);refreshTimer=setTimeout(scheduleRepositorySyncC,60000);}},250);
+}
+function disposeRepositorySyncC() { syncDisposed=true;repositoryEpoch++;clearTimeout(refreshTimer);clearTimeout(refreshDebounce); }
+document.addEventListener('visibilitychange',scheduleRepositorySyncC);
+window.addEventListener('focus',scheduleRepositorySyncC);
+window.addEventListener('pagehide',disposeRepositorySyncC);
+window.addEventListener('pageshow',()=>{syncDisposed=false;scheduleRepositorySyncC();});
 // One UI operation owns the repository context until its refresh completes.
 let pendingSubmission = false;
 function beginSubmission(scope, label='正在保存…') {
@@ -212,7 +259,7 @@ async function formSubmit(e) {
     }
   } catch(error) { notify(error.message||'操作失败','error'); } finally { finish(); }
 }
-async function logoutC() { try { await fetch('/api/auth/logout',{method:'POST',credentials:'include',headers:{'X-CSRF-Token':S.csrf}}); } finally { localStorage.removeItem('gh-image-remembered-token'); location.replace('/?logged_out=1'); } }
+async function logoutC() { disposeRepositorySyncC(); S.connected=false; try { await fetch('/api/auth/logout',{method:'POST',credentials:'include',headers:{'X-CSRF-Token':S.csrf}}); } finally { localStorage.removeItem('gh-image-remembered-token'); location.replace('/?logged_out=1'); } }
 async function autoSelectRepository() {
   if (!S.auth) return;
   try {

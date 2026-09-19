@@ -72,8 +72,8 @@ class GitHubClient {
       const owner = String(parts.shift()).toLowerCase();
       const repo = String(parts.shift()).toLowerCase();
       if (owner !== String(this.config.owner).toLowerCase() || repo !== String(this.config.repo).toLowerCase()) return '';
-      parts.shift();
-      return parts.join('/');
+      const rest=parts.join('/'), prefix=String(this.config.branch)+'/';
+      return rest.startsWith(prefix)?rest.slice(prefix.length):'';
     } catch { /* external or invalid URL */ }
     return '';
   }
@@ -103,35 +103,77 @@ class GitHubClient {
   }
   metadataChange(value) { return { path:METADATA_PATH, mode:'100644', type:'blob', content:JSON.stringify(value,null,2)+'\n' }; }
   async pathHistory(path, head=this.config.branch) {
+    const rows=[];
     try {
-      const rows=await this.request(`${this.base}/commits?path=${encodeURIComponent(path)}&sha=${encodeURIComponent(head)}&per_page=100`);
-      if(!Array.isArray(rows)||!rows.length)return { createdAt:null, updatedAt:null, source:'unknown' };
-      const dates=rows.map(row=>row.commit?.committer?.date||row.commit?.author?.date).filter(Boolean);
-      return { createdAt:dates.at(-1)||null, updatedAt:dates[0]||null, source:rows.length===100?'git-history-limited':'git-history' };
-    } catch { return { createdAt:null, updatedAt:null, source:'unknown' }; }
-  }
-  async migrateMetadata(snap, imageEntries) {
-    const metadata=this.metadataFromSnapshot(snap), missing=[];
-    for(const entry of imageEntries)if(!metadata.assets[entry.path])missing.push({type:'asset',path:entry.path});
-    for(const doc of snap.docs)if(!metadata.libraries[doc.path])missing.push({type:'library',path:doc.path});
-    if(!missing.length)return metadata;
-    // One bounded, one-time lookup per legacy path; the persisted index avoids repeat API use.
-    for(let offset=0;offset<missing.length;offset+=4){
-      const batch=missing.slice(offset,offset+4), histories=await Promise.all(batch.map(x=>this.pathHistory(x.path,snap.head)));
-      batch.forEach((item,index)=>{const h=histories[index];if(item.type==='asset')metadata.assets[item.path]={createdAt:h.createdAt,updatedAt:h.updatedAt,source:h.source};else metadata.libraries[item.path]={createdAt:h.createdAt,updatedAt:h.updatedAt,references:[],source:h.source};});
-    }
-    for(const doc of snap.docs){
-      const library=metadata.libraries[doc.path];
-      if(!Array.isArray(library.references)||library.references.length!==doc.value.icons.length){
-        library.references=this.referenceMetadata(library,doc.value.icons);
+      for(let page=1;page<=3;page++) {
+        const batch=await this.request(`${this.base}/commits?path=${encodeURIComponent(path)}&sha=${encodeURIComponent(head)}&per_page=100&page=${page}`);
+        if(!Array.isArray(batch))throw new Error('Invalid commit history');
+        rows.push(...batch);
+        if(batch.length<100)return { rows, complete:true, createdAt:rows.at(-1)?.commit?.committer?.date||null, updatedAt:rows[0]?.commit?.committer?.date||null, source:'git-history' };
       }
-    }
-    await this.atomic('初始化资源时间元数据', async latest=>{
-      const current=this.metadataFromSnapshot(latest);
-      if(latest.head!==snap.head)return []; // Re-read on next load rather than seed stale history after a concurrent change.
-      current.assets={...metadata.assets,...current.assets}; current.libraries={...metadata.libraries,...current.libraries};
-      return [this.metadataChange(current)];
+      return { rows, complete:false, createdAt:null, updatedAt:rows[0]?.commit?.committer?.date||null, source:'git-history-limited' };
+    } catch { return { rows:[], complete:false, createdAt:null, updatedAt:null, source:'unknown' }; }
+  }
+  // Pair exact duplicates by occurrence first. Only unambiguous URL/name edits
+  // inherit identity; ambiguous replacements are new references, never another's age.
+  reconcileReferences(previous, icons, date=null, source='unknown') {
+    const pool=(previous||[]).map(x=>({...x})), result=icons.map(()=>null), used=new Set();
+    icons.forEach((icon,i)=>{const n=pool.findIndex((x,j)=>!used.has(j)&&x.name===icon.name&&x.url===icon.url);if(n>=0){used.add(n);result[i]={...pool[n],name:icon.name,url:icon.url};}});
+    icons.forEach((icon,i)=>{
+      if(result[i])return;
+      const candidates=pool.map((x,j)=>({x,j})).filter(({x,j})=>!used.has(j)&&(x.url===icon.url||x.name===icon.name));
+      const match=candidates.length===1?candidates[0]:null;
+      const unique=match&&icons.filter((x,k)=>!result[k]&&(x.url===match.x.url||x.name===match.x.name)).length===1;
+      if(unique){used.add(match.j);result[i]={...match.x,name:icon.name,url:icon.url,updatedAt:date,source};}
+      else result[i]={name:icon.name,url:icon.url,addedAt:date,updatedAt:date,source};
     });
+    return result;
+  }
+  async referenceHistory(doc, history, previous) {
+    if(!history.rows.length)return this.reconcileReferences(previous?.references,doc.value.icons);
+    const stop=previous?.historySha;
+    const index=stop?history.rows.findIndex(row=>row.sha===stop):-1;
+    const pending=index>=0?history.rows.slice(0,index):history.rows;
+    // Limit content lookups too. Incomplete reference ancestry is explicitly unknown.
+    if(pending.length>30)return this.reconcileReferences(previous?.references,doc.value.icons);
+    let refs=index>=0?(previous.references||[]):[];
+    let known=index>=0||history.complete;
+    try {
+      for(const row of [...pending].reverse()) {
+        const file=await this.request(`${this.base}/contents/${doc.path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(row.sha)}`);
+        const value=JSON.parse(GitHubClient.decode(file.content||''));
+        if(!Array.isArray(value?.icons)){refs=[];known=true;continue;}
+        refs=this.reconcileReferences(refs,value.icons,known?row.commit?.committer?.date||null:null,known?'git-history':'unknown');
+        known=true;
+      }
+      return this.reconcileReferences(refs,doc.value.icons);
+    } catch { return this.reconcileReferences(previous?.references,doc.value.icons); }
+  }
+  async syncMetadata(snap, images, previous) {
+    // Optional on-disk metadata is validated but read-only during synchronization.
+    // SHA-bound session state, not that optional index, decides external changes.
+    this.metadataFromSnapshot(snap);
+    const metadata=this.emptyMetadata();
+    const before=new Map((previous?.snapshot?.entries||[]).map(e=>[e.path,e]));
+    const old=previous?.metadata || this.metadataFromSnapshot(snap);
+    for(const entry of [...images,...snap.docs]) {
+      const asset=!entry.value, key=asset?'assets':'libraries';
+      const prior=old?.[key]?.[entry.path];
+      if(prior&&before.get(entry.path)?.sha===entry.sha){metadata[key][entry.path]=structuredClone(prior);continue;}
+      const history=await this.pathHistory(entry.path,snap.head);
+      const time={createdAt:prior?.createdAt||history.createdAt,updatedAt:history.updatedAt||prior?.updatedAt||null,source:history.source,historySha:history.rows[0]?.sha||null};
+      if(!asset)time.references=await this.referenceHistory(entry,history,prior);
+      metadata[key][entry.path]=time;
+    }
+    for(const doc of snap.docs) {
+      const lib=metadata.libraries[doc.path];
+      lib.references=lib.references.map(ref=>{
+        const path=this.ownedPath(ref.url), image=metadata.assets[path];
+        if(!image?.updatedAt)return ref;
+        if(!ref.updatedAt||Date.parse(image.updatedAt)>Date.parse(ref.updatedAt))return {...ref,updatedAt:image.updatedAt};
+        return ref;
+      });
+    }
     return metadata;
   }
   touchLibrary(metadata, doc, now, createdAt=null) {
@@ -143,16 +185,17 @@ class GitHubClient {
     const pool=(library?.references||[]).map(x=>({...x}));
     return icons.map(icon=>{const index=pool.findIndex(x=>x.url===icon.url&&x.name===icon.name);return index<0?{name:icon.name,url:icon.url,addedAt:null,source:'unknown'}:pool.splice(index,1)[0];});
   }
-  async snapshot() {
-    const ref = await this.request(`${this.base}/git/ref/heads/${encodeURIComponent(this.config.branch)}`);
+  async snapshot(head=null, previous=null) {
+    const ref = head ? {object:{sha:head}} : await this.request(`${this.base}/git/ref/heads/${encodeURIComponent(this.config.branch)}`);
     const commit = await this.request(`${this.base}/git/commits/${ref.object.sha}`);
     const result = await this.request(`${this.base}/git/trees/${commit.tree.sha}?recursive=1`);
     if (result.truncated) throw new Error('仓库文件过多，GitHub 返回了不完整目录。已停止，避免遗漏 JSON 引用。');
     const entries = result.tree.filter(e => e.type === 'blob'); const docs = [];
     for (const entry of entries.filter(e => /\.json$/i.test(e.path))) {
-      const blob = await this.request(`${this.base}/git/blobs/${entry.sha}`); entry.content=blob.content; let value;
+      const cached=previous?.entries.find(e=>e.path===entry.path&&e.sha===entry.sha&&e.content!==undefined);
+      const blob = cached || await this.request(`${this.base}/git/blobs/${entry.sha}`); entry.content=blob.content; let value;
       try { value = JSON.parse(GitHubClient.decode(blob.content)); }
-      catch { if (entry.path.startsWith('json/')) throw new Error(`JSON 格式错误：${entry.path}，已停止操作。`); continue; }
+      catch { if (entry.path===METADATA_PATH || entry.path.startsWith('json/') || previous?.docs.some(d=>d.path===entry.path)) throw new Error(`JSON 格式错误：${entry.path}，已停止操作。`); continue; }
       if (!value || !Array.isArray(value.icons)) continue;
       if (value.icons.some(i => !i || typeof i.name !== 'string' || typeof i.url !== 'string')) throw new Error(`图片记录格式异常：${entry.path}，请修复后重试。`);
       docs.push({ path:entry.path, sha:entry.sha, value });
@@ -160,14 +203,28 @@ class GitHubClient {
     return { head:ref.object.sha, tree:commit.tree.sha, entries, docs, directories:result.tree.filter(e => e.type === 'tree').map(e => e.path) };
   }
   async load() {
-    const repo = await this.request(this.base);
+    if(this.loading)return this.loading;
+    this.loading=this.loadIncremental();
+    try { return await this.loading; } finally { this.loading=null; }
+  }
+  async loadIncremental() {
+    const previous=this.cached;
+    const repo = previous?.repo || await this.request(this.base);
     if (!this.config.branch) this.config.branch = repo.default_branch;
-    if (repo.size === 0) return { repo, root:this.config.assetsPath || 'assets', assets:[], groups:[], libraries:[], snapshot:null };
-    const snap = await this.snapshot();
+    let ref;
+    try { ref=await this.request(`${this.base}/git/ref/heads/${encodeURIComponent(this.config.branch)}`); }
+    catch(error) {
+      if(![404,409].includes(error.status))throw error;
+      const fresh=await this.request(this.base);
+      if(fresh.size!==0 || previous?.snapshot)throw error;
+      return this.cached={repo:fresh,root:this.config.assetsPath||'assets',assets:[],groups:[],libraries:[],metadata:this.emptyMetadata(),snapshot:null};
+    }
+    if(previous?.snapshot?.head===ref.object.sha)return previous;
+    const snap = await this.snapshot(ref.object.sha,previous?.snapshot);
     const roots = [...new Set([this.config.assetsPath || 'assets', 'assets', 'icons'])];
     const root = roots.find(p => snap.directories.includes(p) || snap.entries.some(e => e.path.startsWith(p + '/'))) || roots[0];
     const images = snap.entries.filter(e => e.path.startsWith(root + '/') && /\.(png|jpe?g|webp|gif|svg)$/i.test(e.path));
-    const metadata=await this.migrateMetadata(snap,images);
+    const metadata=await this.syncMetadata(snap,images,previous);
     const assets = images.map(e => {
       const rel = e.path.slice(root.length + 1), parts = rel.split('/'), time=metadata.assets[e.path]||{};
       return { ...e, id:e.path, group:parts.length > 1 ? parts[0] : '', name:parts.at(-1).replace(/\.[^.]+$/, ''), ext:parts.at(-1).split('.').at(-1).toUpperCase(), url:this.raw(e.path), createdAt:time.createdAt||null, updatedAt:time.updatedAt||null, timeSource:time.source||'unknown' };
@@ -175,25 +232,27 @@ class GitHubClient {
     const names = new Set(snap.directories.filter(p => p.startsWith(root + '/') && !p.slice(root.length + 1).includes('/')).map(p => p.slice(root.length + 1)));
     assets.forEach(a => names.add(a.group));
     const libraries=snap.docs.map(d=>{const time=metadata.libraries[d.path]||{}, refs=this.referenceMetadata(time,d.value.icons);return { id:d.path, file:d.path, ...d, name:d.value.name||d.path.split('/').at(-1), description:d.value.description||'', icons:d.value.icons.map((icon,index)=>({...icon,addedAt:refs[index]?.addedAt||null,updatedAt:refs[index]?.updatedAt||null,timeSource:refs[index]?.source||'unknown'})), count:d.value.icons.length, createdAt:time.createdAt||null, updatedAt:time.updatedAt||null, timeSource:time.source||'unknown' };});
-    return { repo, snapshot:snap, root, assets, groups:[...names].sort().map(name => ({ name, count:assets.filter(a => a.group === name).length })), libraries };
+    return this.cached={ repo, snapshot:snap, metadata, root, assets, groups:[...names].sort().map(name => ({ name, count:assets.filter(a => a.group === name).length })), libraries };
   }
   jsonChange(doc, value) { return { path:doc.path, mode:'100644', type:'blob', content:JSON.stringify(value, null, 2) + '\n' }; }
-  keepRootEntries(snap, changes) {
-    for (const root of ['assets', 'json']) if (!snap.entries.some(e => e.path === `${root}/.gitkeep`)) changes.push({ path:`${root}/.gitkeep`, mode:'100644', type:'blob', content:'\n' });
-    return changes;
-  }
-  async ensureRootDirectories() {
-    return this.atomic('初始化图床目录结构', async snap => this.keepRootEntries(snap, []));
-  }
   async atomic(message, build) {
     if (GitHubClient.writing) throw new Error('上一项操作尚未完成，请稍候。');
     GitHubClient.writing = true;
-    try { return await this.commitAtomic(message, build); }
+    try { if(this.loading)await this.loading.catch(()=>{}); return await this.commitAtomic(message, build); }
     finally { GitHubClient.writing = false; }
   }
   async commitAtomic(message, build) {
     for (let attempt = 0; attempt < 3; attempt++) {
-      const snap = await this.snapshot(); const changes = await build(snap);
+      let snap;
+      try { snap=await this.snapshot(); }
+      catch(error) {
+        if(![404,409].includes(error.status) || (await this.request(this.base)).size!==0)throw error;
+        // Only an explicit mutation initializes a truly blank repository.
+        try { await this.request(`${this.base}/contents/${this.config.assetsPath||'assets'}/.gitkeep`, 'PUT', {message:'初始化资源仓库',content:btoa('\n'),branch:this.config.branch}); }
+        catch(initError) { if(![409,422].includes(initError.status))throw initError; }
+        snap=await this.snapshot();
+      }
+      const changes = await build(snap);
       if (!changes.length) return { changed:false };
       const tree = await this.request(`${this.base}/git/trees`, 'POST', { base_tree:snap.tree, tree:changes });
       const commit = await this.request(`${this.base}/git/commits`, 'POST', { message, tree:tree.sha, parents:[snap.head] });
