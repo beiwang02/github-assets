@@ -373,8 +373,7 @@ window.addEventListener('popstate',e=>{closeC();if(e.state?.ghView){S.view=e.sta
 renderC();
 
 function tokenEyeC(visible){
-  const path=visible?'M3 3l18 18M10.6 5.1A11 11 0 0 1 12 5c6 0 10 7 10 7a19 19 0 0 1-3 3.8M6.2 6.2A22 22 0 0 0 2 12s4 7 10 7a13 13 0 0 0 5.8-1.8M9.9 9.9a3 3 0 0 0 4.2 4.2':'M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Zm7 0a3 3 0 1 0 6 0 3 3 0 1 0-6 0';
-  return `<svg class="ui-icon" data-icon="${visible?'eye-off':'eye'}" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${path}"/></svg>`;
+  return visible?'◎':'◉';
 }
 // Native component adapter; existing business event delegation is unchanged.
 function uiIconC(name){
@@ -389,7 +388,7 @@ function enhanceControlsC(){
     el.classList.add('ui-button');el.dataset.ui=kind;
     if(el.matches('button')&&!el.hasAttribute('type')&&!el.closest('form'))el.type='button';
     const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
-    nodes.forEach(n=>{if(n.parentElement!==el||n.parentElement.closest('svg,.library-picker-copy,.library-picker-option,.repo-meta,.group-pill')||el.matches('[role="button"]'))return;const re=/^(?:＋|×|⧉|←|⌄|✓|▦|↻|☰|◉|◐|•••)(?=\s|$)|→$/g;if(!re.test(n.textContent))return;const box=document.createElement('span');box.innerHTML=n.textContent.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(re,g=>uiIconC(glyphs[g]));n.replaceWith(...box.childNodes);});
+    nodes.forEach(n=>{if(n.parentElement!==el||n.parentElement.closest('svg,.library-picker-copy,.library-picker-option,.repo-meta,.group-pill')||el.matches('[role="button"],.token-eye'))return;const re=/^(?:＋|×|⧉|←|⌄|✓|▦|↻|☰|◉|◐|•••)(?=\s|$)|→$/g;if(!re.test(n.textContent))return;const box=document.createElement('span');box.innerHTML=n.textContent.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(re,g=>uiIconC(glyphs[g]));n.replaceWith(...box.childNodes);});
     if(el.matches('.mobile-menu'))el.setAttribute('aria-label','打开侧栏');
     if(el.matches('.modal-close'))el.setAttribute('aria-label','关闭弹窗');
   });
