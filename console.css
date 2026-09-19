@@ -28,7 +28,6 @@
 .asset-select { flex:0 0 auto; width:21px; height:21px; display:grid; place-items:center; padding:0; color:#8794a9; border:1px solid rgba(196,204,222,.9); border-radius:6px; background:var(--surface); box-shadow:0 3px 9px rgba(30,47,83,.08); font-size:11px; font-weight:800; }
 .asset-name-row { display:flex; align-items:center; gap:6px; min-width:0; }
 .asset-name-row b { min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.asset-card.selected .asset-select { color:#fff; border-color:var(--primary); background:var(--primary); }
 .select-counter { color:var(--primary); font-size:10px; font-weight:700; }
 .connection-badge { display:flex; align-items:center; gap:7px; color:#49a77b; font-size:10px; font-weight:700; }
 .account-panel { display:flex; align-items:center; gap:10px; padding:13px; margin:4px 0 16px; border-radius:11px; background:#f4f6fb; }
@@ -298,8 +297,6 @@ body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#5
 .section-actions { display:flex; align-items:center; gap:8px; }
 .reference-select { width:21px; height:21px; flex:0 0 21px; padding:0; border:1px solid #c4ccde; border-radius:6px; background:var(--surface); color:#fff; cursor:pointer; }
 .json-reference-row.selected { background:rgba(89,101,242,.07); }
-.json-reference-row.selected .reference-select { border-color:var(--primary); background:var(--primary); }
-body.dark .reference-select { border-color:#536681; background:#202e47; }
 
 /* Short-lived copy feedback and compact mobile actions. */
 .btn.btn-danger { color:#d84f67 !important; border-color:#f0b5c0 !important; background:#fff7f8 !important; }

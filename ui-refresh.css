@@ -19,8 +19,9 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 @media(max-width:350px){.stat-grid{grid-template-columns:1fr}.btn{padding-inline:11px;font-size:12px}}
 [data-theme=dark] body{background:#0c1729}.dark-mode body{background:#0c1729}
 
-/* Upload-only text entry: keep the 7px field gap and full touch height. */
-#uploadForm .modal-inline-create{justify-content:flex-start;align-items:flex-start;text-align:left;padding:0;min-height:40px;border:0;background:transparent}
+/* Upload-only text entry: keep the 7px field gap, 40px touch height, and a compact handoff to the JSON field. */
+#uploadForm .modal-inline-create{justify-content:flex-start;align-items:flex-start;text-align:left;padding:0;min-height:40px;border:0;background:transparent;color:var(--primary);text-decoration:none}
+#uploadForm .modal-field:has(.modal-inline-create){margin-bottom:-7px}
 
 /* Component contract. Semantic classes adapt legacy templates, not a framework theme. */
 :root{--ui-control-h:40px;--ui-focus:#79747f;--ui-icon-size:18px}
@@ -57,11 +58,16 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 .quick-asset .quick-asset-name-row{margin-top:9px;padding-inline:6px}
 .quick-asset>small{margin:7px 6px 0}
 .asset-card .asset-meta{display:flex;flex-wrap:nowrap;gap:3px;align-items:center;margin-top:7px}
-.asset-card .asset-select{position:relative;inset:auto;flex:0 0 28px;width:28px;height:28px;min-width:28px;min-height:28px;margin-left:0;padding:0;border:0;background:transparent;box-shadow:none;color:var(--muted);font-size:15px;isolation:isolate}
-.asset-card .asset-select:before{content:'';position:absolute;inset:3px;border:1px solid #cfd5fd;border-radius:6px;background:var(--surface);z-index:-1}
-.asset-card.selected .asset-select{background:transparent;border:0;color:#fff}
-.asset-card.selected .asset-select:before{background:var(--primary);border-color:var(--primary)}
-body.dark .asset-card .asset-select:before{border-color:var(--line)}
+/* Local multi-select palette; never affects native form checkboxes or card outlines. */
+:is(.asset-select,.reference-select){--multi-border:#c4ccde;--multi-bg:var(--surface);--multi-mark:#fff;--multi-fill:#626b78;--multi-focus:#626b78;color:var(--multi-mark)}
+body.dark :is(.asset-select,.reference-select){--multi-border:#536681;--multi-bg:#202e47;--multi-mark:#18202b;--multi-fill:#b8c0cc;--multi-focus:#b8c0cc}
+:is(.asset-card.selected .asset-select,.json-reference-row.selected .reference-select){--multi-border:var(--multi-fill);--multi-bg:var(--multi-fill)}
+.asset-card .asset-select{position:relative;inset:auto;flex:0 0 28px;width:28px;height:28px;min-width:28px;min-height:28px;margin-left:0;padding:0;border:0;background:transparent;box-shadow:none;font-size:15px;isolation:isolate}
+.asset-card .asset-select:before{content:'';position:absolute;inset:3px;border:1px solid var(--multi-border);border-radius:6px;background:var(--multi-bg);z-index:-1}
+.reference-select{border-color:var(--multi-border);background:var(--multi-bg)}
+:is(.asset-select,.reference-select):focus-visible{outline:2px solid var(--multi-focus)!important;outline-offset:3px;box-shadow:none!important}
+:is(.asset-select,.reference-select):is(:disabled,[aria-busy=true]){opacity:.5;cursor:not-allowed;filter:none;transform:none}
+@media(hover:hover){:is(.asset-select,.reference-select):not(:disabled):not([aria-busy=true]):hover{filter:brightness(.985)}body.dark :is(.asset-select,.reference-select):not(:disabled):not([aria-busy=true]):hover{filter:brightness(1.1)}}
 @media(max-width:700px){.asset-card{padding:3px}.asset-card .asset-details{padding:9px 3px 5px}.asset-card .asset-meta{gap:1px}}
 
 
@@ -142,7 +148,7 @@ body.dark .asset-detail-preview,body.dark .json-icon-detail-preview{border-color
 .library-current-copy em{font-size:12px;font-style:normal;color:var(--muted);margin-top:4px}
 /* Auxiliary entries align to their own field/content edge, not generic button insets. */
 #tokenLoginForm .token-guide-button.ui-button,
-.json-workspace .library-switch-trigger.ui-button{justify-content:flex-start;text-align:left;padding:0;min-height:44px;border:0;background:transparent;font-size:12px}
+.json-workspace .library-switch-trigger.ui-button{justify-content:flex-start;text-align:left;padding:0;min-height:44px;border:0;background:transparent;font-size:12px;color:var(--primary);text-decoration:none}
 .json-workspace .json-workspace-top{flex-direction:column;align-items:flex-start;gap:8px}
 .json-workspace .library-switch-trigger.ui-button{flex:none;color:var(--primary);white-space:nowrap}
 .library-switch-copy small{display:block;font-size:11px;font-weight:400;color:var(--muted);white-space:normal;overflow-wrap:anywhere}
