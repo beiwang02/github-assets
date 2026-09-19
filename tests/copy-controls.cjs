@@ -9,4 +9,9 @@ assert(js.includes("if(action==='copy'){e.preventDefault();e.stopImmediatePropag
 assert(css.includes('body.dark .copy-control.ui-button'));
 for(const state of [':hover',':active',':focus-visible','[aria-busy=true]'])assert(css.includes(state));
 assert(!css.includes('.asset-copy-label'));
+assert(css.includes('--copy-bg:var(--surface);--copy-line:var(--line);--copy-ink:#8090a6'));
+assert(!css.includes('--copy-bg:#f5f7fa'));
+assert(css.includes('width:34px!important;height:34px!important;min-width:34px;min-height:34px;max-width:34px'));
+assert(css.includes('gap:0;border-radius:9px;box-sizing:border-box'));
+assert(js.includes("if(el.dataset.action==='copy'&&kind==='icon')el.classList.add('copy-control-icon')"));
 console.log('PASS copy-controls: shared classes, left checkbox/right SVG copy, neutral dark tokens, retained async/propagation guard. Browser companion: tests/copy-controls.js.');

@@ -9,5 +9,6 @@ const rule=css.match(/#uploadForm \.modal-inline-create\{([^}]+)\}/)?.[1];
 assert(rule,'Upload-only scope');
 for(const declaration of ['justify-content:flex-start','align-items:flex-start','text-align:left','padding:0','min-height:40px','border:0','background:transparent'])assert(rule.includes(declaration));
 assert(read('styles.css').includes('.modal-field { display: grid; gap: 7px; }'));
-for(const asset of ['console.js','ui-refresh.css'])assert(html.includes(asset+'?v=upload-group-32'));
+assert(html.includes('console.js?v=copy-outline-34'));
+assert(html.includes('ui-refresh.css?v=copy-outline-34'));
 console.log('PASS upload-group-entry: local text, scope, touch height, 7px gap, JSON hierarchy and unchanged action. Browser companion: tests/upload-group-entry.js');

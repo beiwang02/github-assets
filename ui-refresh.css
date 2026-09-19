@@ -115,14 +115,15 @@ body.dark .auth-card #mainTokenInput:focus,body.dark .auth-card #mainTokenInput:
 .preview-file .preview-clear{position:static;transform:none;width:32px;height:32px;min-width:32px;min-height:32px;flex:0 0 32px;padding:0;border-radius:8px;color:var(--muted);background:var(--surface);border:1px solid var(--line)}
 .preview-clear.ui-button svg{width:16px;height:16px;flex-basis:16px}
 .preview-file .preview-clear:hover{color:var(--ink);background:var(--ui-canvas)}
-/* Shared neutral copy controls: overview, assets, JSON and detail actions. */
-.copy-control.ui-button{--copy-bg:#f5f7fa;--copy-line:#e1e6ed;--copy-ink:#7b899c;color:var(--copy-ink);background:var(--copy-bg);border:1px solid var(--copy-line);border-radius:8px;transition:background .12s,border-color .12s,filter .12s}
-body.dark .copy-control.ui-button{--copy-bg:#263247;--copy-line:#3a4960;--copy-ink:#bdc9da;color:var(--copy-ink);background:var(--copy-bg);border-color:var(--copy-line)}
-.copy-control.copy-control-icon.ui-button{width:28px!important;height:28px!important;min-width:28px;min-height:28px;max-width:28px;flex:0 0 28px;padding:0;gap:0;box-sizing:border-box}
-.copy-control.copy-control-icon .ui-icon{width:14px;height:14px;flex:0 0 14px}
+/* Historical outlined copy controls: surface only, never a filled grey/black tile.
+   JSON copy matches its unchanged X: 34px minimum box, 9px radius, 18px SVG. */
+.copy-control.ui-button{--copy-bg:var(--surface);--copy-line:var(--line);--copy-ink:#8090a6;color:var(--copy-ink);background:var(--copy-bg);border:1px solid var(--copy-line);transition:background .12s,border-color .12s,filter .12s}
+body.dark .copy-control.ui-button{--copy-ink:var(--ink);color:var(--copy-ink);background:var(--copy-bg);border-color:var(--copy-line)}
+.copy-control.copy-control-icon.ui-button{width:34px!important;height:34px!important;min-width:34px;min-height:34px;max-width:34px;max-height:34px;flex:0 0 34px;padding:0;gap:0;border-radius:9px;box-sizing:border-box}
+.copy-control.copy-control-icon .ui-icon{width:18px;height:18px;flex:0 0 18px}
 .asset-meta .copy-control{margin-left:auto}
-@media(hover:hover){.copy-control.ui-button:not(:disabled):hover{background:color-mix(in srgb,var(--copy-bg) 90%,var(--copy-ink));border-color:var(--copy-ink)}}
-.copy-control.ui-button:not(:disabled):active{background:color-mix(in srgb,var(--copy-bg) 80%,var(--copy-ink))}
+@media(hover:hover){.copy-control.ui-button:not(:disabled):hover{background:var(--copy-bg);border-color:var(--copy-ink)}}
+.copy-control.ui-button:not(:disabled):active{background:var(--copy-bg)}
 .copy-control.ui-button:focus-visible{outline-color:var(--copy-ink)!important}
 .copy-control-icon[aria-busy=true]{font-size:0}
 .copy-control-icon[aria-busy=true]::after{content:'…';font-size:14px}
@@ -139,7 +140,11 @@ body.dark .asset-detail-preview,body.dark .json-icon-detail-preview{border-color
 .library-current-copy{min-width:0;overflow-wrap:anywhere}
 .library-current-copy b,.library-current-copy em{display:block;white-space:normal;overflow-wrap:anywhere}
 .library-current-copy em{font-size:12px;font-style:normal;color:var(--muted);margin-top:4px}
-.library-switch-trigger.ui-button{flex:none;min-height:44px;padding:0 6px;background:transparent;border:0;color:var(--primary);font-size:12px;white-space:nowrap}
+/* Auxiliary entries align to their own field/content edge, not generic button insets. */
+#tokenLoginForm .token-guide-button.ui-button,
+.json-workspace .library-switch-trigger.ui-button{justify-content:flex-start;text-align:left;padding:0;min-height:44px;border:0;background:transparent;font-size:12px}
+.json-workspace .json-workspace-top{flex-direction:column;align-items:flex-start;gap:8px}
+.json-workspace .library-switch-trigger.ui-button{flex:none;color:var(--primary);white-space:nowrap}
 .library-switch-copy small{display:block;font-size:11px;font-weight:400;color:var(--muted);white-space:normal;overflow-wrap:anywhere}
 .library-switch-copy b{white-space:normal;overflow-wrap:anywhere}
 
@@ -148,3 +153,7 @@ body.dark .asset-detail-preview,body.dark .json-icon-detail-preview{border-color
 .sort-menu.floating-menu .sort-option.ui-button{min-height:40px;height:40px;border-radius:9px;padding:0 9px;font-weight:400}
 .sort-menu.floating-menu .sort-option.ui-button.active{font-weight:600}
 body.dark .sort-menu.floating-menu{box-shadow:0 8px 22px rgba(0,0,0,.24)}
+
+/* Text copy actions retain normal secondary contrast; compact icons stay muted. */
+.copy-control.ui-button.btn:not(.copy-control-icon){--copy-bg:var(--surface);--copy-line:var(--line);--copy-ink:#5e6b80}
+body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--ink)}
