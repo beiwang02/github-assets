@@ -111,6 +111,9 @@ body.dark .auth-card #mainTokenInput:focus,body.dark .auth-card #mainTokenInput:
 .preview-file .preview-clear{position:static;transform:none;width:32px;height:32px;min-width:32px;min-height:32px;flex:0 0 32px;padding:0;border-radius:8px;color:var(--muted);background:var(--surface);border:1px solid var(--line)}
 .preview-clear.ui-button svg{width:16px;height:16px;flex-basis:16px}
 .preview-file .preview-clear:hover{color:var(--ink);background:var(--ui-canvas)}
+/* Overview copy is a square icon control, independent of regular button height. */
+.quick-asset .quick-copy{width:28px!important;height:28px!important;min-width:28px!important;min-height:28px!important;max-width:28px;max-height:28px;flex:0 0 28px;padding:0!important;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;gap:0;box-sizing:border-box}
+.quick-asset .quick-copy .ui-icon{width:14px;height:14px;flex:0 0 14px}
 /* Shared compact detail plate; list thumbnails retain their own sizing. */
 .asset-detail-preview,.json-icon-detail-preview{width:min(100%,200px);height:auto;min-height:0;aspect-ratio:1;position:relative;padding:0;border:1px solid var(--line);border-radius:12px;background:#f4f6ff;justify-self:center}
 .asset-detail-preview img,.json-icon-detail-preview img{position:absolute;left:10%;top:10%;width:80%;height:80%;max-width:80%;max-height:80%;object-fit:contain;object-position:center;box-shadow:none;border-radius:0}
