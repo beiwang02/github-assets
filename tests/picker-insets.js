@@ -3,7 +3,7 @@ window.auditPickerInsets=async()=>{
  window.fetch=()=>{throw Error('Network forbidden')};window.GitHubClient=class{deleteLibrary(){deletes++;throw Error('Delete forbidden')}};
  for(const theme of ['light','dark'])for(const count of [1,3]){
  localStorage.setItem('gh-image-theme',theme);applyAppearance();S.auth={login:'fixture'};S.view='libraries';S.selectedLibrary='lib0';S.libraries=Array.from({length:count},(_,i)=>({id:'lib'+i,name:i===2?'较长的库名称用于检查文字换行布局':'测试库'+i,file:i===2?'libraries/'+ 'long-path-'.repeat(10)+'.json':'library-'+i+'.json',count:i,icons:[]}));renderC();await wait();
- const open=async()=>{document.querySelector('.library-switch-trigger').click();await wait();return document.querySelector('.library-switch-panel.floating-menu')};
+ const open=async()=>{document.querySelector('.library-switch-trigger').click();await wait();return document.querySelector('.modal .library-switch-modal-body')};
  let panel=await open(),pr=panel.getBoundingClientRect(),xs=[];
  assert(pr.left>=0&&pr.right<=innerWidth&&pr.bottom<=innerHeight,'panel viewport');assert(document.documentElement.scrollWidth===innerWidth&&panel.scrollWidth<=panel.clientWidth,'root/panel overflow');
  for(const row of panel.querySelectorAll('.library-switch-row')){

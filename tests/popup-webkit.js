@@ -28,7 +28,7 @@ window.runPopupChecks = async function(theme) {
     }
     const before=[document.documentElement.scrollWidth,document.documentElement.clientWidth];
     let trigger=document.querySelector('.sort-trigger');trigger.click();await wait();
-    let menu=document.querySelector('.floating-menu'),r=menu.getBoundingClientRect();
+    let menu=document.querySelector('.modal .library-switch-modal-body'),r=menu.getBoundingClientRect();
     const weights=[getComputedStyle(trigger).fontWeight,...[...menu.querySelectorAll('.sort-option')].map(x=>getComputedStyle(x).fontWeight)];
     assert(weights.every(x=>x==='500'),'sort weight');
     results.push({theme,view,weights});
@@ -40,11 +40,11 @@ window.runPopupChecks = async function(theme) {
     assert(localStorage.getItem(kind==='assets'?'gh-assets-sort':'gh-icons-sort')==='name-desc','sort not persisted');
     trigger=document.querySelector('.sort-trigger');trigger.click();await wait();
     document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
-    assert(!document.querySelector('.floating-menu')&&document.activeElement===trigger,'Escape/focus');
-    trigger.click();await wait();document.querySelector('#pageTitle').click();assert(!document.querySelector('.floating-menu'),'outside click');
+    assert(!document.querySelector('.modal .library-switch-modal-body')&&document.activeElement===trigger,'Escape/focus');
+    trigger.click();await wait();document.querySelector('#pageTitle').click();assert(!document.querySelector('.modal .library-switch-modal-body'),'outside click');
     for(let i=0;i<12;i++){trigger.click();await wait();trigger.click();}
-    assert(!document.querySelector('.floating-menu')&&trigger.getAttribute('aria-expanded')==='false','repeat cleanup');
-    trigger.click();await wait();renderC();assert(!document.querySelector('.floating-menu'),'render cleanup');
+    assert(!document.querySelector('.modal .library-switch-modal-body')&&trigger.getAttribute('aria-expanded')==='false','repeat cleanup');
+    trigger.click();await wait();renderC();assert(!document.querySelector('.modal .library-switch-modal-body'),'render cleanup');
   }
   // Two simultaneously available anchors, including a viewport-bottom anchor.
   openC(sortSelectC('libraries',S.librarySort,[['updated-desc','最近更新'],['name-asc','名称 A-Z']]));
@@ -56,7 +56,7 @@ window.runPopupChecks = async function(theme) {
   document.body.append(bottomOwner);
   Object.assign(bottomOwner.style,{position:'fixed',bottom:'8px',left:'8px',zIndex:'1300'});
   second.click();await wait();
-  const flipped=document.querySelector('.floating-menu').getBoundingClientRect(),anchor=second.getBoundingClientRect();
+  const flipped=document.querySelector('.modal .library-switch-modal-body').getBoundingClientRect(),anchor=second.getBoundingClientRect();
   assert(flipped.bottom<=anchor.top&&flipped.top>=7,'bottom flip');
   results.push({theme,flip:{top:flipped.top,bottom:flipped.bottom,anchorTop:anchor.top},singleMenu:'PASS'});
   closeC();bottomOwner.remove();
@@ -69,7 +69,7 @@ window.runPopupChecks = async function(theme) {
   del.click();assert(document.querySelector('[data-action="confirm-exec"]')&&S.modalConfirm&&deletes===0,'must only confirm');closeC();
   // Sort inside a modal: portal survives clipping but closes with its owning dialog.
   openC(sortSelectC('libraries',S.librarySort,[['updated-desc','最近更新'],['name-asc','名称 A-Z']]));
-  document.querySelector('#modalRoot .sort-trigger').click();await wait();closeC();assert(!document.querySelector('.floating-menu'),'modal cleanup');
+  document.querySelector('#modalRoot .sort-trigger').click();await wait();closeC();assert(!document.querySelector('.modal .library-switch-modal-body'),'modal cleanup');
   results.push({theme,interactions:'selection/persistence, Escape/focus, outside, 24 repeated cycles, render/modal cleanup, delete confirmation only: PASS',deletes});
   S.libraries[0].icons=[0,1,2].map(i=>({name:'图标'+i,url:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" fill="#7183ed"/></svg>')}));
   S.libraries[0].count=3;
