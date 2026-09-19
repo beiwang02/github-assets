@@ -458,6 +458,6 @@ function enhanceControlsC(){
 }
 const uiObserverC=new MutationObserver(()=>{uiObserverC.disconnect();enhanceControlsC();uiObserverC.observe(document.body,{childList:true,subtree:true});});
 enhanceControlsC();uiObserverC.observe(document.body,{childList:true,subtree:true});
-// WebKit does not consistently focus buttons on pointer activation; normalize framed controls.
-document.addEventListener('click',e=>{const b=e.target.closest('.ui-button:not([data-ui="danger"],[data-ui="primary"],[data-ui="text"])');if(b?.isConnected)b.focus({preventScroll:true});},true);
+// WebKit does not consistently expose :focus after pointer activation; normalize framed controls.
+document.addEventListener('click',e=>{const b=e.target.closest('.ui-button:not([data-ui="danger"],[data-ui="primary"],[data-ui="text"])');document.querySelectorAll('.ui-button[data-focus-active]').forEach(x=>x.removeAttribute('data-focus-active'));if(b?.isConnected){b.focus({preventScroll:true});b.setAttribute('data-focus-active','');}},true);
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.library-list-row[data-action],.library-empty-row[data-action]')){e.preventDefault();e.target.click();}});

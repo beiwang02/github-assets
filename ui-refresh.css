@@ -167,8 +167,8 @@ body.dark .sort-menu.floating-menu{box-shadow:0 8px 22px rgba(0,0,0,.24)}
 body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--ink)}
 
 /* Regression guard: framed controls keep neutral rest styling and expose theme focus until focus moves. */
-:where(.ui-button,.btn,button):not([data-ui=danger],.btn-danger,.library-picker-delete,.library-switch-delete,.group-delete-link):focus{color:var(--primary)!important;border-color:var(--primary)!important}
-:where(.ui-button,.btn,button):not([data-ui=danger],.btn-danger,.library-picker-delete,.library-switch-delete,.group-delete-link):focus svg{color:var(--primary);stroke:currentColor}
-.copy-control.ui-button:focus{--copy-ink:var(--primary);color:var(--primary)!important;border-color:var(--primary)!important}
-.asset-select:focus:before{border-color:var(--primary)!important}
-.reference-select:focus{border-color:var(--primary)!important}
+:where(.ui-button,.btn,button):not([data-ui=danger],.btn-danger,.library-picker-delete,.library-switch-delete,.group-delete-link):is(:focus,[data-focus-active]){color:var(--primary)!important;border-color:var(--primary)!important}
+:where(.ui-button,.btn,button):not([data-ui=danger],.btn-danger,.library-picker-delete,.library-switch-delete,.group-delete-link):is(:focus,[data-focus-active]) svg{color:var(--primary);stroke:currentColor}
+.copy-control.ui-button:is(:focus,[data-focus-active]){--copy-ink:var(--primary);color:var(--primary)!important;border-color:var(--primary)!important}
+.asset-select:is(:focus,[data-focus-active]):before{border-color:var(--primary)!important}
+.reference-select:is(:focus,[data-focus-active]){border-color:var(--primary)!important}
