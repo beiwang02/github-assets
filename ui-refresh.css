@@ -45,7 +45,11 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 
 .sort-trigger{color:#5e6b80;font-weight:600;display:inline-flex;gap:7px;padding-inline:10px}body.dark .sort-trigger{color:var(--ink)}.sort-trigger b{position:static;display:inline-flex;align-items:center;flex:0 0 auto;transform:none;line-height:1}.sort-control.open .sort-trigger b{transform:rotate(180deg)}
 /* Asset-only operation row: visible 22px check inside a separate 28px target. */
-.asset-card .asset-meta{display:flex;flex-wrap:nowrap;gap:3px;align-items:center}
+.asset-card .asset-details{padding:9px 8px 7px}
+.quick-asset{padding-bottom:7px}
+.quick-asset .quick-asset-name-row{margin-top:9px;padding-inline:6px}
+.quick-asset>small{margin:7px 6px 0}
+.asset-card .asset-meta{display:flex;flex-wrap:nowrap;gap:3px;align-items:center;margin-top:7px}
 .asset-card .asset-copy{flex:none;min-height:28px;padding:0;border:0;border-radius:0;background:transparent;color:var(--primary);font-size:11px;gap:0}
 .asset-card .asset-select{position:relative;inset:auto;flex:0 0 28px;width:28px;height:28px;min-width:28px;min-height:28px;margin-left:auto;padding:0;border:0;background:transparent;box-shadow:none;color:var(--muted);font-size:15px;isolation:isolate}
 .asset-card .asset-select:before{content:'';position:absolute;inset:3px;border:1px solid #cfd5fd;border-radius:6px;background:var(--surface);z-index:-1}
@@ -53,7 +57,7 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 .asset-card.selected .asset-select:before{background:var(--primary);border-color:var(--primary)}
 body.dark .asset-card .asset-select:before{border-color:var(--line)}
 .asset-copy-label{display:inline;white-space:nowrap}
-@media(max-width:700px){.asset-card{padding:3px}.asset-card .asset-details{padding:8px 0 1px}.asset-card .asset-meta{gap:1px}.asset-card .asset-copy{font-size:10px}}
+@media(max-width:700px){.asset-card{padding:3px}.asset-card .asset-details{padding:9px 3px 5px}.asset-card .asset-meta{gap:1px}.asset-card .asset-copy{font-size:10px}}
 
 
 /* Do not resurrect controls hidden by responsive legacy rules. */
