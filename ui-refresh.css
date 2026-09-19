@@ -23,6 +23,10 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 :root{--ui-control-h:40px;--ui-focus:#79747f;--ui-icon-size:18px}
 .ui-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;max-width:100%;min-width:0;flex-shrink:0;font-family:inherit;font-size:13px;font-weight:600;line-height:1.2;white-space:nowrap!important;text-decoration:none;-webkit-tap-highlight-color:transparent;cursor:pointer}
 .ui-button svg{width:var(--ui-icon-size);height:var(--ui-icon-size);flex:0 0 var(--ui-icon-size);vertical-align:middle}
+/* Expanded sort options only: reserve the same check slot for every label. */
+.sort-menu.floating-menu .sort-option.ui-button{display:grid;grid-template-columns:14px minmax(0,1fr);justify-content:initial;text-align:left;gap:6px;padding:0 8px;min-height:36px;height:36px;font-size:12px}
+.sort-menu.floating-menu .sort-option.ui-button>span{display:flex;align-items:center;justify-content:center;width:14px;min-width:14px;height:14px}
+.sort-menu.floating-menu .sort-option.ui-button>span svg{width:14px;height:14px;flex:0 0 14px}
 .ui-icon{display:inline-block;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle}
 .ui-button[data-ui=nav]{justify-content:flex-start}.ui-button[data-ui=text]{background:transparent;padding-inline:8px}.ui-button[data-ui=sort]{min-height:36px}
 .ui-button[data-ui=icon]{padding:0;width:34px;height:34px;min-height:34px;min-width:34px;gap:0}
