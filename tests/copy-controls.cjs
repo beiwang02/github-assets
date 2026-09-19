@@ -5,7 +5,7 @@ assert(asset.indexOf('class="asset-select"')<asset.indexOf('class="asset-copy co
 assert(!asset.includes('asset-copy-label'));
 for(const cls of ['asset-copy','quick-copy','icon-btn'])assert(js.includes(`class="${cls} copy-control copy-control-icon"`));
 assert(js.includes("if(el.dataset.action==='copy')el.classList.add('copy-control')"));
-assert(js.includes("if(action==='copy'){e.preventDefault();e.stopImmediatePropagation();target.blur();await runSubmission(target,'正在复制…',()=>copyC(target.dataset.copy||''));return;}"));
+assert(js.includes("if(action==='copy'){e.preventDefault();e.stopImmediatePropagation();target.focus({preventScroll:true});await runSubmission(target,'正在复制…',()=>copyC(target.dataset.copy||''));return;}"));
 assert(css.includes('body.dark .copy-control.ui-button'));
 for(const state of [':hover',':active',':focus-visible','[aria-busy=true]'])assert(css.includes(state));
 assert(!css.includes('.asset-copy-label'));

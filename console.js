@@ -314,7 +314,7 @@ document.addEventListener('click', async e => {
   if(action==='open-project'){ window.open('https://github.com/beiwang02/github-assets','_blank'); return; }
   if(action==='open-repo'){ if(S.repo.owner&&S.repo.repo) window.open(`https://github.com/${encodeURIComponent(S.repo.owner)}/${encodeURIComponent(S.repo.repo)}`,'_blank'); else notify('当前还没有连接仓库','error'); return; }
   if(action==='toggle-sort'){const owner=target.closest('[data-sort-menu]');if(!owner)return;window.AnchoredMenu.open(target,owner.querySelector('.sort-menu')||document.querySelector('.floating-menu'),{placement:owner.dataset.sortMenu==='assets'?'bottom-end':'bottom-start'});return;}
-  if(action==='toggle-theme'){cycleAppearance();target.blur();return;}
+  if(action==='toggle-theme'){cycleAppearance();target.focus({preventScroll:true});return;}
   if(action==='choose-sort'){const kind=target.dataset.sortKind,value=target.dataset.sortValue;const map={assets:['assetSort','gh-assets-sort'],libraries:['librarySort','gh-libraries-sort'],icons:['iconSort','gh-icons-sort']},pair=map[kind];if(!pair)return;S[pair[0]]=value;localStorage.setItem(pair[1],value);closeSortMenus();if(kind==='libraries')libraryPickerModal();else renderC();document.querySelector(`[data-sort-menu="${kind}"] .sort-trigger`)?.focus({preventScroll:true});return;}
   if(action==='account-menu'){accountMenu();return;}
   if(action==='forget-token'){localStorage.removeItem('gh-image-remembered-token');closeC();notify('已清除此设备记住的 Token，当前会话保留');return;}
@@ -331,14 +331,14 @@ document.addEventListener('click', async e => {
   if(action==='open-library-picker'){libraryPickerModal();return;}
   if(action==='select-library'){S.selectedLibrary=target.dataset.id||target.value;S.selectedIcons.clear();S.iconQuery='';closeC();renderC();return;}
   if(action==='group'){S.group=target.dataset.group;S.selected.clear();renderC();return;}
-  if(action==='select-all'){const list=filteredAssets(); if(list.length&&list.every(x=>S.selected.has(x.id)))list.forEach(x=>S.selected.delete(x.id));else list.forEach(x=>S.selected.add(x.id));syncAssetSelectionUI(list.map(x=>x.id));target.blur();return;}
-  if(action==='select-icon'){e.stopPropagation();const index=Number(target.dataset.index);S.selectedIcons.has(index)?S.selectedIcons.delete(index):S.selectedIcons.add(index);syncIconSelectionUI([index]);target.blur();return;}
-  if(action==='select-all-icons'){const icons=visibleIcons();if(icons.length&&icons.every(x=>S.selectedIcons.has(x.index)))icons.forEach(x=>S.selectedIcons.delete(x.index));else icons.forEach(x=>S.selectedIcons.add(x.index));syncIconSelectionUI();target.blur();return;}
+  if(action==='select-all'){const list=filteredAssets(); if(list.length&&list.every(x=>S.selected.has(x.id)))list.forEach(x=>S.selected.delete(x.id));else list.forEach(x=>S.selected.add(x.id));syncAssetSelectionUI(list.map(x=>x.id));target.focus({preventScroll:true});return;}
+  if(action==='select-icon'){e.stopPropagation();const index=Number(target.dataset.index);S.selectedIcons.has(index)?S.selectedIcons.delete(index):S.selectedIcons.add(index);syncIconSelectionUI([index]);return;}
+  if(action==='select-all-icons'){const icons=visibleIcons();if(icons.length&&icons.every(x=>S.selectedIcons.has(x.index)))icons.forEach(x=>S.selectedIcons.delete(x.index));else icons.forEach(x=>S.selectedIcons.add(x.index));syncIconSelectionUI();return;}
   if(action==='delete-selected-icons'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary), indexes=[...S.selectedIcons];if(!lib||!indexes.length)return;confirmC('移除图片引用',`从 ${lib.name} 中移除选中的 ${indexes.length} 条图片引用？图片文件不会删除。`,async()=>{await currentClient().removeIcons(lib.file,indexes,lib.sha);S.selectedIcons.clear();closeC();await refreshCommittedC();notify('图片引用已移除');},'移除引用');return;}
-  if(action==='asset-select'){e.preventDefault();e.stopImmediatePropagation();const id=target.dataset.id;S.selected.has(id)?S.selected.delete(id):S.selected.add(id);syncAssetSelectionUI([id]);target.blur();return;}
+  if(action==='asset-select'){e.preventDefault();e.stopImmediatePropagation();const id=target.dataset.id;S.selected.has(id)?S.selected.delete(id):S.selected.add(id);syncAssetSelectionUI([id]);target.focus({preventScroll:true});return;}
   if(action==='asset-open'){const item=S.assets.find(x=>x.id===target.dataset.id);if(item)assetModal(item);return;}
   if(action==='icon-open'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary),index=Number(target.dataset.index),icon=lib?.icons?.[index];if(icon)iconModal({...icon,index});return;}
-  if(action==='copy'){e.preventDefault();e.stopImmediatePropagation();target.blur();await runSubmission(target,'正在复制…',()=>copyC(target.dataset.copy||''));return;}
+  if(action==='copy'){e.preventDefault();e.stopImmediatePropagation();target.focus({preventScroll:true});await runSubmission(target,'正在复制…',()=>copyC(target.dataset.copy||''));return;}
   if(action==='library-detail'){S.selectedIcons.clear();S.selectedLibrary=target.dataset.id;S.iconQuery='';S.view='libraries';renderC();return;}
   if(action==='edit-library'){e.stopPropagation();S.selectedLibrary=target.dataset.id||S.selectedLibrary;libraryModal(true);return;}
   if(action==='edit-icon'){editIconModal(Number(target.dataset.index));return;}
@@ -360,8 +360,7 @@ document.addEventListener('click', async e => {
 });
 document.addEventListener('click',e=>{ const sidebar=$c('#sidebar'); if(sidebar?.classList.contains('open')&&!e.target.closest('#sidebar')&&!e.target.closest('.mobile-menu')){ sidebar.classList.remove('open'); e.preventDefault(); e.stopImmediatePropagation(); } },true);
 document.addEventListener('submit',formSubmit);
-// Clear Safari's sticky button focus after each touch release.
-document.addEventListener('pointerup',e=>{const button=e.target.closest('button');if(button&&e.pointerType==='touch')button.blur();});
+// Native click focus is preserved so framed controls keep visible activation feedback.
 document.addEventListener('input',e=>{if(pendingSubmission)return;const b=e.target.dataset.bind;if(!b)return;if(b==='asset-search')S.assetQuery=e.target.value;if(b==='library-search')S.libraryQuery=e.target.value;if(b==='icon-search')S.iconQuery=e.target.value;const cursor=e.target.selectionStart;renderC();const next=document.querySelector(`[data-bind="${b}"]`);if(next){next.focus();next.setSelectionRange(cursor,cursor);}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!pendingSubmission)closeC();if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$c('#globalSearch')?.focus();}});
 renderC(); void bootAuth();
@@ -459,4 +458,6 @@ function enhanceControlsC(){
 }
 const uiObserverC=new MutationObserver(()=>{uiObserverC.disconnect();enhanceControlsC();uiObserverC.observe(document.body,{childList:true,subtree:true});});
 enhanceControlsC();uiObserverC.observe(document.body,{childList:true,subtree:true});
+// WebKit does not consistently focus buttons on pointer activation; normalize framed controls.
+document.addEventListener('click',e=>{const b=e.target.closest('.ui-button:not([data-ui="danger"],[data-ui="primary"],[data-ui="text"])');if(b?.isConnected)b.focus({preventScroll:true});},true);
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.library-list-row[data-action],.library-empty-row[data-action]')){e.preventDefault();e.target.click();}});
