@@ -196,10 +196,10 @@ body.dark .table-icon { background:#273751; }
 .json-workspace-top { display:flex; align-items:center; justify-content:space-between; gap:16px; }
 .library-picker { display:flex; min-width:0; flex:1; align-items:center; gap:10px; padding:0; border:0; color:var(--ink); text-align:left; background:transparent; cursor:pointer; }
 .library-picker .library-logo { flex:0 0 auto; }
-.library-picker-copy { display:grid; min-width:0; gap:2px; }
+.library-picker-copy { display:grid; min-width:0; flex:0 1 auto; gap:2px; }
 .library-picker-copy small,.library-picker-copy em { overflow:hidden; color:var(--muted); font-size:10px; font-style:normal; text-overflow:ellipsis; white-space:nowrap; }
 .library-picker-copy b { overflow:hidden; font-size:13px; text-overflow:ellipsis; white-space:nowrap; }
-.library-picker-arrow { margin-left:auto; color:var(--muted); font-size:18px; }
+.library-picker-arrow { flex:0 0 auto; margin-left:6px; color:var(--muted); font-size:15px; line-height:1; }
 .json-workspace-actions { display:flex; flex-wrap:nowrap; justify-content:flex-end; gap:8px; }
 .json-workspace-actions .btn { flex:1 1 0; min-width:0; text-align:center; }
 .json-delete-library { margin-left:auto; color:#d66a76; }
