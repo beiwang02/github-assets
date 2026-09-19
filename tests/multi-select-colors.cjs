@@ -1,0 +1,11 @@
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const css=fs.readFileSync('ui-refresh.css','utf8');
+assert.match(css,/:is\(\.asset-select,\.reference-select\)\{--multi-border:#c4ccde;--multi-bg:var\(--surface\);--multi-mark:#fff;color:var\(--multi-mark\)\}/);
+assert.match(css,/body\.dark :is\(\.asset-select,\.reference-select\)\{--multi-border:#536681;--multi-bg:#202e47\}/);
+assert.match(css,/:is\(\.asset-card\.selected \.asset-select,\.json-reference-row\.selected \.reference-select\)\{--multi-border:var\(--primary\);--multi-bg:var\(--primary\)\}/);
+assert.match(css,/:is\(\.asset-select,\.reference-select\):focus,:is\(\.asset-select,\.reference-select\):focus-visible\{outline:none!important;box-shadow:none!important\}/);
+assert(!css.includes('--multi-fill:#626b78'));assert(!css.includes('--multi-focus'));assert(!css.includes('data-focus-active'));
+const base=fs.readFileSync('console.css','utf8');
+assert(base.includes('.asset-card.selected { outline:2px solid rgba(89,101,242,.35); }'));
+assert(base.includes('.json-reference-row.selected { background:rgba(89,101,242,.07); }'));
+console.log('PASS selected checkboxes: primary blue fill, white mark, neutral unchecked borders, no focus ring; historical card/row selection retained');

@@ -59,13 +59,13 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 .quick-asset>small{margin:7px 6px 0}
 .asset-card .asset-meta{display:flex;flex-wrap:nowrap;gap:3px;align-items:center;margin-top:7px}
 /* Local multi-select palette; never affects native form checkboxes or card outlines. */
-:is(.asset-select,.reference-select){--multi-border:#c4ccde;--multi-bg:var(--surface);--multi-mark:#fff;--multi-fill:#626b78;--multi-focus:#626b78;color:var(--multi-mark)}
-body.dark :is(.asset-select,.reference-select){--multi-border:#536681;--multi-bg:#202e47;--multi-mark:#18202b;--multi-fill:#b8c0cc;--multi-focus:#b8c0cc}
-:is(.asset-card.selected .asset-select,.json-reference-row.selected .reference-select){--multi-border:var(--multi-fill);--multi-bg:var(--multi-fill)}
+:is(.asset-select,.reference-select){--multi-border:#c4ccde;--multi-bg:var(--surface);--multi-mark:#fff;color:var(--multi-mark)}
+body.dark :is(.asset-select,.reference-select){--multi-border:#536681;--multi-bg:#202e47}
+:is(.asset-card.selected .asset-select,.json-reference-row.selected .reference-select){--multi-border:var(--primary);--multi-bg:var(--primary)}
 .asset-card .asset-select{position:relative;inset:auto;flex:0 0 28px;width:28px;height:28px;min-width:28px;min-height:28px;margin-left:0;padding:0;border:0;background:transparent;box-shadow:none;font-size:15px;isolation:isolate}
 .asset-card .asset-select:before{content:'';position:absolute;inset:3px;border:1px solid var(--multi-border);border-radius:6px;background:var(--multi-bg);z-index:-1}
 .reference-select{border-color:var(--multi-border);background:var(--multi-bg)}
-:is(.asset-select,.reference-select):focus-visible{outline:2px solid var(--multi-focus)!important;outline-offset:3px;box-shadow:none!important}
+:is(.asset-select,.reference-select):focus,:is(.asset-select,.reference-select):focus-visible{outline:none!important;box-shadow:none!important}
 :is(.asset-select,.reference-select):is(:disabled,[aria-busy=true]){opacity:.5;cursor:not-allowed;filter:none;transform:none}
 @media(hover:hover){:is(.asset-select,.reference-select):not(:disabled):not([aria-busy=true]):hover{filter:brightness(.985)}body.dark :is(.asset-select,.reference-select):not(:disabled):not([aria-busy=true]):hover{filter:brightness(1.1)}}
 @media(max-width:700px){.asset-card{padding:3px}.asset-card .asset-details{padding:9px 3px 5px}.asset-card .asset-meta{gap:1px}}
@@ -105,13 +105,11 @@ body.dark .ui-button.top-icon,body.dark .ui-button.project-link{background:#1b29
 
 .library-switch-title{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .token-eye.ui-button{font-size:18px}
-input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus,textarea:focus-visible{outline:none!important;box-shadow:none!important;border-color:#797080!important}
-body.dark input:focus,body.dark select:focus,body.dark textarea:focus{border-color:#b4a7c8!important}
+input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus,textarea:focus-visible{outline:none!important;box-shadow:none!important;border-color:var(--primary)!important}
 
-/* Login only: shared button border (#cfd5fd / dark --line), no outer ring. */
+/* Login input follows the same theme-blue editing focus without an outer ring. */
 .auth-card #mainTokenInput{width:100%;min-width:0}
-.auth-card #mainTokenInput:focus,.auth-card #mainTokenInput:focus-visible{border:1px solid #cfd5fd!important;outline:none!important;box-shadow:none!important}
-body.dark .auth-card #mainTokenInput:focus,body.dark .auth-card #mainTokenInput:focus-visible{border-color:var(--line)!important}
+.auth-card #mainTokenInput:focus,.auth-card #mainTokenInput:focus-visible{border:1px solid var(--primary)!important;outline:none!important;box-shadow:none!important}
 @media(max-width:700px){.auth-card #mainTokenInput{font-size:16px}}
 
 
