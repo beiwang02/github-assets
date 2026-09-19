@@ -2,7 +2,7 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const source=fs.readFileSync(path.join(__dirname,'../console.js'),'utf8'), github=fs.readFileSync(path.join(__dirname,'../github.js'),'utf8');
 const listeners={},timers=new Map();let now=0,id=0,renders=0,modal=null,requests=0;
 const S={auth:{},connected:true,repo:{},view:'assets',loading:false,groups:[],assets:[],libraries:[],selected:new Set(['a']),selectedIcons:new Set(),group:'g'};
-const ctx=vm.createContext({console,Set,structuredClone,URL,TextDecoder,Uint8Array,atob,btoa,window:{addEventListener:(e,f)=>listeners[e]=f},document:{hidden:false,addEventListener:(e,f)=>listeners[e]=f},S,$c:s=>s==='#modalRoot'?{firstElementChild:modal}:null,renderC:()=>renders++,notify:()=>{},localStorage:{setItem(){},removeItem(){}},location:{replace(){}},fetch:async()=>({}),setTimeout:(f,ms)=>{timers.set(++id,{at:now+ms,f});return id;},clearTimeout:i=>timers.delete(i)});
+const ctx=vm.createContext({console,Set,structuredClone,URL,TextDecoder,Uint8Array,atob,btoa,window:{addEventListener:(e,f)=>listeners[e]=f},document:{hidden:false,addEventListener:(e,f)=>listeners[e]=f},S,$c:s=>s==='#modalRoot'?{firstElementChild:modal}:null,renderC:()=>renders++,notify:()=>{},localStorage:{setItem(){},removeItem(){}},location:{replace(){}},fetch:async()=>({ok:true}),setTimeout:(f,ms)=>{timers.set(++id,{at:now+ms,f});return id;},clearTimeout:i=>timers.delete(i)});
 vm.runInContext(github,ctx);ctx.GitHubClient=ctx.window.GitHubClient;
 vm.runInContext('let repositoryEpoch=0,pendingSubmission=false;let client;const currentClient=()=>client;',ctx);
 vm.runInContext(source.slice(source.indexOf('let refreshFlight='),source.indexOf('// One UI operation')),ctx);

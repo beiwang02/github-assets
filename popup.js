@@ -36,6 +36,7 @@
     let generation = 0;
     const update = async () => {
       const version = ++generation;
+      try {
       const result = await computePosition(trigger, menu, {
         strategy:'fixed', placement,
         middleware:[offset(7), flip({padding:8}), shift({padding:8}), size({padding:8, apply({availableWidth, availableHeight}) {
@@ -46,6 +47,7 @@
       });
       if (active !== entry || version !== generation) return;
       Object.assign(menu.style, {left:`${result.x}px`, top:`${result.y}px`, visibility:'visible'});
+      } catch { if(active===entry)close(true); }
     };
     entry.cleanup = autoUpdate(trigger, menu, update);
     entry.observer = new MutationObserver(() => {
@@ -65,6 +67,7 @@
     if (event.key === 'Tab') { close(true); return; }
     const items = [...active.menu.querySelectorAll('button:not(:disabled)')];
     const index = items.indexOf(document.activeElement);
+    if(!items.length)return;
     let next;
     if (event.key === 'ArrowDown') next = (index + 1) % items.length;
     if (event.key === 'ArrowUp') next = (index - 1 + items.length) % items.length;

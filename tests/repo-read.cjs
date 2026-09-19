@@ -3,7 +3,7 @@ const source=fs.readFileSync(require('node:path').join(__dirname,'../console.js'
 const messages=[];let active,calls=0,resolve,reject;
 function form(){const b={disabled:false,innerHTML:'保存并读取仓库',textContent:'保存并读取仓库',type:'submit'};return {id:'repoForm',dataset:{},values:{owner:'mock',repo:'fixture',branch:'main',assetsPath:'assets'},attrs:{},buttons:[b],matches:()=>false,querySelectorAll(){return this.buttons},getAttribute(k){return this.attrs[k]??null},setAttribute(k,v){this.attrs[k]=v},removeAttribute(k){delete this.attrs[k]}}}
 const S={repo:{},view:'settings',selected:new Set(),activity:[],groups:[],assets:[],libraries:[]};
-const ctx=vm.createContext({console,Set,S,HTMLFormElement:Object,FormData:class{constructor(f){this.f=f}get(k){return this.f.values[k]}},notify:(...m)=>messages.push(m),localStorage:{setItem(){}},document:{getElementById:()=>active,querySelector:()=>null},scheduleRepositorySyncC(){},renderC(){active=form();ctx.restoreSubmissionC()},currentClient:()=>ctx.client});
+const ctx=vm.createContext({console,Set,S,HTMLFormElement:Object,FormData:class{constructor(f){this.f=f}get(k){return this.f.values[k]}},notify:(...m)=>messages.push(m),localStorage:{setItem(){}},document:{getElementById:()=>active,querySelector:()=>null},syncStatusC(message){S.syncError=message},scheduleRepositorySyncC(){},renderC(){active=form();ctx.restoreSubmissionC()},currentClient:()=>ctx.client});
 ctx.client={load(){calls++;return new Promise((a,b)=>{resolve=a;reject=b})}};
 vm.runInContext('let repositoryEpoch=0;',ctx);
 vm.runInContext(source.slice(source.indexOf('async function readRepo'),source.indexOf('let refreshFlight=')),ctx);

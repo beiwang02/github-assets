@@ -1,5 +1,6 @@
 import http from 'node:http';
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { dirname } from 'node:path';
+import { readFile, writeFile, mkdir, rename, unlink } from 'node:fs/promises';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 
 const PORT = Number(process.env.PORT || 8765);
@@ -18,8 +19,12 @@ let accessPolicy = { allowAll: ALLOWED_GITHUB_LOGINS.size === 0, allowed: [...AL
 const POLICY_FILE = process.env.POLICY_FILE || '/app/data/access-policy.json';
 try {
   const stored = JSON.parse(await readFile(POLICY_FILE, 'utf8'));
-  if (stored && Array.isArray(stored.allowed)) accessPolicy = { allowAll:Boolean(stored.allowAll), allowed:[...new Set(stored.allowed.map(value => String(value).toLowerCase()).filter(Boolean))] };
-} catch { /* first run or read-only filesystem: use environment defaults */ }
+  if (!stored || typeof stored.allowAll !== 'boolean' || !Array.isArray(stored.allowed) || stored.allowed.some(value => typeof value !== 'string' || !/^[a-z0-9-]+$/i.test(value.trim()))) throw new Error('Invalid access policy');
+  accessPolicy = { allowAll:stored.allowAll, allowed:[...new Set(stored.allowed.map(value => value.trim().toLowerCase()))] };
+} catch (error) {
+  // Only a genuinely absent file is a first run. Never reopen access after corruption or EACCES.
+  if (error.code !== 'ENOENT') throw new Error('无法安全加载访问策略，服务启动已停止。', { cause:error });
+}
 const SECURE = BASE.protocol === 'https:';
 const sessions = new Map();
 const oauthStates = new Map();
@@ -32,7 +37,7 @@ function oauthAuthorizeUrl(state) {
   return target.toString();
 }
 function clearOAuthCookie() { return cookie('gh_oauth_state', '', 0); }
-const equal = (a, b) => typeof a === 'string' && typeof b === 'string' && a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
+const equal = (a, b) => typeof a === 'string' && typeof b === 'string' && Buffer.byteLength(a) === Buffer.byteLength(b) && timingSafeEqual(Buffer.from(a), Buffer.from(b));
 const ROOT = new URL('./', import.meta.url);
 const assets = new Map([
   ['/popup.js','popup.js'], ['/source/popup.js','popup.js'],
@@ -90,7 +95,15 @@ async function readBody(req) {
 function allowedAPI(url, method) {
   if (url.origin !== 'https://api.github.com' || url.username || url.password || url.hash) return false;
   const p = url.pathname;
-  if (method === 'GET') return p === '/user' || p === '/user/repos' || /^\/repos\/[^/]+\/[^/]+(?:\/commits|\/git\/(?:ref|refs|commits|trees|blobs)\/.*|\/contents(?:\/.*)?)?$/.test(p);
+  if (method === 'GET') return p === '/user' || p === '/user/repos' || /^\/repos\/[^/]+\/[^/]+(?:\/commits|\/compare\/[^/]+|\/git\/(?:ref|refs|commits|trees|blobs)\/.*|\/contents(?:\/.*)?)?$/.test(p);
+  if (method === 'PUT') {
+    // Decode once per segment; residual escapes could acquire new meaning upstream.
+    try {
+      const parts=p.split('/').slice(1).map(segment=>decodeURIComponent(segment));
+      if(parts.some(segment=>!segment||segment==='.'||segment==='..'||/[\/\\\x00-\x1f\x7f-\x9f]/.test(segment)||/%[0-9a-f]{2}/i.test(segment)))return false;
+      return parts.length>=5&&parts[0]==='repos'&&parts[3]==='contents'&&parts.at(-1)==='.gitkeep';
+    } catch { return false; }
+  }
   if (method === 'POST') return p === '/user/repos' || /^\/repos\/[^/]+\/[^/]+\/git\/(?:trees|commits|blobs)$/.test(p);
   if (method === 'PATCH') return /^\/repos\/[^/]+\/[^/]+\/git\/refs\/heads\/.+/.test(p) || /^\/repos\/[^/]+\/[^/]+$/.test(p);
   if (method === 'DELETE') return DELETE_REPO && (/^\/repos\/[^/]+\/[^/]+$/.test(p) || /^\/repos\/[^/]+\/[^/]+\/contents(?:\/.*)?$/.test(p));
@@ -142,17 +155,28 @@ const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === '/api/admin/policy' && req.method === 'GET') {
       const auth = session(req), permission = accessFor(auth?.user?.login);
-      if (!auth || !permission.isAdmin) return json(res, 403, { message:'只有管理员可以查看访问策略。' });
+      if (!auth) return json(res, 401, { message:'请先登录。' });
+      if (!permission.isAdmin) return json(res, 403, { message:'只有管理员可以查看访问策略。' });
       return json(res, 200, { allowAll:accessPolicy.allowAll, allowed:[...accessPolicy.allowed] });
     }
     if (url.pathname === '/api/admin/policy' && req.method === 'PUT') {
       const auth = session(req), permission = accessFor(auth?.user?.login);
-      if (!auth || !permission.isAdmin || !requireCSRF(req, res, auth)) return;
+      if (!auth) return json(res, 401, { message:'请先登录。' });
+      if (!permission.isAdmin) return json(res, 403, { message:'只有管理员可以修改访问策略。' });
+      if (!requireCSRF(req, res, auth)) return;
       const raw = await readBody(req); let input;
       try { input = JSON.parse(raw.toString('utf8')); } catch { return json(res, 400, { message:'请求格式错误。' }); }
-      const allowed = [...new Set((Array.isArray(input?.allowed) ? input.allowed : []).map(value => String(value).trim().toLowerCase()).filter(value => /^[a-z0-9-]+$/.test(value)))];
-      accessPolicy = { allowAll:Boolean(input?.allowAll), allowed:Array.from(new Set([ADMIN_GITHUB_LOGIN, ...allowed].filter(Boolean))) };
-      try { await mkdir('/app/data', { recursive:true }); await writeFile(POLICY_FILE, JSON.stringify(accessPolicy, null, 2), { mode:0o600 }); } catch { /* policy remains active in memory for this process */ }
+      if (!input || typeof input.allowAll !== 'boolean' || !Array.isArray(input.allowed) || input.allowed.some(value => typeof value !== 'string' || !/^[a-z0-9-]+$/i.test(value.trim()))) return json(res, 400, { message:'访问策略格式错误。' });
+      const allowed = [...new Set(input.allowed.map(value => value.trim().toLowerCase()))];
+      const nextPolicy = { allowAll:Boolean(input?.allowAll), allowed:Array.from(new Set([ADMIN_GITHUB_LOGIN, ...allowed].filter(Boolean))) };
+      await mkdir(dirname(POLICY_FILE), { recursive:true });
+      const temporary = `${POLICY_FILE}.${random()}.tmp`;
+      try {
+        await writeFile(temporary, JSON.stringify(nextPolicy, null, 2), { mode:0o600, flag:'wx' });
+        await rename(temporary, POLICY_FILE);
+      } finally { await unlink(temporary).catch(() => {}); }
+      accessPolicy = nextPolicy;
+      for (const [id, value] of sessions) if (!accessFor(value.user.login).allowed) sessions.delete(id);
       return json(res, 200, { allowAll:accessPolicy.allowAll, allowed:[...accessPolicy.allowed] });
     }
     if (url.pathname === '/api/auth/token' && req.method === 'POST') {

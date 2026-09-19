@@ -93,6 +93,7 @@ class GitHubClient {
   }
   emptyMetadata() { return { version:METADATA_VERSION, assets:{}, libraries:{} }; }
   metadataFromSnapshot(snap) {
+    if(snap.resolvedMetadata)return structuredClone(snap.resolvedMetadata);
     const entry=(snap.entries||[]).find(e=>e.path===METADATA_PATH);
     if(!entry)return this.emptyMetadata();
     try {
@@ -112,7 +113,7 @@ class GitHubClient {
         if(batch.length<100)return { rows, complete:true, createdAt:rows.at(-1)?.commit?.committer?.date||null, updatedAt:rows[0]?.commit?.committer?.date||null, source:'git-history' };
       }
       return { rows, complete:false, createdAt:null, updatedAt:rows[0]?.commit?.committer?.date||null, source:'git-history-limited' };
-    } catch { return { rows:[], complete:false, createdAt:null, updatedAt:null, source:'unknown' }; }
+    } catch (error) { return { rows:[], complete:false, createdAt:null, updatedAt:null, source:'unknown', retryable:![404,410].includes(error.status) }; }
   }
   // Pair exact duplicates by occurrence first. Only unambiguous URL/name edits
   // inherit identity; ambiguous replacements are new references, never another's age.
@@ -129,7 +130,7 @@ class GitHubClient {
     });
     return result;
   }
-  async referenceHistory(doc, history, previous) {
+  async referenceHistory(doc, history, previous, recordedBaseline) {
     if(!history.rows.length)return this.reconcileReferences(previous?.references,doc.value.icons);
     const stop=previous?.historySha;
     const index=stop?history.rows.findIndex(row=>row.sha===stop):-1;
@@ -143,26 +144,31 @@ class GitHubClient {
         const file=await this.request(`${this.base}/contents/${doc.path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(row.sha)}`);
         const value=JSON.parse(GitHubClient.decode(file.content||''));
         if(!Array.isArray(value?.icons)){refs=[];known=true;continue;}
-        refs=this.reconcileReferences(refs,value.icons,known?row.commit?.committer?.date||null:null,known?'git-history':'unknown');
+        const baseline=[previous,recordedBaseline].find(b=>b?.blobSha&&file.sha===b.blobSha);
+        if(baseline){refs=this.referenceMetadata(baseline,value.icons);known=true;}
+        else refs=this.reconcileReferences(refs,value.icons,known?row.commit?.committer?.date||null:null,known?'git-history':'unknown');
         known=true;
       }
       return this.reconcileReferences(refs,doc.value.icons);
-    } catch { return this.reconcileReferences(previous?.references,doc.value.icons); }
+    } catch (error) { history.retryable=![404,410].includes(error.status); return this.reconcileReferences(previous?.references,doc.value.icons); }
   }
   async syncMetadata(snap, images, previous) {
     // Optional on-disk metadata is validated but read-only during synchronization.
     // SHA-bound session state, not that optional index, decides external changes.
-    this.metadataFromSnapshot(snap);
+    const disk=this.metadataFromSnapshot(snap);
     const metadata=this.emptyMetadata();
     const before=new Map((previous?.snapshot?.entries||[]).map(e=>[e.path,e]));
-    const old=previous?.metadata || this.metadataFromSnapshot(snap);
     for(const entry of [...images,...snap.docs]) {
       const asset=!entry.value, key=asset?'assets':'libraries';
-      const prior=old?.[key]?.[entry.path];
-      if(prior&&before.get(entry.path)?.sha===entry.sha){metadata[key][entry.path]=structuredClone(prior);continue;}
+      const recorded=disk[key]?.[entry.path], cached=previous?.metadata?.[key]?.[entry.path];
+      // Only an exact blob binding permits disk to supersede session history.
+      const bound=recorded?.blobSha===entry.sha;
+      const prior=bound?recorded:cached;
+      if(prior&&!prior.retryable&&(bound||before.get(entry.path)?.sha===entry.sha)){metadata[key][entry.path]=structuredClone(prior);continue;}
       const history=await this.pathHistory(entry.path,snap.head);
-      const time={createdAt:prior?.createdAt||history.createdAt,updatedAt:history.updatedAt||prior?.updatedAt||null,source:history.source,historySha:history.rows[0]?.sha||null};
-      if(!asset)time.references=await this.referenceHistory(entry,history,prior);
+      const time={createdAt:prior?.createdAt||history.createdAt,updatedAt:history.updatedAt||prior?.updatedAt||null,source:history.source,historySha:history.rows[0]?.sha||null,blobSha:entry.sha};
+      if(!asset)time.references=await this.referenceHistory(entry,history,prior?.retryable?undefined:prior,recorded);
+      time.retryable=!!history.retryable;
       metadata[key][entry.path]=time;
     }
     for(const doc of snap.docs) {
@@ -219,7 +225,7 @@ class GitHubClient {
       if(fresh.size!==0 || previous?.snapshot)throw error;
       return this.cached={repo:fresh,root:this.config.assetsPath||'assets',assets:[],groups:[],libraries:[],metadata:this.emptyMetadata(),snapshot:null};
     }
-    if(previous?.snapshot?.head===ref.object.sha)return previous;
+    if(previous?.snapshot?.head===ref.object.sha&&!previous.historyWarnings?.some(w=>w.code==='HISTORY_RETRYABLE'))return previous;
     const snap = await this.snapshot(ref.object.sha,previous?.snapshot);
     const roots = [...new Set([this.config.assetsPath || 'assets', 'assets', 'icons'])];
     const root = roots.find(p => snap.directories.includes(p) || snap.entries.some(e => e.path.startsWith(p + '/'))) || roots[0];
@@ -231,8 +237,9 @@ class GitHubClient {
     });
     const names = new Set(snap.directories.filter(p => p.startsWith(root + '/') && !p.slice(root.length + 1).includes('/')).map(p => p.slice(root.length + 1)));
     assets.forEach(a => names.add(a.group));
-    const libraries=snap.docs.map(d=>{const time=metadata.libraries[d.path]||{}, refs=this.referenceMetadata(time,d.value.icons);return { id:d.path, file:d.path, ...d, name:d.value.name||d.path.split('/').at(-1), description:d.value.description||'', icons:d.value.icons.map((icon,index)=>({...icon,addedAt:refs[index]?.addedAt||null,updatedAt:refs[index]?.updatedAt||null,timeSource:refs[index]?.source||'unknown'})), count:d.value.icons.length, createdAt:time.createdAt||null, updatedAt:time.updatedAt||null, timeSource:time.source||'unknown' };});
-    return this.cached={ repo, snapshot:snap, metadata, root, assets, groups:[...names].sort().map(name => ({ name, count:assets.filter(a => a.group === name).length })), libraries };
+    const libraries=snap.docs.map(d=>{const time=metadata.libraries[d.path]||{}, refs=this.referenceMetadata(time,d.value.icons);return { id:d.path, file:d.path, ...d, name:typeof d.value.name==='string'&&d.value.name?d.value.name:d.path.split('/').at(-1), description:typeof d.value.description==='string'?d.value.description:'', icons:d.value.icons.map((icon,index)=>({...icon,addedAt:refs[index]?.addedAt||null,updatedAt:refs[index]?.updatedAt||null,timeSource:refs[index]?.source||'unknown'})), count:d.value.icons.length, createdAt:time.createdAt||null, updatedAt:time.updatedAt||null, timeSource:time.source||'unknown' };});
+    const historyWarnings=Object.entries({...metadata.assets,...metadata.libraries}).filter(([,time])=>time.retryable||time.source==='unknown'||time.source==='git-history-limited'||!time.createdAt||time.references?.some(r=>!r.addedAt||r.source==='unknown')).map(([path,time])=>({path,code:time.retryable?'HISTORY_RETRYABLE':time.source==='git-history-limited'?'HISTORY_LIMITED':'HISTORY_UNKNOWN',message:time.retryable?'时间历史暂时不可用，下次刷新会重试。':'历史记录不完整，部分时间不可用。'}));
+    return this.cached={ repo, snapshot:snap, metadata, historyWarnings, root, assets, groups:[...names].sort().map(name => ({ name, count:assets.filter(a => a.group === name).length })), libraries };
   }
   jsonChange(doc, value) { return { path:doc.path, mode:'100644', type:'blob', content:JSON.stringify(value, null, 2) + '\n' }; }
   async atomic(message, build) {
@@ -248,21 +255,48 @@ class GitHubClient {
       catch(error) {
         if(![404,409].includes(error.status) || (await this.request(this.base)).size!==0)throw error;
         // Only an explicit mutation initializes a truly blank repository.
-        try { await this.request(`${this.base}/contents/${this.config.assetsPath||'assets'}/.gitkeep`, 'PUT', {message:'初始化资源仓库',content:btoa('\n'),branch:this.config.branch}); }
+        try { await this.request(`${this.base}/contents/${(this.config.assetsPath||'assets').split('/').map(encodeURIComponent).join('/')}/.gitkeep`, 'PUT', {message:'初始化资源仓库',content:btoa('\n'),branch:this.config.branch}); }
         catch(initError) { if(![409,422].includes(initError.status))throw initError; }
         snap=await this.snapshot();
       }
+      if(snap.entries){
+        const images=snap.entries.filter(e=>e.path.startsWith((this.config.assetsPath||'assets')+'/')&&/\.(png|jpe?g|webp|gif|svg)$/i.test(e.path));
+        snap.resolvedMetadata=await this.syncMetadata(snap,images,this.cached);
+        if(Object.values({...snap.resolvedMetadata.assets,...snap.resolvedMetadata.libraries}).some(time=>time.retryable))throw new Error('时间历史暂时不可用，请刷新恢复后再修改，避免丢失原始时间。');
+      }
       const changes = await build(snap);
       if (!changes.length) return { changed:false };
+      const metaChange=changes.find(e=>e.path===METADATA_PATH);
+      if(metaChange){
+        const metadata=JSON.parse(metaChange.content), entries=new Map((snap.entries||[]).map(e=>[e.path,e]));
+        for(const change of changes){
+          if(change===metaChange)continue;
+          if(change.content!==undefined){const blob=await this.request(`${this.base}/git/blobs`,'POST',{content:change.content,encoding:'utf-8'});change.sha=blob.sha;delete change.content;}
+          if(change.sha===null)entries.delete(change.path);else entries.set(change.path,change);
+        }
+        for(const key of ['assets','libraries'])for(const [path,time] of Object.entries(metadata[key])){const entry=entries.get(path);if(entry)time.blobSha=entry.sha;else delete metadata[key][path];}
+        metaChange.content=this.metadataChange(metadata).content;
+      }
       const tree = await this.request(`${this.base}/git/trees`, 'POST', { base_tree:snap.tree, tree:changes });
       const commit = await this.request(`${this.base}/git/commits`, 'POST', { message, tree:tree.sha, parents:[snap.head] });
       try {
         await this.request(`${this.base}/git/refs/heads/${encodeURIComponent(this.config.branch)}`, 'PATCH', { sha:commit.sha, force:false });
         return { changed:true, commit:commit.sha };
       } catch (error) {
-        if (![409,422].includes(error.status) || attempt === 2) throw error;
-        const latest = await this.request(`${this.base}/git/ref/heads/${encodeURIComponent(this.config.branch)}`);
-        if (latest.object.sha === snap.head) throw error;
+        let latest;
+        try {
+          latest=await this.request(`${this.base}/git/ref/heads/${encodeURIComponent(this.config.branch)}`);
+          if(latest.object.sha===commit.sha)return {changed:true,commit:commit.sha,recovered:true};
+          if(latest.object.sha!==snap.head){
+            const comparison=await this.request(`${this.base}/compare/${encodeURIComponent(commit.sha)}...${encodeURIComponent(latest.object.sha)}`);
+            if(['ahead','identical'].includes(comparison.status))return {changed:true,commit:commit.sha,recovered:true};
+          }
+        } catch { /* An unreadable branch cannot establish whether PATCH landed. */ }
+        if(![409,422].includes(error.status)||!latest){
+          const uncertain=new Error('提交结果待确认，请先刷新仓库核查，不要直接重试。');
+          uncertain.code='COMMIT_OUTCOME_UNKNOWN';uncertain.commit=commit.sha;uncertain.requiresRefresh=true;throw uncertain;
+        }
+        if(latest.object.sha===snap.head||attempt===2)throw error;
       }
     }
   }
@@ -335,8 +369,8 @@ class GitHubClient {
     return this.atomic(`删除图片分组：${group}`,async snap=>{const files=snap.entries.filter(e=>e.path.startsWith(root)),paths=new Set(files.map(e=>e.path)),changes=files.map(e=>({path:e.path,mode:e.mode||'100644',type:'blob',sha:null})),metadata=this.metadataFromSnapshot(snap),now=new Date().toISOString();paths.forEach(path=>delete metadata.assets[path]);for(const doc of snap.docs)if(doc.value.icons.some(i=>paths.has(this.ownedPath(i.url)))){const value=structuredClone(doc.value),library=this.touchLibrary(metadata,doc,now);value.icons=value.icons.filter(i=>!paths.has(this.ownedPath(i.url)));library.references=library.references.filter(i=>!paths.has(this.ownedPath(i.url)));changes.push(this.jsonChange(doc,value));}if(!changes.length)return [];changes.push(this.metadataChange(metadata));return changes;});
   }
   async createGroup(group) {
-    const name = GitHubClient.group(group), path = `${this.config.assetsPath}/${name}/.gitkeep`;
-    return this.atomic(`新建图片分组：${name}`, async snap => { if (snap.entries.some(e => e.path === path)) throw new Error('分组已经存在。'); return [{ path, mode:'100644', type:'blob', content:'\n' }]; });
+    const name = GitHubClient.group(group), root = `${this.config.assetsPath}/${name}`, path = `${root}/.gitkeep`;
+    return this.atomic(`新建图片分组：${name}`, async snap => { if (snap.entries.some(e => e.path === root || e.path.startsWith(root+'/')) || (snap.directories||[]).includes(root)) throw new Error('分组已经存在。'); return [{ path, mode:'100644', type:'blob', content:'\n' }]; });
   }
   async appendToLibrary(path, items) {
     let added = 0, skipped = 0; const now=new Date().toISOString();
@@ -351,7 +385,7 @@ class GitHubClient {
   }
   async saveIcon(path,index,name,url,expectedSha) {
     const cleanName=GitHubClient.name(name),parsed=new URL(url);if(parsed.protocol!=='https:'||parsed.hostname!=='raw.githubusercontent.com')throw new Error('这里只允许使用 GitHub Raw HTTPS 图片直链。');
-    return this.atomic(`修改图片：${cleanName}`,async snap=>{const doc=snap.docs.find(d=>d.path===path);if(!doc)throw new Error('找不到 JSON 库。');if(!expectedSha||doc.sha!==expectedSha)throw new Error('JSON 已被其他客户端修改，请刷新后重试。');const value=structuredClone(doc.value);if(index<0||!value.icons[index])throw new Error('图片已经不存在，请刷新。');if(value.icons.some((i,n)=>n!==index&&i.name===cleanName))throw new Error('已经有同名图片了。');if(value.icons[index].name===cleanName&&value.icons[index].url===url.trim())return [];const now=new Date().toISOString(),metadata=this.metadataFromSnapshot(snap),library=this.touchLibrary(metadata,doc,now),previous=library.references[index]||{};value.icons[index]={...value.icons[index],name:cleanName,url:url.trim()};library.references[index]={...previous,name:cleanName,url:url.trim(),updatedAt:now,source:'recorded'};return [this.jsonChange(doc,value),this.metadataChange(metadata)];});
+    return this.atomic(`修改图片：${cleanName}`,async snap=>{const doc=snap.docs.find(d=>d.path===path);if(!doc)throw new Error('找不到 JSON 库。');if(!expectedSha||doc.sha!==expectedSha)throw new Error('JSON 已被其他客户端修改，请刷新后重试。');const value=structuredClone(doc.value);if(index<0||!value.icons[index])throw new Error('图片已经不存在，请刷新。');if(value.icons[index].name===cleanName&&value.icons[index].url===url.trim())return [];const now=new Date().toISOString(),metadata=this.metadataFromSnapshot(snap),library=this.touchLibrary(metadata,doc,now),previous=library.references[index]||{};value.icons[index]={...value.icons[index],name:cleanName,url:url.trim()};library.references[index]={...previous,name:cleanName,url:url.trim(),updatedAt:now,source:'recorded'};return [this.jsonChange(doc,value),this.metadataChange(metadata)];});
   }
   async removeIcons(path,indexes,expectedSha) {
     const wanted=new Set(indexes.map(Number));return this.atomic(`从 JSON 移除图片：${wanted.size} 项`,async snap=>{const doc=snap.docs.find(d=>d.path===path);if(!doc)throw new Error('找不到 JSON 库。');if(!expectedSha||doc.sha!==expectedSha)throw new Error('JSON 已被其他客户端修改，请刷新后重试。');if(!doc.value.icons.some((_,i)=>wanted.has(i)))return [];const value=structuredClone(doc.value),metadata=this.metadataFromSnapshot(snap),library=this.touchLibrary(metadata,doc,new Date().toISOString());value.icons=value.icons.filter((_,i)=>!wanted.has(i));library.references=library.references.filter((_,i)=>!wanted.has(i));return [this.jsonChange(doc,value),this.metadataChange(metadata)];});
