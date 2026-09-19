@@ -132,3 +132,9 @@ body.dark .asset-detail-preview,body.dark .json-icon-detail-preview{border-color
 .library-switch-trigger.ui-button{flex:none;min-height:44px;padding:0 6px;background:transparent;border:0;color:var(--primary);font-size:12px;white-space:nowrap}
 .library-switch-copy small{display:block;font-size:11px;font-weight:400;color:var(--muted);white-space:normal;overflow-wrap:anywhere}
 .library-switch-copy b{white-space:normal;overflow-wrap:anywhere}
+
+/* Compact JSON-library sorting menu: one flat list, no grouping/dividers. */
+.sort-menu.floating-menu{width:142px;min-width:142px;padding:5px;border-radius:13px;gap:2px;box-shadow:0 8px 22px rgba(31,45,75,.11)}
+.sort-menu.floating-menu .sort-option.ui-button{min-height:45px;height:45px;border-radius:9px;padding:0 9px;font-weight:400}
+.sort-menu.floating-menu .sort-option.ui-button.active{font-weight:600}
+body.dark .sort-menu.floating-menu{box-shadow:0 8px 22px rgba(0,0,0,.24)}
