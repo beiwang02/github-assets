@@ -44,7 +44,18 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 @media(max-width:700px){.asset-grid,.quick-assets-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.asset-card .asset-copy,.quick-asset .quick-copy{font-size:8px;gap:2px;padding-inline:0;min-width:0;white-space:nowrap!important;--ui-icon-size:10px}.asset-card .asset-copy svg{width:10px;height:10px;flex-basis:10px}.asset-name-row,.quick-asset-name-row{gap:3px}}
 
 .sort-trigger{color:#5e6b80;font-weight:600;display:inline-flex;gap:7px;padding-inline:10px}body.dark .sort-trigger{color:var(--ink)}.sort-trigger b{position:static;display:inline-flex;align-items:center;flex:0 0 auto;transform:none;line-height:1}.sort-control.open .sort-trigger b{transform:rotate(180deg)}
-@media(max-width:700px){.asset-card .asset-meta{flex-wrap:wrap}.asset-card .asset-copy{flex:0 0 100%;min-height:28px;justify-content:flex-start;font-size:10px}.asset-copy-label{display:inline}.asset-card .asset-meta{gap:2px}.asset-card .asset-badge{font-size:8px;padding-inline:2px}.asset-card .asset-select{margin-left:auto}}
+/* Asset-only operation row: visible 22px check inside a separate 28px target. */
+.asset-card .asset-meta{display:flex;flex-wrap:nowrap;gap:3px;align-items:center}
+.asset-card .asset-badge{flex:none;white-space:nowrap}
+.asset-card .asset-copy{flex:none;min-height:28px;padding:0 3px;border:1px solid #cfd5fd;border-radius:6px;gap:3px}
+.asset-card .asset-select{position:relative;inset:auto;flex:0 0 28px;width:28px;height:28px;min-width:28px;min-height:28px;margin-left:auto;padding:0;border:0;background:transparent;box-shadow:none;color:var(--muted);font-size:15px;isolation:isolate}
+.asset-card .asset-select:before{content:'';position:absolute;inset:3px;border:1px solid #cfd5fd;border-radius:6px;background:var(--surface);z-index:-1}
+.asset-card.selected .asset-select{background:transparent;border:0;color:#fff}
+.asset-card.selected .asset-select:before{background:var(--primary);border-color:var(--primary)}
+body.dark .asset-card .asset-copy,body.dark .asset-card .asset-select:before{border-color:var(--line)}
+.asset-copy-label{display:inline;white-space:nowrap}
+@media(max-width:700px){.asset-card{padding:3px}.asset-card .asset-details{padding:8px 0 1px}.asset-card .asset-meta{gap:1px}.asset-card .asset-badge{font-size:7px;padding:3px 1px}.asset-card .asset-copy{font-size:8px;padding-inline:1px;gap:0}.asset-card .asset-copy svg{display:none}}
+@media(min-width:701px){.asset-card .asset-copy{font-size:9px}.asset-card .asset-badge{padding-inline:3px}}
 
 /* Do not resurrect controls hidden by responsive legacy rules. */
 .ui-button.sidebar-overlay{display:none}.ui-button.mobile-menu,.ui-button.sidebar-close{display:none}
@@ -86,10 +97,10 @@ body.dark .ui-button.top-icon,body.dark .ui-button.project-link{background:#1b29
 input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus,textarea:focus-visible{outline:none!important;box-shadow:none!important;border-color:#797080!important}
 body.dark input:focus,body.dark select:focus,body.dark textarea:focus{border-color:#b4a7c8!important}
 
-/* Login only: a single blue focus border, with no outer focus ring. */
+/* Login only: shared button border (#cfd5fd / dark --line), no outer ring. */
 .auth-card #mainTokenInput{width:100%;min-width:0}
-.auth-card #mainTokenInput:focus,.auth-card #mainTokenInput:focus-visible{border:1px solid #2563eb!important;outline:none!important;box-shadow:none!important}
-body.dark .auth-card #mainTokenInput:focus,body.dark .auth-card #mainTokenInput:focus-visible{border-color:#60a5fa!important}
+.auth-card #mainTokenInput:focus,.auth-card #mainTokenInput:focus-visible{border:1px solid #cfd5fd!important;outline:none!important;box-shadow:none!important}
+body.dark .auth-card #mainTokenInput:focus,body.dark .auth-card #mainTokenInput:focus-visible{border-color:var(--line)!important}
 @media(max-width:700px){.auth-card #mainTokenInput{font-size:16px}}
 
 /* Large library trigger must not darken a full card on press; small controls retain feedback. */

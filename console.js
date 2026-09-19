@@ -275,7 +275,7 @@ document.addEventListener('click', async e => {
   if(action==='asset-select'){e.preventDefault();e.stopImmediatePropagation();const id=target.dataset.id;S.selected.has(id)?S.selected.delete(id):S.selected.add(id);syncAssetSelectionUI([id]);target.blur();return;}
   if(action==='asset-open'){const item=S.assets.find(x=>x.id===target.dataset.id);if(item)assetModal(item);return;}
   if(action==='icon-open'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary),index=Number(target.dataset.index),icon=lib?.icons?.[index];if(icon)iconModal({...icon,index});return;}
-  if(action==='copy'){e.stopPropagation();target.blur();await copyC(target.dataset.copy||'');return;}
+  if(action==='copy'){e.preventDefault();e.stopImmediatePropagation();target.blur();await copyC(target.dataset.copy||'');return;}
   if(action==='library-detail'){S.selectedLibrary=target.dataset.id;S.iconQuery='';S.view='libraries';renderC();return;}
   if(action==='edit-library'){e.stopPropagation();S.selectedLibrary=target.dataset.id||S.selectedLibrary;libraryModal(true);return;}
   if(action==='edit-icon'){editIconModal(Number(target.dataset.index));return;}
