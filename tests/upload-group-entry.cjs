@@ -1,0 +1,13 @@
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const read=f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8');
+const js=read('console.js'),css=read('ui-refresh.css'),html=read('index.html');
+assert(js.includes('<button type="button" class="text-link modal-inline-create" data-action="new-group-from-upload">新建分组</button>'));
+assert(js.includes('data-action="new-group">＋ 新建分组</button>'),'Other group entry is unchanged');
+assert(js.includes("if(action==='new-group-from-upload'){groupModal(true);return;}"));
+assert(js.includes('上传后加入 JSON 库（可选）'));
+const rule=css.match(/#uploadForm \.modal-inline-create\{([^}]+)\}/)?.[1];
+assert(rule,'Upload-only scope');
+for(const declaration of ['justify-content:flex-start','align-items:flex-start','text-align:left','padding:0','min-height:40px','border:0','background:transparent'])assert(rule.includes(declaration));
+assert(read('styles.css').includes('.modal-field { display: grid; gap: 7px; }'));
+for(const asset of ['console.js','ui-refresh.css'])assert(html.includes(asset+'?v=upload-group-32'));
+console.log('PASS upload-group-entry: local text, scope, touch height, 7px gap, JSON hierarchy and unchanged action. Browser companion: tests/upload-group-entry.js');
