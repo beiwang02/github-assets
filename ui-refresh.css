@@ -39,11 +39,12 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 
 .asset-grid,.quick-assets-grid{grid-template-columns:repeat(6,minmax(0,1fr))}
 .asset-preview,.quick-asset-image{aspect-ratio:1/1;height:auto;width:100%}
-.asset-preview img,.quick-asset-image img{max-width:100%;max-height:100%;object-fit:contain;object-position:center}
+.asset-preview,.quick-asset-image{position:relative}
+.asset-preview img,.quick-asset-image img{position:absolute;width:72%;height:72%;max-width:72%;max-height:72%;left:14%;top:14%;object-fit:contain;object-position:center}
 @media(max-width:700px){.asset-grid,.quick-assets-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.asset-card .asset-copy,.quick-asset .quick-copy{font-size:8px;gap:2px;padding-inline:0;min-width:0;white-space:nowrap!important;--ui-icon-size:10px}.asset-card .asset-copy svg{width:10px;height:10px;flex-basis:10px}.asset-name-row,.quick-asset-name-row{gap:3px}}
 
 .sort-trigger{color:#5e6b80;font-weight:600;display:inline-flex;gap:7px;padding-inline:10px}body.dark .sort-trigger{color:var(--ink)}.sort-trigger b{position:static;display:inline-flex;align-items:center;flex:0 0 auto;transform:none;line-height:1}.sort-control.open .sort-trigger b{transform:rotate(180deg)}
-@media(max-width:700px){.asset-card .asset-meta{flex-wrap:wrap}.asset-card .asset-copy{flex:0 0 24px;min-height:28px}.asset-copy-label{display:none}.asset-card .asset-meta{gap:2px}.asset-card .asset-badge{font-size:8px;padding-inline:2px}.asset-card .asset-select{margin-left:auto}}
+@media(max-width:700px){.asset-card .asset-meta{flex-wrap:wrap}.asset-card .asset-copy{flex:0 0 100%;min-height:28px;justify-content:flex-start;font-size:10px}.asset-copy-label{display:inline}.asset-card .asset-meta{gap:2px}.asset-card .asset-badge{font-size:8px;padding-inline:2px}.asset-card .asset-select{margin-left:auto}}
 
 /* Do not resurrect controls hidden by responsive legacy rules. */
 .ui-button.sidebar-overlay{display:none}.ui-button.mobile-menu,.ui-button.sidebar-close{display:none}
@@ -67,4 +68,34 @@ body.dark .ui-button.top-icon,body.dark .ui-button.project-link{background:#1b29
 .library-switch-panel{display:none;width:min(360px,calc(100vw - 24px));padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);box-shadow:0 12px 32px #16213b26;overflow:auto;z-index:1200}
 .library-switch-panel.floating-menu{display:block}.library-switch-title{font-size:12px;font-weight:600;padding:5px 6px 10px;color:var(--muted)}
 .library-switch-row{display:flex;align-items:center;gap:4px}.library-switch-option.ui-button{flex:1;min-width:0;padding:9px 5px;justify-content:flex-start;border:0;background:transparent;color:inherit;text-align:left}.library-switch-option[aria-checked=true]{background:var(--ui-canvas);border-radius:10px}body.dark .library-switch-option[aria-checked=true]{background:#24334b}
-.library-switch-option .library-logo{width:32px;height:32px;flex:0 0 32px;font-size:13px}.library-switch-copy{flex:1;min-width:0}.library-switch-copy b,.library-switch-copy small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-switch-copy small{font-size:10px;margin-top:4px;color:var(--muted)}.library-switch-option em{font-size:11px;font-style:normal;flex-shrink:0}.library-switch-delete.ui-button{font-size:11px;padding:0 6px;background:transparent;border:0;color:#c6445e;flex-shrink:0}body.dark .library-switch-delete.ui-button{color:#ff9cac}.library-switch-panel .library-picker-create{width:100%;margin-top:8px}
+.library-switch-copy{flex:1;min-width:0}.library-switch-copy b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-switch-option em{font-size:11px;font-style:normal;flex-shrink:0}.library-switch-delete.ui-button{font-size:11px;padding:0 6px;background:transparent;border:0;color:#c6445e;flex-shrink:0}body.dark .library-switch-delete.ui-button{color:#ff9cac}.library-switch-panel .library-picker-create{width:100%;margin-top:8px}
+
+/* Only the repository name truncates; reserve room for the status halo. */
+.repo-meta #repoName{display:flex;align-items:center;overflow:visible;min-width:0;padding-right:4px}
+.repo-name-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#repoName .repo-status-dot{flex:none;width:9px;height:9px;margin-left:8px}
+
+.library-card .library-list-row,.library-card .library-empty-row{display:flex;width:100%;min-width:0;justify-content:flex-start;text-align:left}
+.library-card .list-info,.library-card .library-empty-row>div:last-child{flex:1;min-width:0;overflow:hidden}
+.library-card .list-info b,.library-card .list-info small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.library-card .list-meta{flex:none;margin-left:auto}
+.library-card .library-preview-strip,.library-card .empty-icon{flex-shrink:0}
+
+.library-switch-title{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.library-switch-title .library-switch-delete{min-height:30px;margin-left:auto}
+input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus,textarea:focus-visible{outline:none!important;box-shadow:none!important;border-color:#797080!important}
+body.dark input:focus,body.dark select:focus,body.dark textarea:focus{border-color:#b4a7c8!important}
+
+/* Large library trigger must not darken a full card on press; small controls retain feedback. */
+.library-picker.ui-button:active{filter:none!important;box-shadow:none!important;transform:none!important}
+.preview-file{min-width:0;padding-right:12px}
+.preview-file img{width:48px;height:48px;flex:0 0 48px;object-fit:contain}
+.preview-file span{flex:1;min-width:0}
+.preview-file .preview-clear{position:static;transform:none;width:32px;height:32px;min-width:32px;min-height:32px;flex:0 0 32px;padding:0;border-radius:8px;color:var(--muted);background:var(--surface);border:1px solid var(--line)}
+.preview-clear.ui-button svg{width:16px;height:16px;flex-basis:16px}
+.preview-file .preview-clear:hover{color:var(--ink);background:var(--ui-canvas)}
+/* Shared compact detail plate; list thumbnails retain their own sizing. */
+.asset-detail-preview,.json-icon-detail-preview{width:min(100%,200px);height:auto;min-height:0;aspect-ratio:1;position:relative;padding:0;border:1px solid var(--line);border-radius:12px;background:#f4f6ff;justify-self:center}
+.asset-detail-preview img,.json-icon-detail-preview img{position:absolute;left:10%;top:10%;width:80%;height:80%;max-width:80%;max-height:80%;object-fit:contain;object-position:center;box-shadow:none;border-radius:0}
+body.dark .asset-detail-preview,body.dark .json-icon-detail-preview{border-color:#3b4d69;background:#24334b}
+@media(max-width:700px){.asset-detail-preview,.json-icon-detail-preview{width:min(100%,160px);padding:0}}

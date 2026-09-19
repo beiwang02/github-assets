@@ -159,4 +159,6 @@ ALLOWED_GITHUB_LOGINS=
 
 ## UI Refresh 正式版
 
-当前界面版本 `ui-refresh-15`，沿用原生业务与认证。测试夹具与生产隔离，范围及验证限制见 [发布说明](README-UI-REFRESH.md)。
+当前界面版本 `ui-refresh-18`，沿用原生业务与认证。测试夹具与生产隔离，范围及验证限制见 [发布说明](README-UI-REFRESH.md)。
+
+图片网格保持手机 3 列、桌面 6 列，图片按方板的 72% 居中 contain；资源与 JSON 详情共用手机 160px / 桌面 200px 紧凑方板。概览库行直接进入对应库，工作区库信息使用 Floating UI 切换器。
