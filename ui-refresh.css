@@ -31,7 +31,7 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 .ui-button[data-ui=nav]{justify-content:flex-start}.ui-button[data-ui=text]{background:transparent;padding-inline:8px}.ui-button[data-ui=sort]{min-height:36px}
 .ui-button[data-ui=icon]{padding:0;width:34px;height:34px;min-height:34px;min-width:34px;gap:0}
 .ui-button.top-icon{width:34px;height:34px;min-width:34px;min-height:34px}.auth-head-actions>.ui-button{width:42px;height:42px;min-width:42px;min-height:42px}
-.ui-button.asset-select,.ui-button.reference-select{width:24px;height:24px;min-width:24px;min-height:24px}.ui-button.asset-copy{min-height:30px;padding:0;font-size:11px;gap:4px}.asset-copy svg{width:14px;height:14px;flex-basis:14px}
+.ui-button.asset-select,.ui-button.reference-select{width:24px;height:24px;min-width:24px;min-height:24px}
 .ui-button:focus,.ui-button:active{box-shadow:none!important}.ui-button:focus-visible{outline:2px solid #85808c!important;outline-offset:3px;box-shadow:none!important}.ui-button:active:not(:disabled){transform:translateY(1px);filter:brightness(.92)}.ui-button:disabled{cursor:not-allowed;opacity:.5;transform:none}
 .ui-button[data-ui=danger]{color:#b23c55;background:#fff1f3;border:1px solid #f3cbd3}body.dark .ui-button[data-ui=danger]{color:#efa5b3;background:#392633;border-color:#654052}
 .library-picker-copy{min-width:0}.library-picker-copy b,.library-picker-copy em{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.json-workspace-top{padding:12px!important}.json-library-summary{margin-top:0}.library-picker-list .library-picker-row{flex-wrap:wrap;min-width:0;padding:8px 0;border-bottom:1px solid var(--border)}
@@ -45,7 +45,7 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 .asset-preview,.quick-asset-image{aspect-ratio:1/1;height:auto;width:100%}
 .asset-preview,.quick-asset-image{position:relative}
 .asset-preview img,.quick-asset-image img{position:absolute;width:72%;height:72%;max-width:72%;max-height:72%;left:14%;top:14%;object-fit:contain;object-position:center}
-@media(max-width:700px){.asset-grid,.quick-assets-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.asset-card .asset-copy,.quick-asset .quick-copy{font-size:8px;gap:2px;padding-inline:0;min-width:0;white-space:nowrap!important;--ui-icon-size:10px}.asset-card .asset-copy svg{width:10px;height:10px;flex-basis:10px}.asset-name-row,.quick-asset-name-row{gap:3px}}
+@media(max-width:700px){.asset-grid,.quick-assets-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.asset-name-row,.quick-asset-name-row{gap:3px}}
 
 .sort-trigger{color:#5e6b80;font-weight:600;display:inline-flex;gap:7px;padding-inline:10px}body.dark .sort-trigger{color:var(--ink)}.sort-trigger b{position:static;inset:auto;display:inline-flex;align-items:center;justify-content:center;align-self:center;width:14px;height:14px;flex:0 0 14px;transform:rotate(0deg);transform-origin:50% 50%;line-height:1}.sort-trigger b>.ui-icon{display:block;width:14px;height:14px;flex:0 0 14px}.sort-control.open .sort-trigger b{transform:rotate(180deg)}
 /* Asset-only operation row: visible 22px check inside a separate 28px target. */
@@ -54,14 +54,12 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 .quick-asset .quick-asset-name-row{margin-top:9px;padding-inline:6px}
 .quick-asset>small{margin:7px 6px 0}
 .asset-card .asset-meta{display:flex;flex-wrap:nowrap;gap:3px;align-items:center;margin-top:7px}
-.asset-card .asset-copy{flex:none;min-height:28px;padding:0;border:0;border-radius:0;background:transparent;color:var(--primary);font-size:11px;gap:0}
-.asset-card .asset-select{position:relative;inset:auto;flex:0 0 28px;width:28px;height:28px;min-width:28px;min-height:28px;margin-left:auto;padding:0;border:0;background:transparent;box-shadow:none;color:var(--muted);font-size:15px;isolation:isolate}
+.asset-card .asset-select{position:relative;inset:auto;flex:0 0 28px;width:28px;height:28px;min-width:28px;min-height:28px;margin-left:0;padding:0;border:0;background:transparent;box-shadow:none;color:var(--muted);font-size:15px;isolation:isolate}
 .asset-card .asset-select:before{content:'';position:absolute;inset:3px;border:1px solid #cfd5fd;border-radius:6px;background:var(--surface);z-index:-1}
 .asset-card.selected .asset-select{background:transparent;border:0;color:#fff}
 .asset-card.selected .asset-select:before{background:var(--primary);border-color:var(--primary)}
 body.dark .asset-card .asset-select:before{border-color:var(--line)}
-.asset-copy-label{display:inline;white-space:nowrap}
-@media(max-width:700px){.asset-card{padding:3px}.asset-card .asset-details{padding:9px 3px 5px}.asset-card .asset-meta{gap:1px}.asset-card .asset-copy{font-size:10px}}
+@media(max-width:700px){.asset-card{padding:3px}.asset-card .asset-details{padding:9px 3px 5px}.asset-card .asset-meta{gap:1px}}
 
 
 /* Do not resurrect controls hidden by responsive legacy rules. */
@@ -114,9 +112,18 @@ body.dark .auth-card #mainTokenInput:focus,body.dark .auth-card #mainTokenInput:
 .preview-file .preview-clear{position:static;transform:none;width:32px;height:32px;min-width:32px;min-height:32px;flex:0 0 32px;padding:0;border-radius:8px;color:var(--muted);background:var(--surface);border:1px solid var(--line)}
 .preview-clear.ui-button svg{width:16px;height:16px;flex-basis:16px}
 .preview-file .preview-clear:hover{color:var(--ink);background:var(--ui-canvas)}
-/* Overview copy is a square icon control, independent of regular button height. */
-.quick-asset .quick-copy{width:28px!important;height:28px!important;min-width:28px!important;min-height:28px!important;max-width:28px;max-height:28px;flex:0 0 28px;padding:0!important;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;gap:0;box-sizing:border-box}
-.quick-asset .quick-copy .ui-icon{width:14px;height:14px;flex:0 0 14px}
+/* Shared neutral copy controls: overview, assets, JSON and detail actions. */
+.copy-control.ui-button{--copy-bg:#f5f7fa;--copy-line:#e1e6ed;--copy-ink:#7b899c;color:var(--copy-ink);background:var(--copy-bg);border:1px solid var(--copy-line);border-radius:8px;transition:background .12s,border-color .12s,filter .12s}
+body.dark .copy-control.ui-button{--copy-bg:#263247;--copy-line:#3a4960;--copy-ink:#bdc9da;color:var(--copy-ink);background:var(--copy-bg);border-color:var(--copy-line)}
+.copy-control.copy-control-icon.ui-button{width:28px!important;height:28px!important;min-width:28px;min-height:28px;max-width:28px;flex:0 0 28px;padding:0;gap:0;box-sizing:border-box}
+.copy-control.copy-control-icon .ui-icon{width:14px;height:14px;flex:0 0 14px}
+.asset-meta .copy-control{margin-left:auto}
+@media(hover:hover){.copy-control.ui-button:not(:disabled):hover{background:color-mix(in srgb,var(--copy-bg) 90%,var(--copy-ink));border-color:var(--copy-ink)}}
+.copy-control.ui-button:not(:disabled):active{background:color-mix(in srgb,var(--copy-bg) 80%,var(--copy-ink))}
+.copy-control.ui-button:focus-visible{outline-color:var(--copy-ink)!important}
+.copy-control-icon[aria-busy=true]{font-size:0}
+.copy-control-icon[aria-busy=true]::after{content:'…';font-size:14px}
+
 /* Shared compact detail plate; list thumbnails retain their own sizing. */
 .asset-detail-preview,.json-icon-detail-preview{width:min(100%,200px);height:auto;min-height:0;aspect-ratio:1;position:relative;padding:0;border:1px solid var(--line);border-radius:12px;background:#f4f6ff;justify-self:center}
 .asset-detail-preview img,.json-icon-detail-preview img{position:absolute;left:10%;top:10%;width:80%;height:80%;max-width:80%;max-height:80%;object-fit:contain;object-position:center;box-shadow:none;border-radius:0}

@@ -29,7 +29,6 @@
 .asset-name-row { display:flex; align-items:center; gap:6px; min-width:0; }
 .asset-name-row b { min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .asset-card.selected .asset-select { color:#fff; border-color:var(--primary); background:var(--primary); }
-.asset-copy { display:block; width:100%; padding:7px 0 0; color:var(--primary); background:transparent; text-align:left; font-size:9px; }
 .select-counter { color:var(--primary); font-size:10px; font-weight:700; }
 .connection-badge { display:flex; align-items:center; gap:7px; color:#49a77b; font-size:10px; font-weight:700; }
 .account-panel { display:flex; align-items:center; gap:10px; padding:13px; margin:4px 0 16px; border-radius:11px; background:#f4f6fb; }
@@ -101,20 +100,18 @@ body.dark .repo-quick { background:#202e47; border-color:var(--line); color:#b7c
 .quick-asset small { margin-top:4px; color:var(--muted); font-size:9px; }
 .quick-asset-name-row { display:flex; align-items:center; gap:5px; min-width:0; margin-top:9px; }
 .quick-asset-name-row b { flex:1; min-width:0; margin-top:0; }
-.quick-copy { flex:0 0 auto; width:25px; height:25px; color:var(--primary); border:1px solid var(--line); border-radius:7px; background:var(--surface); font-size:12px; }
 .quick-empty { padding:0; }
 @media(max-width:700px){.quick-assets-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.quick-asset-image{height:90px}.quick-asset-image img{width:54px;height:54px}}
 
 .modal-back-link { display:inline-block; margin-bottom:4px; font-size:10px; }
 .quick-asset-image { cursor:pointer; }
 .quick-asset-name-row b { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.quick-copy { z-index:2; padding:0; display:grid; place-items:center; }
 
 .top-actions .appearance-button, .top-actions .github-repo-link { display:inline-grid!important; place-items:center; width:40px; height:36px; border:1px solid var(--line); border-radius:18px; background:var(--surface); color:var(--ink); font-size:20px; }
 .top-actions .github-repo-link { font-size:17px; }
 .choice-menu { display:grid; gap:12px; }.choice-menu .btn { min-height:44px; justify-content:space-between; }
 .page-back { margin-bottom:16px; }.user-chip button.more { background:transparent; color:#9aa9c0; min-width:40px; min-height:40px; cursor:pointer; }
-body.dark .quick-asset-image {background:#24334b}body.dark .quick-copy{background:#31425e;color:#cbd3ff}body.dark .modal-field input,body.dark .modal-field select{background:#202e47;color:#edf1fb;border-color:#3b4d69}
+body.dark .quick-asset-image {background:#24334b}body.dark .modal-field input,body.dark .modal-field select{background:#202e47;color:#edf1fb;border-color:#3b4d69}
 body.dark .json-reference-thumb,body.dark .library-preview-tile {background:#24334b}
 
 .top-avatar { border:0; cursor:pointer; }
@@ -247,7 +244,6 @@ body.dark .library-detail-image { background:#24334b; }
 .asset-preview img { width:74px; height:74px; object-fit:contain; background:transparent; }
 .asset-details { padding:11px 3px 2px; }
 .asset-meta { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:8px; }
-.asset-copy { width:auto; padding:0; font-size:9px; white-space:nowrap; }
 body.dark .asset-preview { background:#24334b; }
 .json-workspace { padding:20px; margin-bottom:18px; }
 .json-workspace-top { display:flex; align-items:end; justify-content:space-between; gap:16px; }
@@ -265,7 +261,6 @@ body.dark .library-selector select { color:var(--ink); border-color:#3b4d69; bac
   .asset-preview img { width:58px; height:58px; }
   .asset-details { padding:9px 2px 1px; }
   .asset-meta { gap:4px; margin-top:6px; }
-  .asset-copy { font-size:8px; }
   .json-workspace { padding:14px; }
   .json-workspace-top { align-items:stretch; flex-direction:column; gap:13px; }
   .library-selector { min-width:0; }
@@ -392,9 +387,6 @@ body.dark .json-reference-actions [data-action="delete-icon"] { color:#ff9cac!im
 /* Keep preview backplates, but never round the image itself. */
 .quick-asset-image img,.asset-preview img,.json-reference-row>img,.cover-stack img,.table-icon img,.asset-detail-preview img,.json-icon-detail-preview img { border-radius:0!important; }
 .quick-asset-image img,.asset-preview img,.json-reference-row>img,.table-icon img,.asset-detail-preview img,.json-icon-detail-preview img { object-fit:contain!important; }
-/* JSON-row copy controls keep their neutral gray identity while receiving the shared press/focus feedback. */
-.json-reference-actions [data-action="copy"] { color:#8090a6; }
-body.dark .json-reference-actions [data-action="copy"] { color:var(--ink); }
 
 /* JSON 引用缩略图与总览库封面。总览只展示，整行点击后进入库内操作。 */
 .json-reference-thumb { width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center; padding:5px; box-sizing:border-box; overflow:hidden; border-radius:9px; background:#f4f6ff; }
