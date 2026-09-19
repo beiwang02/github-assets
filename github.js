@@ -97,13 +97,14 @@ class GitHubClient {
     if(!entry)return this.emptyMetadata();
     try {
       const value=JSON.parse(GitHubClient.decode(entry.content || ''));
+      if(!value||typeof value!=='object'||Array.isArray(value)||!value.assets||typeof value.assets!=='object'||Array.isArray(value.assets)||!value.libraries||typeof value.libraries!=='object'||Array.isArray(value.libraries))throw new Error('Invalid metadata');
       return { version:METADATA_VERSION, assets:value?.assets&&typeof value.assets==='object'?value.assets:{}, libraries:value?.libraries&&typeof value.libraries==='object'?value.libraries:{} };
-    } catch { return this.emptyMetadata(); }
+    } catch { throw new Error('资源时间元数据损坏，已停止写入以保护历史记录。'); }
   }
   metadataChange(value) { return { path:METADATA_PATH, mode:'100644', type:'blob', content:JSON.stringify(value,null,2)+'\n' }; }
-  async pathHistory(path) {
+  async pathHistory(path, head=this.config.branch) {
     try {
-      const rows=await this.request(`${this.base}/commits?path=${encodeURIComponent(path)}&per_page=100`);
+      const rows=await this.request(`${this.base}/commits?path=${encodeURIComponent(path)}&sha=${encodeURIComponent(head)}&per_page=100`);
       if(!Array.isArray(rows)||!rows.length)return { createdAt:null, updatedAt:null, source:'unknown' };
       const dates=rows.map(row=>row.commit?.committer?.date||row.commit?.author?.date).filter(Boolean);
       return { createdAt:dates.at(-1)||null, updatedAt:dates[0]||null, source:rows.length===100?'git-history-limited':'git-history' };
@@ -116,23 +117,24 @@ class GitHubClient {
     if(!missing.length)return metadata;
     // One bounded, one-time lookup per legacy path; the persisted index avoids repeat API use.
     for(let offset=0;offset<missing.length;offset+=4){
-      const batch=missing.slice(offset,offset+4), histories=await Promise.all(batch.map(x=>this.pathHistory(x.path)));
-      batch.forEach((item,index)=>{const h=histories[index];if(item.type==='asset')metadata.assets[item.path]={createdAt:h.createdAt,source:h.source};else metadata.libraries[item.path]={createdAt:h.createdAt,updatedAt:h.updatedAt,references:[],source:h.source};});
+      const batch=missing.slice(offset,offset+4), histories=await Promise.all(batch.map(x=>this.pathHistory(x.path,snap.head)));
+      batch.forEach((item,index)=>{const h=histories[index];if(item.type==='asset')metadata.assets[item.path]={createdAt:h.createdAt,updatedAt:h.updatedAt,source:h.source};else metadata.libraries[item.path]={createdAt:h.createdAt,updatedAt:h.updatedAt,references:[],source:h.source};});
     }
     for(const doc of snap.docs){
       const library=metadata.libraries[doc.path];
       if(!Array.isArray(library.references)||library.references.length!==doc.value.icons.length){
-        library.references=doc.value.icons.map(icon=>{const asset=metadata.assets[this.ownedPath(icon.url)];return {name:icon.name,url:icon.url,addedAt:asset?.createdAt||null,source:asset?.createdAt?'asset-created':'unknown'};});
+        library.references=this.referenceMetadata(library,doc.value.icons);
       }
     }
     await this.atomic('初始化资源时间元数据', async latest=>{
       const current=this.metadataFromSnapshot(latest);
+      if(latest.head!==snap.head)return []; // Re-read on next load rather than seed stale history after a concurrent change.
       current.assets={...metadata.assets,...current.assets}; current.libraries={...metadata.libraries,...current.libraries};
       return [this.metadataChange(current)];
     });
     return metadata;
   }
-  touchLibrary(metadata, doc, now, createdAt=now) {
+  touchLibrary(metadata, doc, now, createdAt=null) {
     const previous=metadata.libraries[doc.path]||{};
     const library={...previous,createdAt:previous.createdAt||createdAt||null,updatedAt:now,references:this.referenceMetadata(previous,doc.value.icons)};
     metadata.libraries[doc.path]=library; return library;
@@ -155,7 +157,7 @@ class GitHubClient {
       if (value.icons.some(i => !i || typeof i.name !== 'string' || typeof i.url !== 'string')) throw new Error(`图片记录格式异常：${entry.path}，请修复后重试。`);
       docs.push({ path:entry.path, sha:entry.sha, value });
     }
-    const metaEntry=entries.find(e=>e.path===METADATA_PATH); if(metaEntry){try{const blob=await this.request(`${this.base}/git/blobs/${metaEntry.sha}`);metaEntry.content=blob.content;}catch{/* migrate without index */}} return { head:ref.object.sha, tree:commit.tree.sha, entries, docs, directories:result.tree.filter(e => e.type === 'tree').map(e => e.path) };
+    return { head:ref.object.sha, tree:commit.tree.sha, entries, docs, directories:result.tree.filter(e => e.type === 'tree').map(e => e.path) };
   }
   async load() {
     const repo = await this.request(this.base);
@@ -168,11 +170,11 @@ class GitHubClient {
     const metadata=await this.migrateMetadata(snap,images);
     const assets = images.map(e => {
       const rel = e.path.slice(root.length + 1), parts = rel.split('/'), time=metadata.assets[e.path]||{};
-      return { ...e, id:e.path, group:parts.length > 1 ? parts[0] : '', name:parts.at(-1).replace(/\.[^.]+$/, ''), ext:parts.at(-1).split('.').at(-1).toUpperCase(), url:this.raw(e.path), createdAt:time.createdAt||null, timeSource:time.source||'unknown' };
+      return { ...e, id:e.path, group:parts.length > 1 ? parts[0] : '', name:parts.at(-1).replace(/\.[^.]+$/, ''), ext:parts.at(-1).split('.').at(-1).toUpperCase(), url:this.raw(e.path), createdAt:time.createdAt||null, updatedAt:time.updatedAt||null, timeSource:time.source||'unknown' };
     });
     const names = new Set(snap.directories.filter(p => p.startsWith(root + '/') && !p.slice(root.length + 1).includes('/')).map(p => p.slice(root.length + 1)));
     assets.forEach(a => names.add(a.group));
-    const libraries=snap.docs.map(d=>{const time=metadata.libraries[d.path]||{}, refs=this.referenceMetadata(time,d.value.icons);return { id:d.path, file:d.path, ...d, name:d.value.name||d.path.split('/').at(-1), description:d.value.description||'', icons:d.value.icons.map((icon,index)=>({...icon,addedAt:refs[index]?.addedAt||null,timeSource:refs[index]?.source||'unknown'})), count:d.value.icons.length, createdAt:time.createdAt||null, updatedAt:time.updatedAt||null, timeSource:time.source||'unknown' };});
+    const libraries=snap.docs.map(d=>{const time=metadata.libraries[d.path]||{}, refs=this.referenceMetadata(time,d.value.icons);return { id:d.path, file:d.path, ...d, name:d.value.name||d.path.split('/').at(-1), description:d.value.description||'', icons:d.value.icons.map((icon,index)=>({...icon,addedAt:refs[index]?.addedAt||null,updatedAt:refs[index]?.updatedAt||null,timeSource:refs[index]?.source||'unknown'})), count:d.value.icons.length, createdAt:time.createdAt||null, updatedAt:time.updatedAt||null, timeSource:time.source||'unknown' };});
     return { repo, snapshot:snap, root, assets, groups:[...names].sort().map(name => ({ name, count:assets.filter(a => a.group === name).length })), libraries };
   }
   jsonChange(doc, value) { return { path:doc.path, mode:'100644', type:'blob', content:JSON.stringify(value, null, 2) + '\n' }; }
@@ -215,10 +217,10 @@ class GitHubClient {
     await this.atomic(`上传图片：${cleanName}`, async snap => {
       if (snap.entries.some(e => e.path === path)) throw new Error(`同名图片已存在：${path.split('/').at(-1)}`);
       const changes = [{ path, mode:'100644', type:'blob', sha:(await this.request(`${this.base}/git/blobs`, 'POST', { content, encoding:'base64' })).sha }];
-      const metadata=this.metadataFromSnapshot(snap); metadata.assets[path]={createdAt:now,source:'recorded'};
+      const metadata=this.metadataFromSnapshot(snap); metadata.assets[path]={createdAt:now,updatedAt:now,source:'recorded'};
       if (libraryPath) {
         const doc = snap.docs.find(d => d.path === libraryPath); if (!doc) throw new Error('找不到目标 JSON 库。');
-        const value = structuredClone(doc.value), library=this.touchLibrary(metadata,doc,now); if (!value.icons.some(i => i.url === url)){ value.icons.push({ name:cleanName, url }); library.references.push({name:cleanName,url,addedAt:now,source:'recorded'}); }
+        const value = structuredClone(doc.value), library=this.touchLibrary(metadata,doc,now); if (!value.icons.some(i => i.url === url)){ value.icons.push({ name:cleanName, url }); library.references.push({name:cleanName,url,addedAt:now,updatedAt:now,source:'recorded'}); }
         changes.push(this.jsonChange(doc, value));
       }
       changes.push(this.metadataChange(metadata)); return changes;
@@ -233,9 +235,9 @@ class GitHubClient {
       if (snap.entries.some(e => e.path === nextPath)) throw new Error(`同名图片已存在：${nextPath.split('/').at(-1)}`);
       const changes = [{ path:nextPath, mode:'100644', type:'blob', sha:source.sha }, { path:item.path, mode:'100644', type:'blob', sha:null }];
       const nextUrl = this.raw(nextPath);
-      const metadata=this.metadataFromSnapshot(snap); if(metadata.assets[item.path]){metadata.assets[nextPath]=metadata.assets[item.path];delete metadata.assets[item.path];}
+      const metadata=this.metadataFromSnapshot(snap),now=new Date().toISOString(); metadata.assets[nextPath]={...metadata.assets[item.path],createdAt:metadata.assets[item.path]?.createdAt||null,updatedAt:now,source:'recorded'};delete metadata.assets[item.path];
       for (const doc of snap.docs) if (doc.value.icons.some(i => this.ownedPath(i.url) === item.path)) {
-        const value = structuredClone(doc.value), library=this.touchLibrary(metadata,doc,new Date().toISOString()); value.icons = value.icons.map(i => this.ownedPath(i.url) === item.path ? { ...i, name:cleanName, url:nextUrl } : i); library.references=library.references.map(i=>this.ownedPath(i.url)===item.path?{...i,name:cleanName,url:nextUrl}:i); changes.push(this.jsonChange(doc, value));
+        const value = structuredClone(doc.value), library=this.touchLibrary(metadata,doc,now); value.icons = value.icons.map(i => this.ownedPath(i.url) === item.path ? { ...i, name:cleanName, url:nextUrl } : i); library.references=library.references.map(i=>this.ownedPath(i.url)===item.path?{...i,name:cleanName,url:nextUrl,updatedAt:now}:i); changes.push(this.jsonChange(doc, value));
       }
       changes.push(this.metadataChange(metadata)); return changes;
     });
@@ -254,7 +256,7 @@ class GitHubClient {
       const paths = new Set(items.map(i => i.path)); const changes = [], metadata=this.metadataFromSnapshot(snap); paths.forEach(path=>delete metadata.assets[path]);
       for (const item of items) { if (snap.entries.some(e => e.path === item.path)) changes.push({ path:item.path, mode:'100644', type:'blob', sha:null }); }
       for (const doc of snap.docs) if (doc.value.icons.some(i => paths.has(this.ownedPath(i.url)))) { const value = structuredClone(doc.value), library=this.touchLibrary(metadata,doc,new Date().toISOString()); value.icons = value.icons.filter(i => !paths.has(this.ownedPath(i.url))); library.references=library.references.filter(i=>!paths.has(this.ownedPath(i.url))); changes.push(this.jsonChange(doc, value)); }
-      changes.push(this.metadataChange(metadata)); return changes;
+      if(!changes.length)return [];changes.push(this.metadataChange(metadata)); return changes;
     });
   }
   async renameGroup(group, nextGroup) {
@@ -264,14 +266,14 @@ class GitHubClient {
       if(snap.entries.some(e=>e.path===nextRoot||e.path.startsWith(nextRoot)))throw new Error(`目标分组已存在：${nextName}`);
       const files=snap.entries.filter(e=>e.path.startsWith(oldRoot));if(!files.length)throw new Error('当前分组没有文件。');
       const changes=files.map(e=>({path:nextRoot+e.path.slice(oldRoot.length),mode:e.mode||'100644',type:'blob',sha:e.sha})).concat(files.map(e=>({path:e.path,mode:e.mode||'100644',type:'blob',sha:null}))),metadata=this.metadataFromSnapshot(snap),now=new Date().toISOString();
-      files.forEach(e=>{if(metadata.assets[e.path]){metadata.assets[nextRoot+e.path.slice(oldRoot.length)]=metadata.assets[e.path];delete metadata.assets[e.path];}});
-      for(const doc of snap.docs){let touched=false;const value=structuredClone(doc.value),library=this.touchLibrary(metadata,doc,now);value.icons=value.icons.map(i=>{const path=this.ownedPath(i.url);if(!path.startsWith(oldRoot))return i;touched=true;return {...i,url:this.raw(nextRoot+path.slice(oldRoot.length))};});if(touched){library.references=library.references.map(i=>{const path=this.ownedPath(i.url);return path.startsWith(oldRoot)?{...i,url:this.raw(nextRoot+path.slice(oldRoot.length))}:i;});changes.push(this.jsonChange(doc,value));}}
+      files.forEach(e=>{if(metadata.assets[e.path]||/\.(png|jpe?g|webp|gif|svg)$/i.test(e.path)){metadata.assets[nextRoot+e.path.slice(oldRoot.length)]={...metadata.assets[e.path],createdAt:metadata.assets[e.path]?.createdAt||null,updatedAt:now,source:'recorded'};delete metadata.assets[e.path];}});
+      for(const doc of snap.docs){let touched=false;const value=structuredClone(doc.value);value.icons=value.icons.map(i=>{const path=this.ownedPath(i.url);if(!path.startsWith(oldRoot))return i;touched=true;return {...i,url:this.raw(nextRoot+path.slice(oldRoot.length))};});if(touched){const library=this.touchLibrary(metadata,doc,now);library.references=library.references.map(i=>{const path=this.ownedPath(i.url);return path.startsWith(oldRoot)?{...i,url:this.raw(nextRoot+path.slice(oldRoot.length)),updatedAt:now}:i;});changes.push(this.jsonChange(doc,value));}}
       changes.push(this.metadataChange(metadata));return changes;
     });
   }
   async deleteGroup(group) {
     const root=`${this.config.assetsPath}/${GitHubClient.group(group)}/`;
-    return this.atomic(`删除图片分组：${group}`,async snap=>{const files=snap.entries.filter(e=>e.path.startsWith(root)),paths=new Set(files.map(e=>e.path)),changes=files.map(e=>({path:e.path,mode:e.mode||'100644',type:'blob',sha:null})),metadata=this.metadataFromSnapshot(snap),now=new Date().toISOString();paths.forEach(path=>delete metadata.assets[path]);for(const doc of snap.docs)if(doc.value.icons.some(i=>paths.has(this.ownedPath(i.url)))){const value=structuredClone(doc.value),library=this.touchLibrary(metadata,doc,now);value.icons=value.icons.filter(i=>!paths.has(this.ownedPath(i.url)));library.references=library.references.filter(i=>!paths.has(this.ownedPath(i.url)));changes.push(this.jsonChange(doc,value));}changes.push(this.metadataChange(metadata));return changes;});
+    return this.atomic(`删除图片分组：${group}`,async snap=>{const files=snap.entries.filter(e=>e.path.startsWith(root)),paths=new Set(files.map(e=>e.path)),changes=files.map(e=>({path:e.path,mode:e.mode||'100644',type:'blob',sha:null})),metadata=this.metadataFromSnapshot(snap),now=new Date().toISOString();paths.forEach(path=>delete metadata.assets[path]);for(const doc of snap.docs)if(doc.value.icons.some(i=>paths.has(this.ownedPath(i.url)))){const value=structuredClone(doc.value),library=this.touchLibrary(metadata,doc,now);value.icons=value.icons.filter(i=>!paths.has(this.ownedPath(i.url)));library.references=library.references.filter(i=>!paths.has(this.ownedPath(i.url)));changes.push(this.jsonChange(doc,value));}if(!changes.length)return [];changes.push(this.metadataChange(metadata));return changes;});
   }
   async createGroup(group) {
     const name = GitHubClient.group(group), path = `${this.config.assetsPath}/${name}/.gitkeep`;
@@ -283,20 +285,20 @@ class GitHubClient {
       const doc = snap.docs.find(d => d.path === path); if (!doc) throw new Error('找不到 JSON 库。');
       const value = structuredClone(doc.value), urls = new Set(value.icons.map(i => i.url)), metadata=this.metadataFromSnapshot(snap), library=this.touchLibrary(metadata,doc,now);
       added = 0; skipped = 0;
-      for (const item of items) { if (urls.has(item.url)) { skipped++; continue; } value.icons.push({ name:item.name, url:item.url }); library.references.push({name:item.name,url:item.url,addedAt:now,source:'recorded'}); urls.add(item.url); added++; }
+      for (const item of items) { if (urls.has(item.url)) { skipped++; continue; } value.icons.push({ name:item.name, url:item.url }); library.references.push({name:item.name,url:item.url,addedAt:now,updatedAt:now,source:'recorded'}); urls.add(item.url); added++; }
       return added ? [this.jsonChange(doc, value),this.metadataChange(metadata)] : [];
     });
     return { ...result, added, skipped };
   }
   async saveIcon(path,index,name,url,expectedSha) {
     const cleanName=GitHubClient.name(name),parsed=new URL(url);if(parsed.protocol!=='https:'||parsed.hostname!=='raw.githubusercontent.com')throw new Error('这里只允许使用 GitHub Raw HTTPS 图片直链。');
-    return this.atomic(`修改图片：${cleanName}`,async snap=>{const doc=snap.docs.find(d=>d.path===path);if(!doc)throw new Error('找不到 JSON 库。');if(!expectedSha||doc.sha!==expectedSha)throw new Error('JSON 已被其他客户端修改，请刷新后重试。');const value=structuredClone(doc.value);if(index<0||!value.icons[index])throw new Error('图片已经不存在，请刷新。');if(value.icons.some((i,n)=>n!==index&&i.name===cleanName))throw new Error('已经有同名图片了。');const metadata=this.metadataFromSnapshot(snap),library=this.touchLibrary(metadata,doc,new Date().toISOString()),previous=library.references[index]||{};value.icons[index]={...value.icons[index],name:cleanName,url:url.trim()};library.references[index]={...previous,name:cleanName,url:url.trim()};return [this.jsonChange(doc,value),this.metadataChange(metadata)];});
+    return this.atomic(`修改图片：${cleanName}`,async snap=>{const doc=snap.docs.find(d=>d.path===path);if(!doc)throw new Error('找不到 JSON 库。');if(!expectedSha||doc.sha!==expectedSha)throw new Error('JSON 已被其他客户端修改，请刷新后重试。');const value=structuredClone(doc.value);if(index<0||!value.icons[index])throw new Error('图片已经不存在，请刷新。');if(value.icons.some((i,n)=>n!==index&&i.name===cleanName))throw new Error('已经有同名图片了。');if(value.icons[index].name===cleanName&&value.icons[index].url===url.trim())return [];const now=new Date().toISOString(),metadata=this.metadataFromSnapshot(snap),library=this.touchLibrary(metadata,doc,now),previous=library.references[index]||{};value.icons[index]={...value.icons[index],name:cleanName,url:url.trim()};library.references[index]={...previous,name:cleanName,url:url.trim(),updatedAt:now,source:'recorded'};return [this.jsonChange(doc,value),this.metadataChange(metadata)];});
   }
   async removeIcons(path,indexes,expectedSha) {
-    const wanted=new Set(indexes.map(Number));return this.atomic(`从 JSON 移除图片：${wanted.size} 项`,async snap=>{const doc=snap.docs.find(d=>d.path===path);if(!doc)throw new Error('找不到 JSON 库。');if(!expectedSha||doc.sha!==expectedSha)throw new Error('JSON 已被其他客户端修改，请刷新后重试。');const value=structuredClone(doc.value),metadata=this.metadataFromSnapshot(snap),library=this.touchLibrary(metadata,doc,new Date().toISOString());value.icons=value.icons.filter((_,i)=>!wanted.has(i));library.references=library.references.filter((_,i)=>!wanted.has(i));return [this.jsonChange(doc,value),this.metadataChange(metadata)];});
+    const wanted=new Set(indexes.map(Number));return this.atomic(`从 JSON 移除图片：${wanted.size} 项`,async snap=>{const doc=snap.docs.find(d=>d.path===path);if(!doc)throw new Error('找不到 JSON 库。');if(!expectedSha||doc.sha!==expectedSha)throw new Error('JSON 已被其他客户端修改，请刷新后重试。');if(!doc.value.icons.some((_,i)=>wanted.has(i)))return [];const value=structuredClone(doc.value),metadata=this.metadataFromSnapshot(snap),library=this.touchLibrary(metadata,doc,new Date().toISOString());value.icons=value.icons.filter((_,i)=>!wanted.has(i));library.references=library.references.filter((_,i)=>!wanted.has(i));return [this.jsonChange(doc,value),this.metadataChange(metadata)];});
   }
   async createLibrary(path,name,description) { const file=GitHubClient.jsonPath(path),now=new Date().toISOString();return this.atomic(`创建 JSON 库：${name}`,async snap=>{if(snap.entries.some(e=>e.path===file))throw new Error('仓库中已经存在同名 JSON 文件。');const metadata=this.metadataFromSnapshot(snap);metadata.libraries[file]={createdAt:now,updatedAt:now,references:[],source:'recorded'};return [{path:file,mode:'100644',type:'blob',content:JSON.stringify({name:name.trim(),description:description.trim(),icons:[]},null,2)+'\n'},this.metadataChange(metadata)];}); }
-  async saveLibrary(path,nextPath,name,description) { const target=GitHubClient.jsonPath(nextPath),now=new Date().toISOString();return this.atomic(`修改 JSON 库：${name}`,async snap=>{const doc=snap.docs.find(d=>d.path===path);if(!doc)throw new Error('找不到原 JSON 文件，请刷新。');if(target!==path&&snap.entries.some(e=>e.path===target))throw new Error('目标 JSON 文件已经存在。');const value=structuredClone(doc.value),metadata=this.metadataFromSnapshot(snap),library=this.touchLibrary(metadata,doc,now);value.name=name.trim();value.description=description.trim();if(target!==path){metadata.libraries[target]=library;delete metadata.libraries[path];}const changes=[this.jsonChange({...doc,path:target},value),this.metadataChange(metadata)];if(target!==path)changes.push({path,mode:'100644',type:'blob',sha:null});return changes;}); }
+  async saveLibrary(path,nextPath,name,description) { const target=GitHubClient.jsonPath(nextPath),now=new Date().toISOString();return this.atomic(`修改 JSON 库：${name}`,async snap=>{const doc=snap.docs.find(d=>d.path===path);if(!doc)throw new Error('找不到原 JSON 文件，请刷新。');if(target!==path&&snap.entries.some(e=>e.path===target))throw new Error('目标 JSON 文件已经存在。');if(target===path&&doc.value.name===name.trim()&&doc.value.description===description.trim())return [];const value=structuredClone(doc.value),metadata=this.metadataFromSnapshot(snap),library=this.touchLibrary(metadata,doc,now);value.name=name.trim();value.description=description.trim();if(target!==path){metadata.libraries[target]=library;delete metadata.libraries[path];}const changes=[this.jsonChange({...doc,path:target},value),this.metadataChange(metadata)];if(target!==path)changes.push({path,mode:'100644',type:'blob',sha:null});return changes;}); }
   async deleteLibrary(path) { return this.atomic(`删除 JSON 库：${path}`,async snap=>{const doc=snap.docs.find(d=>d.path===path);if(!doc)throw new Error('文件已经不存在，请刷新。');const metadata=this.metadataFromSnapshot(snap);delete metadata.libraries[path];return [{path,mode:'100644',type:'blob',sha:null},this.metadataChange(metadata)];}); }
 
 }
