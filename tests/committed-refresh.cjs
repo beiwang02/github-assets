@@ -1,0 +1,5 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const s=fs.readFileSync(require('node:path').join(__dirname,'../console.js'),'utf8');
+let fail=false,calls=0;const c=vm.createContext({refreshRepo:async()=>{calls++;if(fail)throw Error('mock read failure')}});
+vm.runInContext(s.slice(s.indexOf('async function refreshCommittedC'),s.indexOf('// One UI operation')),c);
+(async()=>{await c.refreshCommittedC();fail=true;await assert.rejects(c.refreshCommittedC(),/GitHub 操作已完成.*不要重复提交.*mock read failure/);assert.equal(calls,2);for(const op of ['upload','renameGroup','renameAsset','saveIcon','deleteLibrary','removeIcons','deleteAsset','deleteSelected','deleteGroup'])assert(s.split('\n').some(l=>l.includes('await currentClient().'+op+'(')&&l.includes('refreshCommittedC()')),op);console.log('PASS committed-refresh: success and read-back failure explicitly distinguished; all mutation read-back paths use helper. Mock only.');})().catch(e=>{console.error(e);process.exitCode=1});

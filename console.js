@@ -125,6 +125,7 @@ function renderC() {
   const views={overview:overviewView,libraries:librariesView,assets:assetsView,activity:activityPage,settings:settingsPage,admin:adminPage};
   $c('#app').innerHTML=(views[S.view]||overviewView)(); setMetaC();
   applyAppearance();
+  restoreSubmissionC();
 }
 function openC(html) { closeSortMenus(); $c('#modalRoot').innerHTML=`<div class="modal-backdrop" data-action="modal-backdrop"><div class="modal">${html}</div></div>`; }
 function tokenGuideModal() { openC(`<div class="modal-head"><div><h2>经典 Token 创建教程</h2></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body token-guide-body"><ol><li>打开 GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)。</li><li>点击 Generate new token (classic)，设置有效期。</li><li>权限列表只勾选 <b>repo → public_repo</b>。</li><li>其他权限不要勾选，生成后复制 Token 粘贴到登录框。</li></ol></div>`); }
@@ -164,7 +165,7 @@ function bulkModal(item=null) {
   openC(`<div class="modal-head"><div><h2>加入 JSON 库</h2><p>所选图片会去重后追加到目标 JSON 库。</p></div><button class="modal-close" data-action="close-modal">×</button></div><form id="bulkForm"><div class="modal-body">${S.libraries.length?`<div class="modal-field"><label>目标 JSON 库</label><select name="library" required>${S.libraries.map(l=>`<option value="${escC(l.file)}">${escC(l.name)} · ${l.count} 个</option>`).join('')}</select></div>`:'<p class="field-help">暂无 JSON 库，请先新建 JSON 库后再加入图片。</p><button type="button" class="btn" data-action="new-library">＋ 新建 JSON 库</button>'}<p class="field-help">已选择 ${items.length} 张图片，图片文件不会被移动或删除。</p></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button type="submit" class="btn btn-primary" ${S.libraries.length?'':'disabled'}>加入 JSON 库</button></div></form>`);
   const form=$c('#bulkForm'); form.libraryItems=items; form.singleAsset=!!item;
 }
-async function readRepo(form) { const data = form instanceof HTMLFormElement ? new FormData(form) : { get:key => form.elements[key]?.value ?? '' }; S.repo={owner:String(data.get('owner')).trim(),repo:String(data.get('repo')).trim(),branch:String(data.get('branch')).trim()||'main',assetsPath:String(data.get('assetsPath')).trim().replace(/^\/+|\/+$/g,'')||'assets'}; if(!S.repo.owner||!S.repo.repo)return notify('请填写仓库用户名和名称','error'); localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); S.loading=true;renderC();notify('正在读取 GitHub 仓库…'); const client=currentClient(), epoch=repositoryEpoch; try { const data=await client.load(); if(currentClient()!==client||epoch!==repositoryEpoch)return; S.connected=true; scheduleRepositorySyncC(); S.repo.assetsPath=data.root; localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); S.groups=data.groups;S.group=S.group&&data.groups.some(g=>g.name===S.group)?S.group:(data.groups[0]?.name||'');S.assets=data.assets;S.libraries=data.libraries.map((x,i)=>({...x,gradient:['linear-gradient(135deg,#7580ff,#8c64e9)','linear-gradient(135deg,#ffb26d,#eb7574)','linear-gradient(135deg,#43cec4,#5aa7e8)'][i%3]})); S.selected.clear();S.activity.unshift({title:'读取了 GitHub 仓库',detail:`${S.repo.owner}/${S.repo.repo} · ${S.libraries.length} 个 JSON、${S.assets.length} 张图片`,time:'刚刚'}); S.view='overview';notify(`读取完成：${S.libraries.length} 个 JSON、${S.assets.length} 张图片`); } catch(e){if(currentClient()===client&&epoch===repositoryEpoch){S.connected=false;notify(e.message||'读取失败','error');}} finally{if(currentClient()===client&&epoch===repositoryEpoch){S.loading=false;renderC();}} }
+async function readRepo(form) { const data = form instanceof HTMLFormElement ? new FormData(form) : { get:key => form.elements[key]?.value ?? '' }; S.repo={owner:String(data.get('owner')).trim(),repo:String(data.get('repo')).trim(),branch:String(data.get('branch')).trim()||'main',assetsPath:String(data.get('assetsPath')).trim().replace(/^\/+|\/+$/g,'')||'assets'}; if(!S.repo.owner||!S.repo.repo)return notify('请填写仓库用户名和名称','error'); localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); S.loading=true;renderC(); const client=currentClient(), epoch=repositoryEpoch; try { const data=await client.load(); if(currentClient()!==client||epoch!==repositoryEpoch)return; S.connected=true; scheduleRepositorySyncC(); S.repo.assetsPath=data.root; localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); S.groups=data.groups;S.group=S.group&&data.groups.some(g=>g.name===S.group)?S.group:(data.groups[0]?.name||'');S.assets=data.assets;S.libraries=data.libraries.map((x,i)=>({...x,gradient:['linear-gradient(135deg,#7580ff,#8c64e9)','linear-gradient(135deg,#ffb26d,#eb7574)','linear-gradient(135deg,#43cec4,#5aa7e8)'][i%3]})); S.selected.clear();S.activity.unshift({title:'读取了 GitHub 仓库',detail:`${S.repo.owner}/${S.repo.repo} · ${S.libraries.length} 个 JSON、${S.assets.length} 张图片`,time:'刚刚'}); S.view='overview';notify(`读取完成：${S.libraries.length} 个 JSON、${S.assets.length} 张图片`); } catch(e){if(currentClient()===client&&epoch===repositoryEpoch){S.connected=false;notify(e.message||'读取失败','error');}} finally{S.loading=false;if(currentClient()===client&&epoch===repositoryEpoch)renderC();} }
 let refreshFlight=null, refreshTimer=null, refreshDebounce=null, syncDisposed=false;
 function syncBusyC() { return GitHubClient.writing || pendingSubmission || !!$c('#modalRoot')?.firstElementChild || S.loading || S.view==='settings'; }
 function syncStatusC(message='') { S.syncError=message; const dot=$c('#storageDot'); if(dot){dot.title=message||'已连接';dot.setAttribute('aria-label',message||'已连接');} }
@@ -195,7 +196,7 @@ async function refreshRepo(background=false) {
     renderC();
   })();
   refreshFlight=flight;
-  try { await flight.promise; } catch(e) { if(background){if(currentClient()===client&&repositoryEpoch===epoch&&S.connected&&!syncDisposed){const message=`同步暂缓：${e.message}`;if(S.syncError!==message)notify(message,'error');syncStatusC(message);}}else throw e; }
+  try { await flight.promise; } catch(e) { if(currentClient()!==client||repositoryEpoch!==epoch||syncDisposed)return;if(background){if(currentClient()===client&&repositoryEpoch===epoch&&S.connected&&!syncDisposed){const message=`同步暂缓：${e.message}`;if(S.syncError!==message)notify(message,'error');syncStatusC(message);}}else throw e; }
   finally { if(refreshFlight===flight)refreshFlight=null; }
 }
 function scheduleRepositorySyncC() {
@@ -208,21 +209,40 @@ document.addEventListener('visibilitychange',scheduleRepositorySyncC);
 window.addEventListener('focus',scheduleRepositorySyncC);
 window.addEventListener('pagehide',disposeRepositorySyncC);
 window.addEventListener('pageshow',()=>{syncDisposed=false;scheduleRepositorySyncC();});
+async function refreshCommittedC() {
+  try { await refreshRepo(); }
+  catch(error) { throw new Error(`GitHub 操作已完成，但刷新失败，请点击刷新，不要重复提交：${error.message}`); }
+}
 // One UI operation owns the repository context until its refresh completes.
 let pendingSubmission = false;
-function beginSubmission(scope, label='正在保存…') {
-  if(pendingSubmission || scope.dataset.busy==='1') return null;
-  pendingSubmission=true;
+let submissionStateC = null;
+function bindSubmissionC(scope,state) {
+  if(!scope || state.scopes.some(entry=>entry.scope===scope))return;
   const previousBusy=scope.getAttribute('aria-busy');
   scope.dataset.busy='1'; scope.setAttribute('aria-busy','true');
   const buttons=scope.matches('button')?[scope]:[...scope.querySelectorAll('button')];
   const snapshots=buttons.map(button=>({button,disabled:button.disabled,html:button.innerHTML}));
-  buttons.forEach(button=>{button.disabled=true;if(button===scope || button.type==='submit')button.textContent=label;});
+  state.scopes.push({scope,previousBusy,snapshots});
+  buttons.forEach(button=>{button.disabled=true;if(button===scope || button.type==='submit')button.textContent=state.label;});
+}
+function restoreSubmissionC() {
+  if(!submissionStateC)return;
+  const {id,action}=submissionStateC;
+  const scope=id?document.getElementById(id):action?document.querySelector(`[data-action="${action}"]`):null;
+  bindSubmissionC(scope,submissionStateC);
+}
+function beginSubmission(scope, label='正在保存…') {
+  if(pendingSubmission || scope.dataset.busy==='1') return null;
+  pendingSubmission=true;
+  const state={id:scope.id,action:scope.dataset.action,label,scopes:[]};
+  submissionStateC=state;bindSubmissionC(scope,state);
   return ()=>{
-    snapshots.forEach(({button,disabled,html})=>{button.disabled=disabled;button.innerHTML=html;});
-    delete scope.dataset.busy;
-    if(previousBusy===null)scope.removeAttribute('aria-busy');else scope.setAttribute('aria-busy',previousBusy);
-    pendingSubmission=false;
+    state.scopes.forEach(({scope,previousBusy,snapshots})=>{
+      snapshots.forEach(({button,disabled,html})=>{button.disabled=disabled;button.innerHTML=html;});
+      delete scope.dataset.busy;
+      if(previousBusy===null)scope.removeAttribute('aria-busy');else scope.setAttribute('aria-busy',previousBusy);
+    });
+    submissionStateC=null;pendingSubmission=false;
   };
 }
 async function runSubmission(scope,label,run) {
@@ -231,20 +251,20 @@ async function runSubmission(scope,label,run) {
 }
 async function formSubmit(e) {
   e.preventDefault(); const form=e.target;
-  const labels={tokenLoginForm:'正在验证…',createRepoForm:'正在创建…',repoForm:'正在读取…',uploadForm:'正在上传并提交…'};
+  const labels={tokenLoginForm:'正在验证…',createRepoForm:'正在创建…',repoForm:'正在读取仓库…',uploadForm:'正在上传并提交…'};
   const finish=beginSubmission(form,labels[form.id]||'正在保存…'); if(!finish)return;
   try {
     if(form.id==='adminPolicyForm') return await saveAdminPolicy(form);
     if(form.id==='tokenLoginForm') { const data=new FormData(form), token=String(data.get('token')||'').trim(); if(!token) throw new Error('请先输入 GitHub Token。'); const submit=form.querySelector('[type="submit"]'); if(submit){submit.disabled=true;submit.textContent='正在验证…';} if(data.get('rememberToken')==='on') localStorage.setItem('gh-image-remembered-token',token); else localStorage.removeItem('gh-image-remembered-token'); const response=await fetch('/api/auth/token',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})}); const result=await response.json().catch(()=>({})); if(!response.ok) throw new Error(result.message||`Token 登录失败（HTTP ${response.status}）`); sessionStorage.setItem('gh-login-success','1'); location.reload(); return; }
     if(form.id==='createRepoForm') return await createRepositoryFromModal(form);
     if(form.id==='repoForm') return await readRepo(form);
-    if(form.id==='uploadForm') { const group=String(form.elements.group.value||'').trim(); if(!group)return notify('当前没有图片分组，请先到图片资源页面新建分组。','error'); const result=await currentClient().upload(form.elements.file.files[0],form.elements.name.value,group,form.elements.library.value); closeC(); await refreshRepo(); notify(`已上传“${result.name}”，并提交到 GitHub`); return; }
-    if(form.id==='groupCreateForm') { const name=String(new FormData(form).get('name')||'').trim(); if(!name)return; const draft=S.uploadDraft; await currentClient().createGroup(name); await refreshRepo(); S.group=name; S.uploadDraft=null; if(draft){draft.group=name; uploadModal(draft);} else {closeC();} notify('图片分组已创建'); return; }
-    if(form.id==='groupManageForm') { const name=String(new FormData(form).get('name')||'').trim(); if(!name||name===S.group){closeC();return;} await currentClient().renameGroup(S.group,name); S.group=name; closeC(); await refreshRepo(); notify('分组已重命名'); return; }
+    if(form.id==='uploadForm') { const group=String(form.elements.group.value||'').trim(); if(!group)return notify('当前没有图片分组，请先到图片资源页面新建分组。','error'); const result=await currentClient().upload(form.elements.file.files[0],form.elements.name.value,group,form.elements.library.value); closeC(); await refreshCommittedC(); notify(`已上传“${result.name}”，并提交到 GitHub`); return; }
+    if(form.id==='groupCreateForm') { const name=String(new FormData(form).get('name')||'').trim(); if(!name)return; const draft=S.uploadDraft; await currentClient().createGroup(name); S.uploadDraft=null; closeC(); await refreshCommittedC(); S.group=name; S.uploadDraft=null; if(draft){draft.group=name; uploadModal(draft);} else {closeC();} notify('图片分组已创建'); return; }
+    if(form.id==='groupManageForm') { const name=String(new FormData(form).get('name')||'').trim(); if(!name||name===S.group){closeC();return;} await currentClient().renameGroup(S.group,name); S.group=name; closeC(); await refreshCommittedC(); notify('分组已重命名'); return; }
     if(form.id==='repoRenameForm') { const name=String(new FormData(form).get('name')||'').trim(); if(!name||name===S.repo.repo){closeC();return;} await currentClient().renameRepository(name); S.repo.repo=name; localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); closeC(); renderC(); notify('仓库已改名'); return; }
-    if(form.id==='assetRenameForm') { const item=S.assets.find(x=>x.id===form.dataset.id), name=String(new FormData(form).get('name')||'').trim(); if(!item||!name||name===item.name){closeC();return;} await currentClient().renameAsset(item,name); closeC(); await refreshRepo(); notify('图片已改名，JSON 引用已同步'); return; }
-    if(form.id==='libraryForm') { const data=new FormData(form), name=String(data.get('name')).trim(), description=String(data.get('description')).trim(), inputPath=String(data.get('path')).trim(), path=inputPath.replace(/\.json$/i,'')+'.json'; if(!name)return notify('请填写 JSON 库名称','error'); if(!inputPath)return notify('请填写 JSON 文件名','error'); const old=S.libraries.find(x=>x.id===S.editingLibrary); if(old) await currentClient().saveLibrary(old.file,path,name,description); else await currentClient().createLibrary(path,name,description); closeC(); await refreshRepo(); notify('JSON 库已提交'); return; }
-    if(form.id==='iconForm') { const data=new FormData(form), lib=S.libraries.find(x=>x.id===S.selectedLibrary); await currentClient().saveIcon(lib.file,Number(data.get('index')),String(data.get('name')),String(data.get('url')),lib.sha); closeC(); await refreshRepo(); S.view='libraries'; renderC(); notify('图片引用已更新'); return; }
+    if(form.id==='assetRenameForm') { const item=S.assets.find(x=>x.id===form.dataset.id), name=String(new FormData(form).get('name')||'').trim(); if(!item||!name||name===item.name){closeC();return;} await currentClient().renameAsset(item,name); closeC(); await refreshCommittedC(); notify('图片已改名，JSON 引用已同步'); return; }
+    if(form.id==='libraryForm') { const data=new FormData(form), name=String(data.get('name')).trim(), description=String(data.get('description')).trim(), inputPath=String(data.get('path')).trim(), path=inputPath.replace(/\.json$/i,'')+'.json'; if(!name)return notify('请填写 JSON 库名称','error'); if(!inputPath)return notify('请填写 JSON 文件名','error'); const old=S.libraries.find(x=>x.id===S.editingLibrary); if(old) await currentClient().saveLibrary(old.file,path,name,description); else await currentClient().createLibrary(path,name,description); closeC(); await refreshCommittedC(); notify('JSON 库已提交'); return; }
+    if(form.id==='iconForm') { const data=new FormData(form), lib=S.libraries.find(x=>x.id===S.selectedLibrary); await currentClient().saveIcon(lib.file,Number(data.get('index')),String(data.get('name')),String(data.get('url')),lib.sha); closeC(); await refreshCommittedC(); S.view='libraries'; renderC(); notify('图片引用已更新'); return; }
     if(form.id==='bulkForm') {
       const path=String(new FormData(form).get('library')||'');
       if(!path||!S.libraries.some(l=>l.file===path))throw new Error('请先选择目标 JSON 库。');
@@ -302,7 +322,7 @@ document.addEventListener('click', async e => {
   if(action==='create-repo'){if(!S.auth)return notify('请先登录 GitHub','error');createRepoModal();return;}
   if(action==='use-repo'){S.repo={owner:target.dataset.owner,repo:target.dataset.repo,branch:target.dataset.branch||'main',assetsPath:target.dataset.assetsPath||'assets'};renderC();return;}
   if(action==='settings'){closeC();S.view='settings';renderC();return;}
-  if(action==='refresh'){await runSubmission(target,'正在刷新…',refreshRepo);return;}
+  if(action==='refresh'){await runSubmission(target,'正在刷新…',async()=>{const client=currentClient(),epoch=repositoryEpoch;if(!S.connected||GitHubClient.writing)return;await refreshRepo();if(currentClient()===client&&epoch===repositoryEpoch&&!syncDisposed)notify('仓库已刷新');});return;}
   if(action==='upload'){if(!S.connected)return notify('请先连接你的仓库','error');uploadModal();return;}
   if(action==='new-library'){if(!S.connected)return notify('请先连接你的仓库','error');libraryModal(false);return;}
   if(action==='new-icon'){if(!S.connected)return notify('请先连接你的仓库','error');uploadModal();return;}
@@ -313,7 +333,7 @@ document.addEventListener('click', async e => {
   if(action==='select-all'){const list=filteredAssets(); if(list.length&&list.every(x=>S.selected.has(x.id)))list.forEach(x=>S.selected.delete(x.id));else list.forEach(x=>S.selected.add(x.id));syncAssetSelectionUI(list.map(x=>x.id));target.blur();return;}
   if(action==='select-icon'){e.stopPropagation();const index=Number(target.dataset.index);S.selectedIcons.has(index)?S.selectedIcons.delete(index):S.selectedIcons.add(index);syncIconSelectionUI([index]);target.blur();return;}
   if(action==='select-all-icons'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary), count=lib?.icons?.length||0;if(S.selectedIcons.size===count)S.selectedIcons.clear();else S.selectedIcons=new Set(Array.from({length:count},(_,i)=>i));syncIconSelectionUI();target.blur();return;}
-  if(action==='delete-selected-icons'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary), indexes=[...S.selectedIcons];if(!lib||!indexes.length)return;confirmC('移除图片引用',`从 ${lib.name} 中移除选中的 ${indexes.length} 条图片引用？图片文件不会删除。`,async()=>{await currentClient().removeIcons(lib.file,indexes,lib.sha);S.selectedIcons.clear();closeC();await refreshRepo();notify('图片引用已移除');},'移除引用');return;}
+  if(action==='delete-selected-icons'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary), indexes=[...S.selectedIcons];if(!lib||!indexes.length)return;confirmC('移除图片引用',`从 ${lib.name} 中移除选中的 ${indexes.length} 条图片引用？图片文件不会删除。`,async()=>{await currentClient().removeIcons(lib.file,indexes,lib.sha);S.selectedIcons.clear();closeC();await refreshCommittedC();notify('图片引用已移除');},'移除引用');return;}
   if(action==='asset-select'){e.preventDefault();e.stopImmediatePropagation();const id=target.dataset.id;S.selected.has(id)?S.selected.delete(id):S.selected.add(id);syncAssetSelectionUI([id]);target.blur();return;}
   if(action==='asset-open'){const item=S.assets.find(x=>x.id===target.dataset.id);if(item)assetModal(item);return;}
   if(action==='icon-open'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary),index=Number(target.dataset.index),icon=lib?.icons?.[index];if(icon)iconModal({...icon,index});return;}
@@ -323,19 +343,19 @@ document.addEventListener('click', async e => {
   if(action==='edit-icon'){editIconModal(Number(target.dataset.index));return;}
   if(action==='asset-library'){const item=S.assets.find(x=>x.id===target.dataset.id);if(item)bulkModal(item);return;}
   if(action==='bulk-library'){if(!S.selected.size)return;bulkModal();return;}
-  if(action==='confirm-exec'){const run=S.modalConfirm;if(run)await runSubmission(target,'正在处理…',async()=>{await run();if(S.modalConfirm===run)S.modalConfirm=null;});return;}
+  if(action==='confirm-exec'){const run=S.modalConfirm;if(run)await runSubmission(target,'正在删除…',async()=>{await run();if(S.modalConfirm===run)S.modalConfirm=null;});return;}
   if(action==='rename-repo'){if(S.repo.repo)nameModal('repoRename','重命名 GitHub 仓库',S.repo.repo,'仓库名称会同步更新到 GitHub。');return;}
   if(action==='delete-repo'){if(S.repo.owner&&S.repo.repo)confirmRepositoryDeletion();return;}
   if(action==='delete-library'){e.stopPropagation();const lib=S.libraries.find(x=>x.id===target.dataset.id);if(!lib)return;confirmC('永久删除 JSON 文件',`永久删除 ${lib.name}？
-文件：${lib.file}`,async()=>{await currentClient().deleteLibrary(lib.file);closeC();await refreshRepo();notify('JSON 文件已删除');});return;}
-  if(action==='delete-icon'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary),index=Number(target.dataset.index);if(!lib)return;confirmC('移除图片引用',`从 ${lib.name} 中移除这个图片引用？图片文件不会删除。`,async()=>{await currentClient().removeIcons(lib.file,[index],lib.sha);closeC();await refreshRepo();S.view='library-detail';renderC();notify('图片引用已移除');},'移除引用');return;}
+文件：${lib.file}`,async()=>{await currentClient().deleteLibrary(lib.file);closeC();await refreshCommittedC();notify('JSON 文件已删除');});return;}
+  if(action==='delete-icon'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary),index=Number(target.dataset.index);if(!lib)return;confirmC('移除图片引用',`从 ${lib.name} 中移除这个图片引用？图片文件不会删除。`,async()=>{await currentClient().removeIcons(lib.file,[index],lib.sha);closeC();await refreshCommittedC();S.view='library-detail';renderC();notify('图片引用已移除');},'移除引用');return;}
   if(action==='rename-asset'){const item=S.assets.find(x=>x.id===target.dataset.id);if(item){openC(`<div class="modal-head"><div><h2>重命名图片</h2><p>图片文件和相关 JSON 引用会同步更新。</p></div><button class="modal-close" data-action="close-modal">×</button></div><form id="assetRenameForm" data-id="${escC(item.id)}"><div class="modal-body"><div class="modal-field"><label>图片名称</label><input name="name" value="${escC(item.name)}" required autofocus></div></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button class="btn btn-primary" type="submit">保存</button></div></form>`);}return;}
-  if(action==='delete-asset'){const item=S.assets.find(x=>x.id===target.dataset.id);if(!item)return;confirmC('永久删除图片',`永久删除 ${item.name}？相关 JSON 引用会同步移除。`,async()=>{await currentClient().deleteAsset(item);closeC();await refreshRepo();notify('图片和相关引用已删除');});return;}
-  if(action==='bulk-delete'){const items=S.assets.filter(x=>S.selected.has(x.id));if(!items.length)return;confirmC('永久删除选中图片',`永久删除选中的 ${items.length} 张图片？`,async()=>{await currentClient().deleteSelected(items);S.selected.clear();closeC();await refreshRepo();notify(`已删除 ${items.length} 张图片并同步引用`);});return;}
+  if(action==='delete-asset'){const item=S.assets.find(x=>x.id===target.dataset.id);if(!item)return;confirmC('永久删除图片',`永久删除 ${item.name}？相关 JSON 引用会同步移除。`,async()=>{await currentClient().deleteAsset(item);closeC();await refreshCommittedC();notify('图片和相关引用已删除');});return;}
+  if(action==='bulk-delete'){const items=S.assets.filter(x=>S.selected.has(x.id));if(!items.length)return;confirmC('永久删除选中图片',`永久删除选中的 ${items.length} 张图片？`,async()=>{await currentClient().deleteSelected(items);S.selected.clear();closeC();await refreshCommittedC();notify(`已删除 ${items.length} 张图片并同步引用`);});return;}
   if(action==='new-group'){groupModal(false);return;}
   if(action==='new-group-from-upload'){groupModal(true);return;}
   if(action==='manage-group'){manageGroupModal();return;}
-  if(action==='confirm-delete-group'){const group=target.dataset.group;if(!group)return;confirmC('永久删除分组',`永久删除分组 ${group} 及其中图片？`,async()=>{await currentClient().deleteGroup(group);S.group='';closeC();await refreshRepo();notify('分组已删除');});return;}
+  if(action==='confirm-delete-group'){const group=target.dataset.group;if(!group)return;confirmC('永久删除分组',`永久删除分组 ${group} 及其中图片？`,async()=>{await currentClient().deleteGroup(group);S.group='';closeC();await refreshCommittedC();notify('分组已删除');});return;}
 });
 document.addEventListener('click',e=>{ const sidebar=$c('#sidebar'); if(sidebar?.classList.contains('open')&&!e.target.closest('#sidebar')&&!e.target.closest('.mobile-menu')){ sidebar.classList.remove('open'); e.preventDefault(); e.stopImmediatePropagation(); } },true);
 document.addEventListener('submit',formSubmit);
