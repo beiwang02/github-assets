@@ -36,7 +36,7 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 .ui-button[data-ui=icon]{padding:0;width:34px;height:34px;min-height:34px;min-width:34px;gap:0}
 .ui-button.top-icon{width:34px;height:34px;min-width:34px;min-height:34px}.auth-head-actions>.ui-button{width:42px;height:42px;min-width:42px;min-height:42px}
 .ui-button.asset-select,.ui-button.reference-select{width:24px;height:24px;min-width:24px;min-height:24px}
-.ui-button:focus,.ui-button:active{box-shadow:none!important}.ui-button:focus-visible{outline:2px solid var(--primary)!important;outline-offset:3px;box-shadow:none!important}.ui-button:not([data-ui=danger]):focus{color:var(--primary);border-color:var(--primary)}.ui-button:active:not(:disabled){transform:translateY(1px);filter:brightness(.92)}.ui-button:disabled{cursor:not-allowed;opacity:.5;transform:none}
+.ui-button:focus,.ui-button:active{box-shadow:none!important}.ui-button:focus-visible{outline:2px solid var(--primary)!important;outline-offset:3px;box-shadow:none!important}.ui-button:active:not(:disabled){transform:translateY(1px);filter:brightness(.92)}.ui-button:disabled{cursor:not-allowed;opacity:.5;transform:none}
 .ui-button[data-ui=danger]{color:#b23c55;background:#fff1f3;border:1px solid #f3cbd3}body.dark .ui-button[data-ui=danger]{color:#efa5b3;background:#392633;border-color:#654052}
 .library-picker-copy{min-width:0}.library-picker-copy b,.library-picker-copy em{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.json-workspace-top{padding:12px!important}.json-library-summary{margin-top:0}.library-picker-list .library-picker-row{flex-wrap:wrap;min-width:0;padding:8px 0;border-bottom:1px solid var(--border)}
 .library-picker-list .library-picker-option{width:auto;min-width:0;flex:1 1 220px;justify-content:flex-start}.library-picker-option>span:nth-child(2){min-width:0;overflow:hidden}.library-picker-option b,.library-picker-option small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-picker-actions{margin-left:auto}.library-picker-actions .ui-button{width:auto;padding-inline:12px;min-height:36px;font-size:12px}.library-picker-option em{flex-shrink:0}
@@ -166,9 +166,9 @@ body.dark .sort-menu.floating-menu{box-shadow:0 8px 22px rgba(0,0,0,.24)}
 .copy-control.ui-button.btn:not(.copy-control-icon){--copy-bg:var(--surface);--copy-line:var(--line);--copy-ink:#5e6b80}
 body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--ink)}
 
-/* Regression guard: framed controls keep neutral rest styling and expose theme focus until focus moves. */
-:where(.ui-button,.btn,button):not([data-ui=danger],.btn-danger,.library-picker-delete,.library-switch-delete,.group-delete-link):is(:focus,[data-focus-active]){color:var(--primary)!important;border-color:var(--primary)!important}
-:where(.ui-button,.btn,button):not([data-ui=danger],.btn-danger,.library-picker-delete,.library-switch-delete,.group-delete-link):is(:focus,[data-focus-active]) svg{color:var(--primary);stroke:currentColor}
-.copy-control.ui-button:is(:focus,[data-focus-active]){--copy-ink:var(--primary);color:var(--primary)!important;border-color:var(--primary)!important}
+/* Regression guard: every shared control exposes the same theme focus until focus moves.
+   Keep the override limited to ink/frame; backgrounds and geometry retain component styling. */
+.ui-button:is(:focus,[data-focus-active]){color:var(--primary)!important;border-color:var(--primary)!important}
+.ui-button:is(:focus,[data-focus-active]) svg{color:inherit;stroke:currentColor}
 .asset-select:is(:focus,[data-focus-active]):before{border-color:var(--primary)!important}
 .reference-select:is(:focus,[data-focus-active]){border-color:var(--primary)!important}

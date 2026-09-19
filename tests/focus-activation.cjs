@@ -1,8 +1,11 @@
 const fs=require('fs'),assert=require('assert');
 const css=fs.readFileSync('ui-refresh.css','utf8'),js=fs.readFileSync('console.js','utf8');
-assert(css.includes('.ui-button:not([data-ui=danger]):focus{color:var(--primary);border-color:var(--primary)}'));
-assert(css.includes('.asset-select:focus:before{border-color:var(--primary)}'));
-assert(css.includes('.reference-select:focus{color:var(--primary);border-color:var(--primary)}'));
+assert(css.includes('.ui-button:is(:focus,[data-focus-active]){color:var(--primary)!important;border-color:var(--primary)!important}'));
+assert(css.includes('.ui-button:is(:focus,[data-focus-active]) svg{color:inherit;stroke:currentColor}'));
+assert(css.includes('.asset-select:is(:focus,[data-focus-active]):before{border-color:var(--primary)!important}'));
+assert(css.includes('.reference-select:is(:focus,[data-focus-active]){border-color:var(--primary)!important}'));
+assert(!css.includes(':not([data-ui=danger]'));
+assert(!css.includes('.btn-danger,.library-picker-delete'));
 assert(!/action==='asset-select'[\s\S]{0,240}target\.blur\(\)/.test(js));
 assert(!/action==='select-icon'[\s\S]{0,240}target\.blur\(\)/.test(js));
 assert(css.includes('.ui-button[data-ui=danger]'));
