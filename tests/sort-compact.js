@@ -10,12 +10,12 @@ window.auditSortCompact=async()=>{
   const rows=[...menu.querySelectorAll('.sort-option')].map(b=>{
    const r=b.getBoundingClientRect(),cs=getComputedStyle(b),slot=b.querySelector('span'),sr=slot.getBoundingClientRect();
    const text=[...b.childNodes].find(n=>n.nodeType===3&&n.textContent.trim()),range=document.createRange();range.selectNodeContents(text);const tr=range.getBoundingClientRect();
-   assert(r.height===36&&cs.display==='grid'&&cs.textAlign==='left'&&cs.fontSize==='12px'&&cs.fontWeight==='600','row styles');
+   assert(r.height===40&&cs.display==='grid'&&cs.textAlign==='left'&&cs.fontSize==='12px'&&cs.fontWeight===(b.classList.contains('active')?'600':'400'),'row styles');
    assert(sr.width===14&&range.getClientRects().length===1&&tr.right<=r.right-8&&b.scrollWidth===b.clientWidth,'label fit');
    const svg=slot.querySelector('svg');if(svg)assert(svg.getBoundingClientRect().width===14,'check SVG');
    return {label:text.textContent.trim(),height:r.height,labelX:tr.left-mr.left,slot:sr.width};
   });
-  assert(mr.width===134&&ms.padding==='6px'&&ms.gap==='2px','panel sizing');
+  assert(mr.width===134&&ms.padding==='5px'&&ms.gap==='2px','panel sizing');
   assert(new Set(rows.map(r=>r.labelX)).size===1,'label alignment');
   assert(mr.left>=0&&mr.right<=innerWidth&&document.documentElement.scrollWidth===innerWidth&&menu.scrollWidth===menu.clientWidth,'overflow');
   menu.querySelector('[data-sort-value="name-desc"]').click();await wait();
