@@ -43,7 +43,7 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 .asset-preview img,.quick-asset-image img{position:absolute;width:72%;height:72%;max-width:72%;max-height:72%;left:14%;top:14%;object-fit:contain;object-position:center}
 @media(max-width:700px){.asset-grid,.quick-assets-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.asset-card .asset-copy,.quick-asset .quick-copy{font-size:8px;gap:2px;padding-inline:0;min-width:0;white-space:nowrap!important;--ui-icon-size:10px}.asset-card .asset-copy svg{width:10px;height:10px;flex-basis:10px}.asset-name-row,.quick-asset-name-row{gap:3px}}
 
-.sort-trigger{color:#5e6b80;font-weight:600;display:inline-flex;gap:7px;padding-inline:10px}body.dark .sort-trigger{color:var(--ink)}.sort-trigger b{position:static;display:inline-flex;align-items:center;flex:0 0 auto;transform:none;line-height:1}.sort-control.open .sort-trigger b{transform:rotate(180deg)}
+.sort-trigger{color:#5e6b80;font-weight:600;display:inline-flex;gap:7px;padding-inline:10px}body.dark .sort-trigger{color:var(--ink)}.sort-trigger b{position:static;inset:auto;display:inline-flex;align-items:center;justify-content:center;align-self:center;width:14px;height:14px;flex:0 0 14px;transform:rotate(0deg);transform-origin:50% 50%;line-height:1}.sort-trigger b>.ui-icon{display:block;width:14px;height:14px;flex:0 0 14px}.sort-control.open .sort-trigger b{transform:rotate(180deg)}
 /* Asset-only operation row: visible 22px check inside a separate 28px target. */
 .asset-card .asset-details{padding:9px 8px 7px}
 .quick-asset{padding-bottom:7px}
