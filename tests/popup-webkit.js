@@ -60,16 +60,12 @@ window.runPopupChecks = async function(theme) {
   assert(flipped.bottom<=anchor.top&&flipped.top>=7,'bottom flip');
   results.push({theme,flip:{top:flipped.top,bottom:flipped.bottom,anchorTop:anchor.top},singleMenu:'PASS'});
   closeC();bottomOwner.remove();
-  libraryPickerModal();const del=document.querySelector('.library-picker-delete');
-  assert(del.textContent==='删除当前库'&&del.closest('.library-picker-heading')&&!del.closest('.modal-head')&&del.dataset.id==='one','delete heading/current library');
-  const heading=del.closest('.library-picker-heading'),label=heading.querySelector('h3');
-  const dr=del.getBoundingClientRect(),lr=label.getBoundingClientRect(),hr=heading.getBoundingClientRect();
-  const centerDelta=Math.abs((dr.top+dr.bottom-lr.top-lr.bottom)/2),rightGap=Math.abs(hr.right-dr.right);
-  assert(centerDelta<1&&rightGap<1,'heading/delete alignment');
-  assert(!document.querySelector('#modalRoot .sort-trigger'),'unexpected picker sort');
+  S.view='libraries';renderC();libraryPickerModal();await wait();const del=document.querySelector('.library-switch-delete');
+  assert(!document.querySelector('.library-switch-title button'),'no header delete');
+  assert(document.querySelectorAll('.library-switch-delete').length===S.libraries.length,'one delete per row');
+  for(const row of document.querySelectorAll('.library-switch-row')){const d=row.querySelector('.library-switch-delete'),o=row.querySelector('.library-switch-option');assert(d.parentElement===o.parentElement&&d.dataset.id===o.dataset.id&&d.getAttribute('aria-label')==='删除JSON库'+S.libraries.find(l=>l.id===d.dataset.id).name,'sibling target');}
   assert(document.documentElement.scrollWidth===innerWidth,'picker overflow');
-  results.push({theme,viewport:innerWidth,heading:{centerDelta,rightGap},pickerWidth:document.documentElement.scrollWidth});
-  assert(document.querySelectorAll('.library-picker-delete').length===1,'duplicate delete');
+  results.push({theme,viewport:innerWidth,rowDelete:'PASS',pickerWidth:document.documentElement.scrollWidth});
   del.click();assert(document.querySelector('[data-action="confirm-exec"]')&&S.modalConfirm&&deletes===0,'must only confirm');closeC();
   // Sort inside a modal: portal survives clipping but closes with its owning dialog.
   openC(sortSelectC('libraries',S.librarySort,[['updated-desc','最近更新'],['name-asc','名称 A-Z']]));

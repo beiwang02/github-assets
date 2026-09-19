@@ -247,7 +247,6 @@ body.dark .library-detail-image { background:#24334b; }
 .asset-preview img { width:74px; height:74px; object-fit:contain; background:transparent; }
 .asset-details { padding:11px 3px 2px; }
 .asset-meta { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:8px; }
-.asset-badge { margin:0; }
 .asset-copy { width:auto; padding:0; font-size:9px; white-space:nowrap; }
 body.dark .asset-preview { background:#24334b; }
 .json-workspace { padding:20px; margin-bottom:18px; }
@@ -267,7 +266,6 @@ body.dark .library-selector select { color:var(--ink); border-color:#3b4d69; bac
   .asset-details { padding:9px 2px 1px; }
   .asset-meta { gap:4px; margin-top:6px; }
   .asset-copy { font-size:8px; }
-  .asset-badge { padding:3px 5px; font-size:7px; }
   .json-workspace { padding:14px; }
   .json-workspace-top { align-items:stretch; flex-direction:column; gap:13px; }
   .library-selector { min-width:0; }
