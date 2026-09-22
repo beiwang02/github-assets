@@ -268,7 +268,7 @@ body.dark .text-link:hover,body.dark .text-link:focus,body.dark .text-link:activ
 .preview-file span { min-width: 0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .preview-clear { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; color: #5f6d84; background: #e1e6f0; font-size: 20px; line-height: 26px; cursor: pointer; }
 .preview-clear:hover, .preview-clear:focus-visible { color: #fff; background: #6672ff; }
-.preview-clear:focus-visible { outline: 2px solid #6672ff; outline-offset: 2px; }
+.preview-clear:focus-visible { outline: 2px solid var(--ui-line-focus); outline-offset: 2px; }
 .toast-root { position: fixed; right: 22px; bottom: 22px; z-index: 80; display: grid; gap: 9px; }
 .toast { min-width: 240px; padding: 12px 14px; color: #fff; border-radius: 11px; background: #16233a; box-shadow:none; font-size: 11px; animation: toastIn .22s ease; }
 .toast.success { border-left: 3px solid #48c990; }
@@ -373,7 +373,7 @@ body:not(.dark) .user-chip { color:#25354d; }
 /* Authentication follows the selected appearance and keeps its control outside the card. */
 .auth-theme-button { width:42px; height:42px; display:grid; place-items:center; color:#dce6ff; border:1px solid rgba(179,197,239,.38); border-radius:12px; background:rgba(13,25,48,.72); box-shadow:0 8px 24px rgba(0,0,0,.18); cursor:pointer; }
 .auth-theme-button:hover { color:#fff; border-color:#aab8ff; background:rgba(47,62,112,.84); }
-.auth-theme-button:focus-visible { outline:3px solid #8e9cff; outline-offset:3px; }
+.auth-theme-button:focus-visible { outline:2px solid var(--ui-line-focus); outline-offset:3px; }
 body:not(.dark) .auth-screen, body:not(.dark) .auth-page { color:#1b2a43; background:radial-gradient(circle at 13% 12%,rgba(101,112,255,.17),transparent 29%),radial-gradient(circle at 88% 82%,rgba(38,171,169,.12),transparent 25%),#f4f7ff; }
 body:not(.dark) .auth-grid { opacity:.38; }
 body:not(.dark) .auth-card { background:rgba(255,255,255,.9); border-color:#d8e0f0; box-shadow:0 28px 70px rgba(52,70,118,.18); }

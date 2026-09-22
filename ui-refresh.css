@@ -168,3 +168,13 @@ body.dark .sort-menu.floating-menu{box-shadow:0 8px 22px rgba(0,0,0,.24)}
 /* Text copy actions retain normal secondary contrast; compact icons stay muted. */
 .copy-control.ui-button.btn:not(.copy-control-icon){--copy-bg:var(--surface);--copy-line:var(--line);--copy-ink:#5e6b80}
 body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--ink)}
+
+/* One pale line for every surface a finger lands on: search fields, drop zone, rows and tiles.
+   Border wrappers recolour their own border; containers that own no border get the same pale ring. */
+/* One pale line for every surface a finger lands on: search fields, drop zone, rows and tiles.
+   Wrappers that own a border recolour it; containers without a border get the same pale ring. */
+:is(.inner-search,.global-search,.drop-zone):focus-within{border-color:var(--ui-line-focus)!important}
+:is(.inner-search,.global-search,.drop-zone):active{border-color:var(--ui-line-focus)!important}
+:is(.asset-card,.quick-asset,.json-reference-row,.library-list-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within{outline:2px solid var(--ui-line-focus);outline-offset:2px}
+:is(.asset-card,.quick-asset,.json-reference-row,.library-list-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):active{border-color:var(--ui-line-focus)!important}
+/* Remaining bright focus rings joined the same pale line at their source (console.css .repo-switcher, styles.css .preview-clear/.auth-theme-button). */
