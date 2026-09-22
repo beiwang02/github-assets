@@ -4,14 +4,14 @@ const METADATA_VERSION = 1;
 class GitHubClient {
   constructor(config, csrf) { this.config = { ...config }; this.csrf = csrf; }
   get base() { return `/repos/${encodeURIComponent(this.config.owner)}/${encodeURIComponent(this.config.repo)}`; }
-  async request(path, method = 'GET', body) {
+  async request(path, method = 'GET', body, retried = false) {
     const response = await fetch(`/api/github?url=${encodeURIComponent('https://api.github.com' + path)}`, {
       method, credentials:'same-origin', headers:{ 'Content-Type':'application/json', 'X-CSRF-Token':this.csrf || '' },
       ...(body === undefined ? {} : { body:JSON.stringify(body) })
     });
     const text = await response.text(); let data;
     try { data = text ? JSON.parse(text) : null; } catch { throw new Error('服务器返回无效响应，请使用 Node 服务打开网站。'); }
-    if (!response.ok) { const e = new Error(data?.message || `GitHub API ${response.status}`); e.status = response.status; throw e; }
+    if (!response.ok) { const e = new Error(data?.message || `GitHub API ${response.status}`); e.status = response.status; if (response.status === 401 && !retried && typeof window.recoverSession === 'function' && await window.recoverSession()) { if (typeof window.liveCsrf === 'function') this.csrf = window.liveCsrf() || this.csrf; return this.request(path, method, body, true); } throw e; }
     return data;
   }
   async listRepos() { return this.request('/user/repos?per_page=100&sort=updated&affiliation=owner,collaborator,organization_member'); }

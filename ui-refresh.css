@@ -1,5 +1,5 @@
 /* GitHub Assets UI Refresh — production presentation layer */
-:root{--ui-control-h:40px;--ui-radius:11px;--ui-gap:12px;--ui-focus:#8b70ee;--ui-canvas:#f4f6fb}
+:root{--ui-control-h:40px;--ui-radius:11px;--ui-gap:12px;--ui-focus:#8b70ee;--ui-canvas:#f4f6fb;--ui-line-focus:#cfd5fd}
 *,*:before,*:after{box-sizing:border-box}
 body{background:var(--ui-canvas);overflow-x:hidden}
 button,.btn,.text-link,select,input{font:inherit}
@@ -43,11 +43,11 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 .ui-button[data-ui=icon]{padding:0;width:34px;height:34px;min-height:34px;min-width:34px;gap:0}
 .ui-button.top-icon{width:34px;height:34px;min-width:34px;min-height:34px}.auth-head-actions>.ui-button{width:42px;height:42px;min-width:42px;min-height:42px}
 .ui-button.asset-select,.ui-button.reference-select{width:24px;height:24px;min-width:24px;min-height:24px}
-.ui-button:focus,.ui-button:active{box-shadow:none!important}.ui-button:focus-visible{outline:2px solid #85808c!important;outline-offset:3px;box-shadow:none!important}.ui-button:active:not(:disabled){transform:translateY(1px);filter:brightness(.92)}.ui-button:disabled{cursor:not-allowed;opacity:.5;transform:none}
+.ui-button:focus,.ui-button:active{box-shadow:none!important}.ui-button:focus-visible{outline:2px solid var(--ui-line-focus)!important;outline-offset:3px;box-shadow:none!important}.ui-button:active:not(:disabled){transform:translateY(1px);filter:brightness(.92)}.ui-button:disabled{cursor:not-allowed;opacity:.5;transform:none}
 .ui-button[data-ui=danger]{color:#b23c55;background:#fff1f3;border:1px solid #f3cbd3}body.dark .ui-button[data-ui=danger]{color:#efa5b3;background:#392633;border-color:#654052}
 .library-picker-copy{min-width:0}.library-picker-copy b,.library-picker-copy em{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.json-workspace-top{padding:12px!important}.json-library-summary{margin-top:0}.library-picker-list .library-picker-row{flex-wrap:wrap;min-width:0;padding:8px 0;border-bottom:1px solid var(--border)}
 .library-picker-list .library-picker-option{width:auto;min-width:0;flex:1 1 220px;justify-content:flex-start}.library-picker-option>span:nth-child(2){min-width:0;overflow:hidden}.library-picker-option b,.library-picker-option small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-picker-actions{margin-left:auto}.library-picker-actions .ui-button{width:auto;padding-inline:12px;min-height:36px;font-size:12px}.library-picker-option em{flex-shrink:0}
-.library-list-row:focus-visible{outline:2px solid #85808c;outline-offset:-2px}.modal,.modal-body,.settings-card,.form-field,.main-shell,.json-workspace,.toolbar,.auth-card{min-width:0}.modal-body{overflow-wrap:anywhere}.detail-url{overflow-wrap:anywhere;word-break:break-word}.settings-actions,.section-actions{flex-wrap:wrap;gap:8px}.repo-quick{overflow:hidden;text-overflow:ellipsis}
+.library-list-row:focus-visible{outline:2px solid var(--ui-line-focus);outline-offset:-2px}.modal,.modal-body,.settings-card,.form-field,.main-shell,.json-workspace,.toolbar,.auth-card{min-width:0}.modal-body{overflow-wrap:anywhere}.detail-url{overflow-wrap:anywhere;word-break:break-word}.settings-actions,.section-actions{flex-wrap:wrap;gap:8px}.repo-quick{overflow:hidden;text-overflow:ellipsis}
 @media(max-width:700px){.ui-button{font-size:12px}.toolbar{flex-wrap:wrap}.inner-search{min-width:0;max-width:100%}.settings-card{padding:18px}.settings-card>.btn{margin-bottom:8px}.settings-actions .btn{flex:1 1 auto}.library-picker-list .library-picker-option{flex-basis:100%}.library-picker-actions{padding-left:54px;margin-left:0}.modal-actions .btn{min-width:0}.asset-detail-actions .btn{flex:1 1 140px}.auth-brand{gap:8px}.auth-head-actions{flex-shrink:0}.auth-card{max-width:100%}.ui-button.repo-quick{font-size:11px}.json-reference-actions{flex-shrink:0}.json-reference-copy{min-width:0}.sort-trigger{padding-inline:10px}.hero{padding-inline:12px}.hero-actions{flex-wrap:nowrap;gap:5px}.hero-actions .btn{flex:0 1 auto;height:34px;min-height:34px;padding-inline:6px;font-size:11px;gap:3px;--ui-icon-size:12px}}
 
 @media(max-width:350px){.hero-actions .btn{padding-inline:3px;font-size:10px;gap:2px;--ui-icon-size:10px}}
@@ -112,11 +112,11 @@ body.dark .ui-button.top-icon,body.dark .ui-button.project-link{background:#1b29
 
 .library-switch-title{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .token-eye.ui-button{font-size:18px}
-input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus,textarea:focus-visible{outline:none!important;box-shadow:none!important;border-color:var(--primary)!important}
+input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus,textarea:focus-visible{outline:none!important;box-shadow:none!important;border-color:var(--ui-line-focus)!important}
 
 /* Login input follows the same theme-blue editing focus without an outer ring. */
 .auth-card #mainTokenInput{width:100%;min-width:0}
-.auth-card #mainTokenInput:focus,.auth-card #mainTokenInput:focus-visible{border:1px solid var(--primary)!important;outline:none!important;box-shadow:none!important}
+.auth-card #mainTokenInput:focus,.auth-card #mainTokenInput:focus-visible{border:1px solid var(--ui-line-focus)!important;outline:none!important;box-shadow:none!important}
 @media(max-width:700px){.auth-card #mainTokenInput{font-size:16px}}
 
 

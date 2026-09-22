@@ -469,8 +469,8 @@ body.dark .auth-card > p { color:#b4bfd3; }
 body.dark :where(button,.btn,.icon-btn,.text-link,.nav-item,.repo-quick,.library-picker,.library-picker-option,.library-picker-create,.quick-asset,.json-reference-row,.asset-select,.asset-copy,.quick-copy,.modal-close,.top-icon,.project-link,.token-eye,.token-guide-button):not(:disabled):active { filter:brightness(.88); box-shadow:inset 0 0 0 999px rgba(0,0,0,.18); }
 /* Prevent ancestor card dim when clicking inner buttons */
 .asset-card:has(button:active),.quick-asset:has(button:active),.json-reference-row:has(button:active),.library-list-row:has(button:active),.library-empty-row:has(button:active) { filter:none; box-shadow:none; }
-:where(button,.btn,.icon-btn,.text-link,.nav-item,.repo-quick,.library-picker,.library-picker-option,.library-picker-create,.asset-select,.asset-copy,.quick-copy,.modal-close,.top-icon,.project-link,.token-eye,.token-guide-button):focus-visible { outline:2px solid color-mix(in srgb,var(--primary) 62%,transparent); outline-offset:2px; box-shadow:0 0 0 4px color-mix(in srgb,var(--primary) 14%,transparent); }
-:where(input,select,textarea):focus-visible { outline:2px solid color-mix(in srgb,var(--primary) 55%,transparent); outline-offset:1px; }
+:where(button,.btn,.icon-btn,.text-link,.nav-item,.repo-quick,.library-picker,.library-picker-option,.library-picker-create,.asset-select,.asset-copy,.quick-copy,.modal-close,.top-icon,.project-link,.token-eye,.token-guide-button):focus-visible { outline:2px solid var(--ui-line-focus); outline-offset:2px; box-shadow:0 0 0 4px color-mix(in srgb,var(--ui-line-focus) 55%,transparent); }
+:where(input,select,textarea):focus-visible { outline:2px solid var(--ui-line-focus); outline-offset:1px; }
 /* Do not neutralize press/focus feedback on copy controls. */
 [data-action="copy"] { transition:filter .12s ease,box-shadow .12s ease; }
 /* Shared gallery density and backplate palette. */
