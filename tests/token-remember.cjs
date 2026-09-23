@@ -16,5 +16,5 @@ assert(gh.includes('this.csrf = window.liveCsrf() || this.csrf'));
 assert(js.includes('window.recoverSession=recoverSession;') && js.includes('window.liveCsrf=()=>S.csrf;'));
 /* Logout still forgets the device on purpose. */
 assert(js.includes("localStorage.removeItem('gh-image-remembered-token'); location.replace('/?logged_out=1');"));
-assert(html.includes('console.js?v=hover-gate-42') && html.includes('github.js?v=external-sync-3'));
+assert(html.includes('console.js?v=audit-latest-44') && html.includes('github.js?v=external-sync-3'));
 console.log('PASS token remember: prefill + checked box, boot re-login, 401 self-heal with csrf refresh, logout still forgets');

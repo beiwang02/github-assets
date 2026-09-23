@@ -177,4 +177,16 @@ body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--i
 :is(.inner-search,.global-search,.drop-zone):active{border-color:var(--ui-line-focus)!important}
 :is(.asset-card,.quick-asset,.json-reference-row,.library-list-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within{outline:2px solid var(--ui-line-focus);outline-offset:2px}
 :is(.asset-card,.quick-asset,.json-reference-row,.library-list-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):active{border-color:var(--ui-line-focus)!important}
-/* Remaining bright focus rings joined the same pale line at their source (console.css .repo-switcher, styles.css .preview-clear/.auth-theme-button). */
+/* Unified neutral feedback: no default geometry changes, no persistent pointer focus.
+   JS omits danger, primary, hero CTA and checkmarks. Copy alone can opt out. */
+:root{--ui-feedback-ink:var(--primary)}
+body.dark{--ui-feedback-ink:var(--ui-line-focus)}
+@media(hover:hover){
+[data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):hover{color:var(--ui-feedback-ink)!important;border-color:var(--ui-line-focus)!important}
+:is(.top-icon,.project-link)[data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):hover{background:var(--surface)!important}
+[data-feedback="surface"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):hover:not(:has(button:hover,a:hover)){border-color:var(--ui-line-focus)!important;outline:1px solid var(--ui-line-focus);outline-offset:-1px}
+}
+[data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active{color:var(--ui-feedback-ink)!important;border-color:var(--ui-line-focus)!important}
+:is(.top-icon,.project-link)[data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active{background:var(--surface)!important}
+[data-feedback="surface"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active:not(:has(button:active,a:active)){border-color:var(--ui-line-focus)!important;outline:1px solid var(--ui-line-focus);outline-offset:-1px}
+[data-feedback="control"]:focus-visible{outline-color:var(--ui-line-focus)!important}

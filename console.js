@@ -455,6 +455,16 @@ function uiIconC(name){
   const paths={plus:'M12 5v14M5 12h14',close:'m6 6 12 12M18 6 6 18',copy:'M9 9h11v11H9zM15 9V4H4v11h5',arrow:'M5 12h14m-5-5 5 5-5 5',back:'M19 12H5m5-5-5 5 5 5',chevron:'m6 9 6 6 6-6',check:'m5 12 4 4L19 6',grid:'M4 4h16v16H4zM4 10h16M10 4v16',refresh:'M20 8a8 8 0 1 0 0 8M20 3v5h-5',menu:'M4 6h16M4 12h16M4 18h16',eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Zm7 0a3 3 0 1 0 6 0 3 3 0 1 0-6 0',moon:'M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11',system:'M12 3a9 9 0 1 0 0 18 9 9 0 1 0 0-18Zm0 0v18',more:'M5 12h1m5 0h1m5 0h1'};
   return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${paths[name]||paths.grid}"/></svg>`;
 }
+// Toggle only this flag to restore historical neutral copy feedback without changing other controls.
+const UNIFIED_COPY_FEEDBACK = true;
+function feedbackKindC(el){
+  if(el.matches('.btn-danger,.library-picker-delete,.library-switch-delete,.group-delete-link,[data-ui="danger"],[data-action^="delete-"],[data-action^="confirm-delete-"],[data-action="bulk-delete"]'))return '';
+  if(el.matches('.btn-primary,.btn-github,.asset-select,.reference-select,.sidebar-overlay')||el.closest('.hero-actions'))return '';
+  if(el.dataset.action==='copy')return UNIFIED_COPY_FEEDBACK?'control':'';
+  if(el.matches('.library-switch-trigger,.library-picker-create'))return 'control';
+  if(el.matches('.repo-switcher,.asset-card,.quick-asset,.json-reference-row,.library-list-row,.library-empty-row,.drop-zone'))return 'surface';
+  return el.matches('button,.project-link,[role="button"]')?'control':'';
+}
 function enhanceControlsC(){
   const glyphs={'＋':'plus','×':'close','⧉':'copy','→':'arrow','←':'back','⌄':'chevron','✓':'check','▦':'grid','↻':'refresh','☰':'menu','◉':'eye','◐':'system','•••':'more'};
   document.querySelectorAll('button,.project-link,[role="button"]').forEach(el=>{
@@ -467,6 +477,11 @@ function enhanceControlsC(){
     if(el.matches('.modal-close'))el.setAttribute('aria-label','关闭弹窗');
   });
   document.querySelectorAll('.library-list-row[data-action],.library-empty-row[data-action]').forEach(el=>{el.tabIndex=0;el.setAttribute('role','button');el.removeAttribute('aria-haspopup');});
+  document.querySelectorAll('button,.project-link,[role="button"],.asset-card,.quick-asset,.json-reference-row,.drop-zone').forEach(el=>{
+    const kind=feedbackKindC(el);
+    if(kind){if(el.dataset.feedback!==kind)el.dataset.feedback=kind;}
+    else if(el.hasAttribute('data-feedback'))el.removeAttribute('data-feedback');
+  });
 }
 const uiObserverC=new MutationObserver(()=>{uiObserverC.disconnect();enhanceControlsC();uiObserverC.observe(document.body,{childList:true,subtree:true});});
 enhanceControlsC();uiObserverC.observe(document.body,{childList:true,subtree:true});
