@@ -18,7 +18,7 @@
 .auth-card h2 { margin:0 0 14px; color:#fff; font-size:30px; letter-spacing:-.04em; }
 .auth-card p { margin:0 0 27px; color:#b4bfd3; font-size:13px; line-height:1.8; }
 .auth-card .btn-github { width:100%; height:49px; color:#182334; border:0; border-bottom:4px solid #404fd5; border-radius:12px; background:linear-gradient(135deg,#9deaff,#7885ff); box-shadow:0 13px 27px rgba(93,107,235,.2); text-decoration:none; font-size:13px; }
-.auth-card .btn-github:hover { color:#182334; background:linear-gradient(135deg,#b4efff,#8f9aff); }
+@media(hover:hover){.auth-card .btn-github:hover { color:#182334; background:linear-gradient(135deg,#b4efff,#8f9aff); }}
 .auth-card .btn-github.disabled-link { opacity:.5; pointer-events:auto; }
 .github-logo { width:22px; height:22px; display:grid; place-items:center; color:#182334; border:2px solid currentColor; border-radius:50%; font-size:9px; }
 .auth-note { display:block; margin-top:17px; color:#74839d; font-size:10px; line-height:1.7; }
@@ -63,17 +63,18 @@ body.dark .account-panel b { color:var(--ink); }
 .repo-status-dot { width:9px; height:9px; display:inline-block; margin:0 0 1px 7px; border-radius:50%; background:#ff4d5f; box-shadow:0 0 0 4px rgba(255,77,95,.12),0 0 12px rgba(255,77,95,.3); vertical-align:middle; transition:background .2s,box-shadow .2s; }
 .repo-status-dot.connected { background:#35d48a !important; box-shadow:0 0 0 4px rgba(53,212,138,.14),0 0 12px rgba(53,212,138,.38) !important; }
 .repo-open-icon { width:17px; height:17px; flex:0 0 17px; fill:none; stroke:#aebaff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; opacity:.8; }
-.repo-switcher:hover .repo-open-icon { opacity:1; transform:translate(1px,-1px); }
+@media(hover:hover){.repo-switcher:hover .repo-open-icon { opacity:1; transform:translate(1px,-1px); }}
 .repo-quick-list { display:flex; flex-wrap:wrap; gap:7px; margin:0 0 12px; }
 .repo-quick { max-width:100%; overflow:hidden; padding:8px 10px; color:#7c89a0; border:1px solid var(--line); border-radius:8px; background:#fbfcfe; font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
 .settings-grid > .settings-card:first-child > .btn { display:inline-flex; margin:2px 6px 14px 0; vertical-align:middle; }
 .settings-grid > .settings-card:first-child > form { clear:both; }
 @media(max-width:700px){ .settings-grid > .settings-card:first-child > .btn { margin-right:4px; margin-bottom:12px; padding-left:10px; padding-right:10px; font-size:10px; } }
-.repo-quick:hover, .repo-quick.active { color:var(--primary); border-color:#bfc6fd; background:#f3f4ff; }
+ .repo-quick.active { color:var(--primary); border-color:#bfc6fd; background:#f3f4ff; }
+@media(hover:hover){.repo-quick:hover{ color:var(--primary); border-color:#bfc6fd; background:#f3f4ff; }}
 body.dark .repo-quick { background:#202e47; border-color:var(--line); color:#b7c2d3; }
 
 .token-login-link { display:block; margin:15px auto 0; padding:6px 10px; color:#8f9db4; background:transparent; font-size:10px; text-decoration:underline; cursor:pointer; }
-.token-login-link:hover { color:#b6c0ff; }
+@media(hover:hover){.token-login-link:hover { color:#b6c0ff; }}
 
 .admin-code { padding:14px; overflow:auto; color:#cbd6ea; border-radius:10px; background:#111d31; font:11px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace; white-space:pre-wrap; }
 
@@ -87,7 +88,8 @@ body.dark .repo-quick { background:#202e47; border-color:var(--line); color:#b7c
 .token-input-wrap { position:relative; display:flex; align-items:center; }
 .token-input-wrap input { width:100%; padding-right:45px; }
 .token-eye { position:absolute; right:9px; width:30px; height:30px; display:grid; place-items:center; padding:0; color:#8b98aa; border:0; border-radius:8px; outline:0; background:transparent; box-shadow:none; -webkit-appearance:none; -webkit-tap-highlight-color:transparent; font-size:16px; cursor:pointer; }
-.token-eye:hover, .token-eye:focus, .token-eye:active { color:var(--primary); border:0; outline:0; background:transparent; box-shadow:none; }
+ .token-eye:focus, .token-eye:active { color:var(--primary); border:0; outline:0; background:transparent; box-shadow:none; }
+@media(hover:hover){.token-eye:hover{ color:var(--primary); border:0; outline:0; background:transparent; box-shadow:none; }}
 
 .overview-assets-section { margin-top: 25px; }
 .quick-assets-grid { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:14px; padding:16px; }
@@ -114,14 +116,14 @@ body.dark .quick-asset-image {background:#24334b}body.dark .modal-field input,bo
 body.dark .json-reference-thumb,body.dark .library-preview-tile {background:#24334b}
 
 .top-avatar { border:0; cursor:pointer; }
-.top-avatar:hover { transform:translateY(-1px); filter:brightness(1.06); }
+@media(hover:hover){.top-avatar:hover { transform:translateY(-1px); filter:brightness(1.06); }}
 
 .account-repo-path { padding:10px 12px; color:var(--muted); border:1px solid var(--line); border-radius:9px; background:var(--canvas); font:11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 .appearance-button { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-weight:500; line-height:1; }
 
 .project-link { display:flex; align-items:center; justify-content:center; gap:8px; margin:14px 0 2px; padding:9px; color:#8d9bb1; border:1px solid rgba(141,155,177,.3); border-radius:9px; font-size:10px; text-decoration:none; }
-.project-link:hover { color:#b7c2ff; border-color:#7885ff; background:rgba(120,133,255,.08); }
+@media(hover:hover){.project-link:hover { color:#b7c2ff; border-color:#7885ff; background:rgba(120,133,255,.08); }}
 .project-link span { font-size:17px; line-height:1; }
 .project-github-icon { width:18px; height:18px; display:block; fill:currentColor; }
 
@@ -161,11 +163,11 @@ body:not(.dark) .auth-screen { background:#f7f9ff; }
 
 .token-guide-button { display:inline-flex; align-items:center; gap:5px; padding:3px 0; margin:18px 0 12px; color:#4f5bd7; border:0; border-radius:0; background:transparent; text-align:left; font-size:11px; font-weight:700; cursor:pointer; }
 .token-guide-arrow { width:14px; height:14px; display:inline-grid; place-items:center; flex:0 0 14px; font-size:17px; line-height:1; transform:rotate(-90deg); }
-.token-guide-button:hover { color:#3546c5; border-color:transparent; background:transparent; }
+@media(hover:hover){.token-guide-button:hover { color:#3546c5; border-color:transparent; background:transparent; }}
 .token-guide-body { color:var(--ink); font-size:12px; line-height:1.8; }
 .token-guide-body ol { margin:0; padding-left:20px; }
 body.dark .token-guide-button { color:#c4caff; border-color:transparent; background:transparent; }
-body.dark .token-guide-button:hover { color:#e0e3ff; background:transparent; }
+@media(hover:hover){body.dark .token-guide-button:hover { color:#e0e3ff; background:transparent; }}
 body.dark .token-guide-body { color:#e8edf7; }
 
 /* Keep dashboard sections visually separated on mobile */
@@ -271,14 +273,14 @@ body.dark .library-selector select { color:var(--ink); border-color:#3b4d69; bac
 .library-picker-row { display:flex; align-items:stretch; gap:7px; }
 .library-picker-row .library-picker-option { flex:1; }
 .library-picker-delete { width:auto; height:auto; flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; padding:4px 2px; color:#d66a76; border:0; border-radius:0; background:transparent; font-size:10px; font-weight:700; white-space:nowrap; cursor:pointer; }
-.library-picker-delete:hover { color:#c34f61; background:transparent; }
+@media(hover:hover){.library-picker-delete:hover { color:#c34f61; background:transparent; }}
 .json-reference-copy small { color:var(--muted); }
 body.dark .library-picker-delete { color:#e58a96; border:0; background:transparent; }
 
 /* Keep login header actions visually balanced */
 .auth-head-actions > .auth-theme-button,
 .auth-head-actions > .project-link { width:42px; height:42px; display:grid; place-items:center; margin:0; padding:0; color:#dce6ff; border:1px solid rgba(179,197,239,.38); border-radius:12px; background:rgba(13,25,48,.72); box-shadow:0 8px 24px rgba(0,0,0,.18); }
-.auth-head-actions > .project-link:hover { color:#fff; border-color:#aab8ff; background:rgba(47,62,112,.84); }
+@media(hover:hover){.auth-head-actions > .project-link:hover { color:#fff; border-color:#aab8ff; background:rgba(47,62,112,.84); }}
 .auth-card form > .auth-note:last-child { margin-top:22px; color:#8b9ab3; }
 body:not(.dark) .auth-head-actions > .auth-theme-button,
 body:not(.dark) .auth-head-actions > .project-link { color:#273a59; border-color:#c7d2e6; background:rgba(255,255,255,.92); box-shadow:0 8px 24px rgba(52,70,118,.16); }
@@ -287,12 +289,7 @@ body:not(.dark) .auth-card form > .auth-note:last-child { color:#53647c; }
 /* Login-card controls match the dark workspace theme control. */
 body.dark .auth-head-actions > .auth-theme-button,
 body.dark .auth-head-actions > .project-link { color:#edf1fb; border:1px solid #28364d; background:#17243a; box-shadow:none; }
-body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#586bd8; background:#263857; }
-
-
-
-@media (hover:hover) {
-}
+@media(hover:hover){body.dark .auth-head-actions > .project-link:hover { color:#fff; border-color:#586bd8; background:#263857; }}
 
 .section-actions { display:flex; align-items:center; gap:8px; }
 .reference-select { width:21px; height:21px; flex:0 0 21px; padding:0; border:1px solid #c4ccde; border-radius:6px; background:var(--surface); color:#fff; cursor:pointer; }
@@ -428,7 +425,7 @@ body.dark .library-list-row .tile-arrow { background:#263650; color:#b6c1d5; }
 .group-name-label { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:7px; }
 .group-name-label label { margin:0; }
 .group-delete-link { flex:0 0 auto; padding:0; color:#d66a76; font-size:10px; }
-.group-delete-link:hover { color:#c34f61; background:transparent; }
+@media(hover:hover){.group-delete-link:hover { color:#c34f61; background:transparent; }}
 .groupManageForm .modal-actions { display:grid!important; grid-template-columns:1fr 1fr; gap:10px; }
 .groupManageForm .modal-actions .btn { width:100%; min-width:0; }
 

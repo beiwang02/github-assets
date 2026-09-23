@@ -6,7 +6,7 @@ button,.btn,.text-link,select,input{font:inherit}
 button,.btn{min-height:var(--ui-control-h);padding:0 15px;border-radius:var(--ui-radius);font-size:13px;font-weight:700;line-height:1;white-space:nowrap;transition:background .16s,transform .16s,box-shadow .16s}
 button:active,.btn:active{transform:translateY(1px);filter:brightness(.94)}
 button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid color-mix(in srgb,var(--ui-focus) 35%,transparent);outline-offset:2px;box-shadow:none}
-.btn-danger{color:#b23c55;background:#fff1f3;border:1px solid #f3cbd3}.btn-danger:hover{background:#ffe4e9}
+.btn-danger{color:#b23c55;background:#fff1f3;border:1px solid #f3cbd3}@media(hover:hover){.btn-danger:hover{background:#ffe4e9}}
 .topbar{height:72px;padding-inline:clamp(18px,3vw,40px);align-items:center}.top-actions{gap:9px}.top-icon{width:40px;min-width:40px;padding:0}
 .content{max-width:1440px;padding:28px clamp(18px,3vw,40px) 48px;margin:auto}.page-heading{margin-bottom:22px;align-items:end}.heading-actions,.hero-actions,.modal-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .card,.stat-card,.hero{border-radius:16px;box-shadow:0 8px 24px rgba(31,47,82,.055)}
@@ -125,7 +125,7 @@ input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus
 .preview-file span{flex:1;min-width:0}
 .preview-file .preview-clear{position:static;transform:none;width:32px;height:32px;min-width:32px;min-height:32px;flex:0 0 32px;padding:0;border-radius:8px;color:var(--muted);background:var(--surface);border:1px solid var(--line)}
 .preview-clear.ui-button svg{width:16px;height:16px;flex-basis:16px}
-.preview-file .preview-clear:hover{color:var(--ink);background:var(--ui-canvas)}
+@media(hover:hover){.preview-file .preview-clear:hover{color:var(--ink);background:var(--ui-canvas)}}
 /* Historical outlined copy controls: surface only, never a filled grey/black tile.
    JSON copy matches its unchanged X: 34px minimum box, 9px radius, 18px SVG. */
 .copy-control.ui-button{--copy-bg:var(--surface);--copy-line:var(--line);--copy-ink:#8090a6;color:var(--copy-ink);background:var(--copy-bg);border:1px solid var(--copy-line);transition:background .12s,border-color .12s,filter .12s}

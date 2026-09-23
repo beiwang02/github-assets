@@ -35,6 +35,7 @@ function setMetaC() {
 }
 function rememberedToken(){ try { return localStorage.getItem('gh-image-remembered-token')||''; } catch { return ''; } }
 function finePointerC(){ try { return window.matchMedia('(pointer:fine)').matches; } catch { return false; } }
+function hoverlessC(){ try { return !window.matchMedia('(hover:hover)').matches; } catch { return false; } }
 async function silentTokenLogin(){ const token=rememberedToken(); if(!token)return false; try { const response=await fetch('/api/auth/token',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})}); if(response.ok){ try { const me=await (await fetch('/api/auth/me',{credentials:'include'})).json(); if(me?.csrf)S.csrf=me.csrf; } catch {} return true; } if(response.status===401||response.status===403)localStorage.removeItem('gh-image-remembered-token'); return false; } catch { return false; } }
 let sessionRecovery=null;
 async function recoverSession(){ if(!rememberedToken())return false; if(!sessionRecovery){ const flight=silentTokenLogin(); sessionRecovery=flight; setTimeout(()=>{ if(sessionRecovery===flight)sessionRecovery=null; },5000); } return sessionRecovery; }
@@ -369,6 +370,9 @@ document.addEventListener('click',e=>{ const sidebar=$c('#sidebar'); if(sidebar?
 document.addEventListener('submit',formSubmit);
 // Clear Safari's sticky button focus after each touch release.
 document.addEventListener('pointerup',e=>{const button=e.target.closest('button');if(button&&e.pointerType==='touch')button.blur();});
+/* Pick-once controls release focus as soon as the value is committed, so a hoverless device
+   never keeps a field looking active; text fields keep their focus, exactly like any site. */
+document.addEventListener('change',e=>{const t=e.target;if(!t||!t.matches||!t.matches('select,input[type=file],input[type=checkbox],input[type=radio]')||!hoverlessC())return;t.blur();});
 document.addEventListener('input',e=>{if(pendingSubmission)return;const b=e.target.dataset.bind;if(!b)return;if(b==='asset-search')S.assetQuery=e.target.value;if(b==='library-search')S.libraryQuery=e.target.value;if(b==='icon-search')S.iconQuery=e.target.value;const cursor=e.target.selectionStart;renderC();const next=document.querySelector(`[data-bind="${b}"]`);if(next){next.focus();next.setSelectionRange(cursor,cursor);}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!pendingSubmission)closeC();if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$c('#globalSearch')?.focus();}});
 renderC(); void bootAuth();
