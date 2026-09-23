@@ -147,7 +147,7 @@ body.dark .text-link:focus,body.dark .text-link:active { color:#d0d5ff; backgrou
 .card-menu { color: #98a4b4; font-size: 18px; letter-spacing: 2px; background: transparent; }
 .library-list-row { display: flex; align-items: center; gap: 12px; padding: 14px 19px; border-bottom: 1px solid #f3f5f8; cursor: pointer; transition: .2s; }
 .library-list-row:last-child { border-bottom: 0; }
-@media(hover:hover){.library-list-row:hover { background: #fafbff; }}
+@media(hover:hover){.library-list-row:hover:not(:where(:has(button:hover,a:hover))) { background: #fafbff; }}
 .cover-stack { display: flex; padding-left: 7px; }
 .cover-stack img { width: 30px; height: 30px; object-fit: cover; margin-left: -7px; border: 2px solid rgba(255,255,255,.5); border-radius: 9px; background: #eef0f7; }
 .list-info { min-width: 0; flex: 1; }
@@ -194,7 +194,7 @@ body.dark .text-link:focus,body.dark .text-link:active { color:#d0d5ff; backgrou
 .group-pill b { color: inherit; font-size: 11px; }
 .asset-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 15px; }
 .asset-card { min-width: 0; overflow: hidden; padding: 9px; cursor: pointer; transition: .2s; }
-@media(hover:hover){.asset-card:hover { transform: translateY(-3px); border-color: #cfd5fd; box-shadow: 0 12px 28px rgba(67,82,170,.1); }}
+@media(hover:hover){.asset-card:hover:not(:where(:has(button:hover,a:hover))) { transform: translateY(-3px); border-color: #cfd5fd; box-shadow: 0 12px 28px rgba(67,82,170,.1); }}
 .asset-preview { position: relative; height: 125px; display: grid; place-items: center; overflow: hidden; border-radius: 12px; background: linear-gradient(135deg, #f4f6ff, #eef8f7); }
 .asset-preview img { width: 74px; height: 74px; object-fit: cover; border-radius: 17px; box-shadow: 0 9px 17px rgba(34,54,100,.12); }
 .asset-select { position: absolute; top: 8px; right: 8px; width: 20px; height: 20px; display: grid; place-items: center; color: #fff; border: 1px solid rgba(255,255,255,.8); border-radius: 6px; background: rgba(19,29,54,.13); font-size: 12px; }
@@ -339,7 +339,7 @@ body.dark .global-search input, body.dark .inner-search input, body.dark .form-f
 body.dark .global-search kbd, body.dark kbd { color: #9ca8bb; background: #1d2b42; border-color: #32425d; }
 body.dark .library-card-header, body.dark .table-head { background: #142138; border-color: var(--line); }
 body.dark .library-list-row, body.dark .table-row, body.dark .tile-footer { border-color: #24334b; }
-@media(hover:hover){body.dark .library-list-row:hover, body.dark .table-row:hover { background: #1b2a42; }}
+@media(hover:hover){body.dark .library-list-row:hover:not(:where(:has(button:hover,a:hover))), body.dark .table-row:hover { background: #1b2a42; }}
 body.dark .filter-pills, body.dark .asset-badge, body.dark .tile-arrow { background: #202e47; }
 body.dark .filter-pill.active { background: #2a3854; }
 body.dark .group-pill { background: var(--surface); border-color: var(--line); }

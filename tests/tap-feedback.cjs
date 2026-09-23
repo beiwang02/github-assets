@@ -3,7 +3,7 @@ const ui=fs.readFileSync('ui-refresh.css','utf8'),js=fs.readFileSync('console.js
 /* Tapping a field or tile always shows the same pale line. */
 assert(ui.includes(':is(.inner-search,.global-search,.drop-zone):focus-within{border-color:var(--ui-line-focus)!important}'));
 assert(ui.includes(':is(.inner-search,.global-search,.drop-zone):active{border-color:var(--ui-line-focus)!important}'));
-assert(ui.includes(':is(.asset-card,.quick-asset,.json-reference-row,.library-list-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within{outline:2px solid var(--ui-line-focus);outline-offset:2px}'));
+assert(ui.includes(':is(.asset-card,.quick-asset,.json-reference-row,.library-list-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within:not(:has(button:focus,a:focus,input:focus,select:focus,textarea:focus,[role="button"]:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}'));
 /* Bright focus rings were replaced at their source too. */
 assert(consoleCss.includes('.repo-switcher:focus-visible { outline:2px solid var(--ui-line-focus); outline-offset:2px; }'));
 assert(base.includes('.preview-clear:focus-visible { outline: 2px solid var(--ui-line-focus); outline-offset: 2px; }'));

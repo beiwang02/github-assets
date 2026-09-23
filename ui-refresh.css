@@ -175,10 +175,10 @@ body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--i
    Wrappers that own a border recolour it; containers without a border get the same pale ring. */
 :is(.inner-search,.global-search,.drop-zone):focus-within{border-color:var(--ui-line-focus)!important}
 :is(.inner-search,.global-search,.drop-zone):active{border-color:var(--ui-line-focus)!important}
-:is(.asset-card,.quick-asset,.json-reference-row,.library-list-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within{outline:2px solid var(--ui-line-focus);outline-offset:2px}
-:is(.asset-card,.quick-asset,.json-reference-row,.library-list-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):active{border-color:var(--ui-line-focus)!important}
+:is(.asset-card,.quick-asset,.json-reference-row,.library-list-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within:not(:has(button:focus,a:focus,input:focus,select:focus,textarea:focus,[role="button"]:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}
+:is(.asset-card,.quick-asset,.json-reference-row,.library-list-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):active:not(:has(button:active,a:active,input:active,select:active,textarea:active,[role="button"]:active)){border-color:var(--ui-line-focus)!important}
 /* Unified neutral feedback: no default geometry changes, no persistent pointer focus.
-   JS omits danger, primary, hero CTA and checkmarks. Copy alone can opt out. */
+   JS omits danger, primary, hero CTA and checkmarks. Copy uses the same fixed feedback. */
 :root{--ui-feedback-ink:var(--primary)}
 body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 @media(hover:hover){
