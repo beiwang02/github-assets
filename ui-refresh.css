@@ -113,17 +113,6 @@ body.dark .ui-button.top-icon,body.dark .ui-button.project-link{background:#1b29
 .library-switch-title{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .token-eye.ui-button{font-size:18px}
 input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus,textarea:focus-visible{outline:none!important;box-shadow:none!important;border-color:var(--ui-line-focus)!important}
-/* Only the upload group uses an in-page touch menu; desktop retains native select. */
-.upload-group-picker{display:none;position:relative}
-@media(hover:none),(pointer:coarse){#uploadForm .upload-group-picker{display:block}#uploadForm #uploadGroup.upload-group-native-hidden{display:none}}
-#uploadForm .upload-group-button{width:100%;text-align:left;background:var(--surface,#fff);color:inherit;border:1px solid var(--line);border-radius:10px;padding:11px 14px;font:inherit;min-height:44px}
-#uploadForm .upload-group-button.open{border-color:var(--ui-line-focus)!important}
-#uploadForm .upload-group-button:not(.open):focus{border-color:var(--line)!important;outline:none;box-shadow:none}
-#uploadForm .upload-group-button:focus-visible,#uploadForm .upload-group-menu [role="option"]:focus-visible{outline:2px solid var(--ui-line-focus);outline-offset:2px}
-#uploadForm .upload-group-button:disabled{opacity:.55;cursor:not-allowed}
-#uploadForm .upload-group-menu:not([hidden]){display:grid;position:absolute;z-index:20;top:calc(100% + 4px);left:0;right:0;max-height:220px;overflow:auto;background:var(--surface,#fff);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px #0002}
-#uploadForm .upload-group-menu [role="option"]{display:block;width:100%;text-align:left;border:0;background:transparent;color:inherit;padding:12px 14px;font:inherit;min-height:44px}
-#uploadForm .upload-group-menu [role="option"]:active,#uploadForm .upload-group-menu [aria-selected="true"]{background:color-mix(in srgb,var(--ui-line-focus) 12%,transparent)}
 
 /* Login input follows the same theme-blue editing focus without an outer ring. */
 .auth-card #mainTokenInput{width:100%;min-width:0}

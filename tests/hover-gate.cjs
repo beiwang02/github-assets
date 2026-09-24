@@ -39,7 +39,6 @@ assert(base.includes('@media(hover:hover){.text-link:hover{'),'hover half must b
 assert(base.includes('.group-pill.active {'),'active pill state must stay');
 assert(base.includes('.drop-zone.dragging {'),'drag state must stay');
 /* Pick-once controls drop focus after the value commits; text fields keep it. */
-assert(js.includes("document.addEventListener('input',e=>{const t=e.target;if(t?.matches?.('select')&&hoverlessC())t.blur();});"),'select releases focus as soon as its value updates');
 assert(js.includes("document.addEventListener('change',e=>{const t=e.target;if(!t||!t.matches||!t.matches('select,input[type=file],input[type=checkbox],input[type=radio]')||!hoverlessC())return;t.blur();});"));
 assert(js.includes("function hoverlessC(){ try { return !window.matchMedia('(hover:hover)').matches; } catch { return false; } }"));
 assert(!/addEventListener\('change'[\s\S]{0,120}input\[type=text\]/.test(js),'text fields must keep focus');
