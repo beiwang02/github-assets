@@ -113,6 +113,8 @@ body.dark .ui-button.top-icon,body.dark .ui-button.project-link{background:#1b29
 .library-switch-title{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .token-eye.ui-button{font-size:18px}
 input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus,textarea:focus-visible{outline:none!important;box-shadow:none!important;border-color:var(--ui-line-focus)!important}
+/* iOS native picker holds :focus during its closing animation; touch border must not linger. */
+@media(hover:none){select.touch-picker-open:focus,select.touch-picker-open:focus-visible{border-color:var(--line)!important;box-shadow:none!important;outline:none!important}body.dark select.touch-picker-open:focus,body.dark select.touch-picker-open:focus-visible{border-color:#3b4d69!important}}
 
 /* Login input follows the same theme-blue editing focus without an outer ring. */
 .auth-card #mainTokenInput{width:100%;min-width:0}

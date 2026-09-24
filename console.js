@@ -372,6 +372,13 @@ document.addEventListener('submit',formSubmit);
 document.addEventListener('pointerup',e=>{const button=e.target.closest('button');if(button&&e.pointerType==='touch')button.blur();});
 /* Pick-once controls release focus as soon as the value is committed, so a hoverless device
    never keeps a field looking active; text fields keep their focus, exactly like any site. */
+/* Native iOS pickers may retain :focus through their closing animation. Suppress only
+   the touch-opened select's focus border immediately; keyboard focus stays visible. */
+document.addEventListener('pointerdown',e=>{if(e.pointerType!=='touch')return;const t=e.target;if(t?.matches?.('select'))t.classList.add('touch-picker-open');else document.querySelectorAll('select.touch-picker-open').forEach(s=>{s.blur();s.classList.remove('touch-picker-open');});});
+document.addEventListener('keydown',e=>{if(e.target?.matches?.('select'))e.target.classList.remove('touch-picker-open');});
+/* Safari can dispatch a select's change after its native picker animation. Release the
+   touch focus on input (the value is already updated), with change as a fallback. */
+document.addEventListener('input',e=>{const t=e.target;if(t?.matches?.('select')&&hoverlessC())t.blur();});
 document.addEventListener('change',e=>{const t=e.target;if(!t||!t.matches||!t.matches('select,input[type=file],input[type=checkbox],input[type=radio]')||!hoverlessC())return;t.blur();});
 document.addEventListener('input',e=>{if(pendingSubmission)return;const b=e.target.dataset.bind;if(!b)return;if(b==='asset-search')S.assetQuery=e.target.value;if(b==='library-search')S.libraryQuery=e.target.value;if(b==='icon-search')S.iconQuery=e.target.value;const cursor=e.target.selectionStart;renderC();const next=document.querySelector(`[data-bind="${b}"]`);if(next){next.focus();next.setSelectionRange(cursor,cursor);}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!pendingSubmission)closeC();if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$c('#globalSearch')?.focus();}});
