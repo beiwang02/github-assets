@@ -228,6 +228,8 @@ body.dark .json-reference-list,.dark .library-picker-option { border-color:#3b4d
 
 /* Prevent iOS native pressed highlight on controls */
 button,.btn,.icon-btn,.text-link,.nav-item,.asset-select,.asset-copy,.quick-copy { -webkit-appearance:none; appearance:none; -webkit-tap-highlight-color:rgba(0,0,0,0); touch-action:manipulation; }
+/* Non-button click targets: remove native gray flash only; preserve appearance and gestures. */
+.drop-zone,.repo-switcher,.asset-card,.library-list-row,.library-empty-row { -webkit-tap-highlight-color:transparent; }
 
 .remember-token input { -webkit-appearance:none; appearance:none; position:relative; width:18px; height:18px; margin:0; border:1px solid #aeb8c8; border-radius:5px; background:#fff; vertical-align:middle; }
 .remember-token input:checked { border-color:var(--primary); background:var(--primary); }
