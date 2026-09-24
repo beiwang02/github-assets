@@ -114,6 +114,15 @@ body.dark .ui-button.top-icon,body.dark .ui-button.project-link{background:#1b29
 .token-eye.ui-button{font-size:18px}
 input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus,textarea:focus-visible{outline:none!important;box-shadow:none!important;border-color:var(--ui-line-focus)!important}
 
+/* Native upload select feedback follows menu lifetime, never a replacement menu.
+   The no-op animation reports real :open support; older engines retain focus feedback. */
+@keyframes upload-native-picker-open{from{opacity:1}to{opacity:1}}
+@supports selector(select:open){
+  #uploadForm :is(select[name="group"],select[name="library"])[data-picker-touch]:open{animation:upload-native-picker-open 1ms linear;border-color:var(--ui-line-focus)!important;outline:none!important;box-shadow:none!important;transition:none!important}
+  #uploadForm :is(select[name="group"],select[name="library"])[data-picker-touch][data-picker-open-seen]:not(:open){border-color:#e4e8f0!important;outline:none!important;box-shadow:none!important;transition:none!important}
+  body.dark #uploadForm :is(select[name="group"],select[name="library"])[data-picker-touch][data-picker-open-seen]:not(:open){border-color:#3b4d69!important}
+}
+
 /* Login input follows the same theme-blue editing focus without an outer ring. */
 .auth-card #mainTokenInput{width:100%;min-width:0}
 .auth-card #mainTokenInput:focus,.auth-card #mainTokenInput:focus-visible{border:1px solid var(--ui-line-focus)!important;outline:none!important;box-shadow:none!important}

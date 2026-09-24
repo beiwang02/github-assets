@@ -370,6 +370,22 @@ document.addEventListener('click',e=>{ const sidebar=$c('#sidebar'); if(sidebar?
 document.addEventListener('submit',formSubmit);
 // Clear Safari's sticky button focus after each touch release.
 document.addEventListener('pointerup',e=>{const button=e.target.closest('button');if(button&&e.pointerType==='touch')button.blur();});
+/* Native upload pickers: only switch from focus to :open after this exact control
+   has actually reported an open menu. Parser support alone is not sufficient. */
+function uploadPickerTargetC(t){return !!t?.matches?.('#uploadForm select[name="group"],#uploadForm select[name="library"]');}
+document.addEventListener('pointerdown',e=>{
+  const t=e.target;if(!uploadPickerTargetC(t))return;
+  t.removeAttribute('data-picker-open-seen');
+  if(e.pointerType==='touch')t.setAttribute('data-picker-touch','');
+  else t.removeAttribute('data-picker-touch');
+},true);
+document.addEventListener('animationstart',e=>{
+  const t=e.target;if(e.animationName!=='upload-native-picker-open'||!uploadPickerTargetC(t)||!t.hasAttribute('data-picker-touch'))return;
+  if(t.matches(':open'))t.setAttribute('data-picker-open-seen','');
+},true);
+document.addEventListener('keydown',()=>{
+  document.querySelectorAll('#uploadForm select[data-picker-touch]').forEach(t=>{t.removeAttribute('data-picker-touch');t.removeAttribute('data-picker-open-seen');});
+},true);
 /* Pick-once controls release focus as soon as the value is committed, so a hoverless device
    never keeps a field looking active; text fields keep their focus, exactly like any site. */
 document.addEventListener('change',e=>{const t=e.target;if(!t||!t.matches||!t.matches('select,input[type=file],input[type=checkbox],input[type=radio]')||!hoverlessC())return;t.blur();});

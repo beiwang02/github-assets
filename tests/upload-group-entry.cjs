@@ -13,6 +13,6 @@ assert(css.includes('margin-bottom:-26px'));
 assert(css.includes('#groupManageForm .group-name-label{display:flex;align-items:center;justify-content:space-between}'));
 assert(css.includes('#groupManageForm .group-delete-link{margin-right:0;padding-inline:0;justify-self:end}'));
 assert(read('styles.css').includes('.modal-field { display: grid; gap: 7px; }'));
-assert(html.includes('console.js?v=audit-latest-46'));
-assert(html.includes('ui-refresh.css?v=audit-latest-46'));
+assert(html.includes('console.js?v=native-picker-open-49'));
+assert(html.includes('ui-refresh.css?v=native-picker-open-49'));
 console.log('PASS narrow-ui: upload glyph span/40px hit/compact overlap; group delete exact input-edge contract; cache v39.');
