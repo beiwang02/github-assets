@@ -1,0 +1,12 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const js=fs.readFileSync('console.js','utf8'),css=fs.readFileSync('ui-refresh.css','utf8');
+const fn=js.slice(js.indexOf('function feedbackKindC('),js.indexOf('function enhanceControlsC('));
+const ctx={};vm.runInNewContext(fn,ctx);
+const el=classes=>({dataset:{},matches:s=>s.split(',').some(x=>classes.includes(x.trim())),closest:()=>null});
+assert.equal(ctx.feedbackKindC(el(['.drop-zone'])),'');
+assert.equal(ctx.feedbackKindC(el(['.drop-zone','[role="button"]'])),'');
+assert.equal(ctx.feedbackKindC(el(['.asset-card'])),'surface');
+assert.equal(ctx.feedbackKindC(el(['button'])),'control');
+assert(!css.includes('.drop-zone):focus-within'));
+assert(js.includes("else if(el.hasAttribute('data-feedback'))el.removeAttribute('data-feedback');"));
+console.log('PASS dropzone excluded from runtime feedback; other controls retained');

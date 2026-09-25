@@ -182,7 +182,7 @@ body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--i
    Border wrappers recolour their own border; containers that own no border get the same pale ring. */
 /* One pale line for every surface a finger lands on: search fields, drop zone, rows and tiles.
    Wrappers that own a border recolour it; containers without a border get the same pale ring. */
-:is(.inner-search,.global-search,.drop-zone):focus-within{border-color:var(--ui-line-focus)!important}
+:is(.inner-search,.global-search):focus-within{border-color:var(--ui-line-focus)!important}
 /* Drop zone opens the OS picker instantly; the preview after selection is the real
    feedback, and iOS' gray pressed highlight is suppressed below. No purple on tap. */
 :is(.inner-search,.global-search):active{border-color:var(--ui-line-focus)!important}

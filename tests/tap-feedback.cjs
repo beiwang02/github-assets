@@ -2,7 +2,7 @@ const fs=require('node:fs'),assert=require('node:assert/strict');
 const ui=fs.readFileSync('ui-refresh.css','utf8'),js=fs.readFileSync('console.js','utf8'),base=fs.readFileSync('styles.css','utf8'),consoleCss=fs.readFileSync('console.css','utf8');
 /* Tapping a search field always shows the same pale line; the upload drop zone opens
    the OS picker instantly, so its press feedback is the preview, not a border flash. */
-assert(ui.includes(':is(.inner-search,.global-search,.drop-zone):focus-within{border-color:var(--ui-line-focus)!important}'));
+assert(ui.includes(':is(.inner-search,.global-search):focus-within{border-color:var(--ui-line-focus)!important}'));
 assert(ui.includes(':is(.inner-search,.global-search):active{border-color:var(--ui-line-focus)!important}'));
 assert(!/drop-zone\):active/.test(ui),'drop zone must not flash a press border');
 assert(consoleCss.includes('.drop-zone,.repo-switcher,.asset-card,.library-list-row,.library-empty-row { -webkit-tap-highlight-color:transparent; }'),'non-button surfaces suppress gray highlight without changing appearance or gestures');

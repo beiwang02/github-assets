@@ -472,11 +472,12 @@ function uiIconC(name){
   return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${paths[name]||paths.grid}"/></svg>`;
 }
 function feedbackKindC(el){
+  if(el.matches('.drop-zone'))return '';
   if(el.matches('.btn-danger,.library-picker-delete,.library-switch-delete,.group-delete-link,[data-ui="danger"],[data-action^="delete-"],[data-action^="confirm-delete-"],[data-action="bulk-delete"]'))return '';
   if(el.matches('.btn-primary,.btn-github,.asset-select,.reference-select,.sidebar-overlay')||el.closest('.hero-actions'))return '';
   if(el.dataset.action==='copy')return 'control';
   if(el.matches('.library-switch-trigger,.library-picker-create'))return 'control';
-  if(el.matches('.repo-switcher,.asset-card,.quick-asset,.json-reference-row,.library-list-row,.library-empty-row,.drop-zone'))return 'surface';
+  if(el.matches('.repo-switcher,.asset-card,.quick-asset,.json-reference-row,.library-list-row,.library-empty-row'))return 'surface';
   return el.matches('button,.project-link,[role="button"]')?'control':'';
 }
 function enhanceControlsC(){
