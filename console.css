@@ -480,6 +480,12 @@ body.dark .asset-preview,body.dark .quick-asset-image { background:#24334b; }
 .detail-readonly + .detail-readonly { margin-top:12px; }
 .detail-readonly p { margin:0; text-align:left; font-size:clamp(9px,2.6vw,10px); letter-spacing:-.02em; line-height:1.5; overflow-wrap:anywhere; word-break:normal; hyphens:none; color:var(--ink); }
 .detail-readonly .detail-url { word-break:break-all; }
+.detail-link { color:inherit; text-decoration:underline; text-decoration-color:var(--ui-line-focus,#cfd5fd); text-underline-offset:2px; overflow-wrap:anywhere; word-break:break-word; }
+.detail-link:focus-visible { outline:2px solid var(--ui-line-focus,#cfd5fd); outline-offset:2px; border-radius:2px; }
+@media (hover:hover) and (pointer:fine) { .detail-link:hover { color:#6875e4; } }
+.image-save-note p + p { margin-top:5px; }
+.image-save-note [data-image-save-status]:empty { display:none; }
+.asset-detail-actions > .btn:last-child,.icon-detail-actions > .btn:last-child { grid-column:1/-1; }
 .detail-readonly b { display:block; margin-bottom:5px; text-align:left; color:#768196; font-size:10px; }
 /* Library cards open the management picker; no directional arrow or external row actions. */
 .library-list-row,.library-empty-row { cursor:pointer; }

@@ -136,9 +136,9 @@ function renderC() {
   applyAppearance();
   restoreSubmissionC();
 }
-function openC(html) { closeSortMenus(); $c('#modalRoot').innerHTML=`<div class="modal-backdrop" data-action="modal-backdrop"><div class="modal">${html}</div></div>`; }
+function openC(html) { disposeImageSaveC(); closeSortMenus(); $c('#modalRoot').innerHTML=`<div class="modal-backdrop" data-action="modal-backdrop"><div class="modal">${html}</div></div>`; }
 function tokenGuideModal() { openC(`<div class="modal-head"><div><h2>经典 Token 创建教程</h2></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body token-guide-body"><ol><li>打开 GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)。</li><li>点击 Generate new token (classic)，设置有效期。</li><li>权限列表只勾选 <b>repo → public_repo</b>。</li><li>其他权限不要勾选，生成后复制 Token 粘贴到登录框。</li></ol></div>`); }
-function closeC() { closeSortMenus(); S.modalConfirm=null; if($c('#groupCreateForm')&&S.uploadDraft){const draft=S.uploadDraft;S.uploadDraft=null;uploadModal(draft);return;} S.uploadDraft=null; $c('#modalRoot').innerHTML=''; }
+function closeC() { disposeImageSaveC(); closeSortMenus(); S.modalConfirm=null; if($c('#groupCreateForm')&&S.uploadDraft){const draft=S.uploadDraft;S.uploadDraft=null;uploadModal(draft);return;} S.uploadDraft=null; $c('#modalRoot').innerHTML=''; }
 function confirmC(title,message,run,label='永久删除') { S.modalConfirm=run; openC(`<div class="modal-head"><div><h2>${escC(title)}</h2><p>${escC(message)}</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><p class="field-help">此操作不可恢复，请确认后继续。</p></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button type="button" class="btn btn-danger" data-action="confirm-exec">${escC(label)}</button></div>`); }
 function confirmRepositoryDeletion() {
   const fullName=`${S.repo.owner}/${S.repo.repo}`, client=currentClient();
@@ -166,8 +166,135 @@ function libraryPickerModal() {
 function libraryModal(edit=false) { S.editingLibrary=edit?S.selectedLibrary:null; const lib=edit?S.libraries.find(x=>x.id===S.selectedLibrary):null; openC(`<div class="modal-head"><div><h2>${edit?'编辑 JSON 库':'新建 JSON 库'}</h2><p>${edit?'修改名称、说明或移动 JSON 文件。':'会在仓库中创建一个带 icons 数组的 JSON 文件。'}</p></div><button class="modal-close" data-action="close-modal">×</button></div><form id="libraryForm"><div class="modal-body"><div class="modal-field"><label>JSON 库名称</label><input name="name" value="${escC(lib?.name||'')}" placeholder="例如：emby图标库" required></div><div class="modal-field"><label>JSON 库说明</label><input name="description" value="${escC(lib?.description||'')}" placeholder="可选，填写这个库的用途"></div><div class="modal-field"><label>JSON 文件名</label><input name="path" value="${escC(edit?lib?.file?.split('/').pop()?.replace(/\.json$/i,'')||'':'')}" placeholder="例如：emby-icon" required><small class="field-help">文件名不需要填写 .json 后缀，系统会自动补全。</small></div></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button type="submit" class="btn btn-primary">${edit?'保存修改':'创建 JSON 库'}</button></div></form>`); }
 function createRepoModal() { openC(`<div class="modal-head"><div><h2>创建 GitHub 仓库</h2><p>将在当前 GitHub 账号下创建一个公开仓库。</p></div><button class="modal-close" data-action="close-modal">×</button></div><form id="createRepoForm"><div class="modal-body"><div class="modal-field"><label>仓库名称</label><input name="name" placeholder="例如：my-image-host" required></div><div class="modal-field"><label>仓库说明</label><input name="description" placeholder="可选"></div><p class="field-help">创建后网站会自动把它设为当前图床仓库，并读取真实内容。</p></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button type="submit" class="btn btn-primary">创建并使用</button></div></form>`); }
 function editIconModal(index) { const lib=S.libraries.find(x=>x.id===S.selectedLibrary), icon=lib?.icons?.[index]; if(!lib||!icon)return; openC(`<div class="modal-head"><div><h2>编辑图片引用</h2><p>修改会更新 ${escC(lib.file)}，不会删除图片文件。</p></div><button class="modal-close" data-action="close-modal">×</button></div><form id="iconForm"><input type="hidden" name="index" value="${index}"><div class="modal-body"><div class="modal-field"><label>图片名称</label><input name="name" value="${escC(icon.name)}" required></div><div class="modal-field"><label>GitHub Raw 图片直链</label><input name="url" value="${escC(icon.url)}" required></div></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button class="btn btn-primary" type="submit">保存引用</button></div></form>`); }
-function assetModal(item) { openC(`<div class="modal-head"><div><h2>${escC(item.name)}</h2><p>${escC(item.group||'根目录')} 分组 · ${escC(item.ext)} 图片资源</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><div class="asset-detail-preview"><img src="${escC(imageURLC(item))}" alt="${escC(item.name)}"></div><div class="detail-readonly"><b>GitHub Raw 直链</b><p class="detail-url">${escC(item.url)}</p></div><div class="detail-readonly"><b>仓库路径</b><p>${escC(item.path)}</p></div></div><div class="modal-actions asset-detail-actions"><button class="btn" data-action="copy" data-copy="${escC(item.url)}">⧉ 复制直链</button><button class="btn btn-primary" data-action="asset-library" data-id="${escC(item.id)}">加入 JSON 库</button><button class="btn" data-action="rename-asset" data-id="${escC(item.id)}">改名并同步引用</button><button class="btn btn-danger" data-action="delete-asset" data-id="${escC(item.id)}">删除图片</button></div>`); }
-function iconModal(icon) { openC(`<div class="modal-head"><div><h2>${escC(icon.name)}</h2><p>JSON 图片引用详情</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><div class="json-icon-detail-preview"><img src="${escC(imageURLC(icon))}" alt="${escC(icon.name)}"></div><div class="detail-readonly"><b>GitHub Raw 直链</b><p class="detail-url">${escC(icon.url)}</p></div></div><div class="modal-actions icon-detail-actions"><button class="btn" data-action="copy" data-copy="${escC(icon.url)}">⧉ 复制直链</button><button class="btn btn-danger" data-action="delete-icon" data-index="${icon.index}">删除引用</button></div>`); }
+// Detail-only original-file saving. Never route downloads through the API or a canvas.
+let imageSaveC=null;
+const IMAGE_SAVE_LIMIT_C=32*1024*1024;
+function safeImageURLC(value) {
+  try { const u=new URL(value); return /^https?:$/.test(u.protocol)&&!u.username&&!u.password?u.href:''; } catch { return ''; }
+}
+function detailLinkC(url,label=url) {
+  const safe=safeImageURLC(url);
+  return safe?`<a class="detail-link" href="${escC(safe)}" target="_blank" rel="noopener noreferrer">${escC(label)}</a>`:escC(label);
+}
+function detailRepositoryC(item) {
+  // A JSON label/path is not proof of ownership: match the URL against loaded assets.
+  const url=safeImageURLC(item.url), {owner,repo,branch}=S.repo;
+  if(!url||!owner||!repo||!branch)return '';
+  const encode=v=>encodeURIComponent(v);
+  const asset=S.assets.find(a=>{
+    if(!a.path||a.path.split('/').some(p=>!p||p==='.'||p==='..'))return false;
+    const raw=`https://raw.githubusercontent.com/${encode(owner)}/${encode(repo)}/${encode(branch)}/${a.path.split('/').map(encode).join('/')}`;
+    return safeImageURLC(raw)===url;
+  });
+  if(!asset)return '';
+  const href=`https://github.com/${encode(owner)}/${encode(repo)}/blob/${encode(branch)}/${asset.path.split('/').map(encode).join('/')}`;
+  return `<div class="detail-readonly"><b>仓库路径</b><p>${detailLinkC(href,asset.path)}</p></div>`;
+}
+function imageSaveMarkupC(item) {
+  return `<div class="detail-readonly image-save-note"><p data-image-save-status role="status" aria-live="polite"></p>${safeImageURLC(item.url)?`<p>无法直接保存时，可${detailLinkC(item.url,'打开原图')}后使用浏览器保存。</p>`:''}</div>`;
+}
+function imageSaveStatusC(state,text) {
+  if(imageSaveC!==state)return;
+  const status=$c('#modalRoot [data-image-save-status]');if(status)status.textContent=text;
+}
+function disposeImageSaveC() {
+  const state=imageSaveC;if(!state)return;
+  imageSaveC=null;state.controller.abort();clearTimeout(state.timer);
+  if(state.objectURL)URL.revokeObjectURL(state.objectURL);
+  clearTimeout(state.revokeTimer);state.blob=null;state.file=null;
+}
+function originalFileC(blob,item) {
+  const types={png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',gif:'image/gif',webp:'image/webp',svg:'image/svg+xml',avif:'image/avif',apng:'image/apng',ico:'image/x-icon',bmp:'image/bmp',tif:'image/tiff',tiff:'image/tiff',heic:'image/heic',heif:'image/heif'};
+  let leaf='';try{leaf=decodeURIComponent(new URL(item.url).pathname.split('/').pop());}catch{}
+  const ext=leaf.match(/\.([a-z0-9]+)$/i)?.[1].toLowerCase();
+  const mime=blob.type.split(';')[0].trim().toLowerCase();
+  // Generic Raw responses may use an extension; never mislabel an HTML/error response as an image.
+  const type=mime.startsWith('image/')?mime:(!mime||mime==='application/octet-stream'||mime==='text/plain')?types[ext]:'';
+  if(!type)throw new Error('原图响应不是可识别的图片文件');
+  let name=leaf||String(item.name||'image');
+  name=name.replace(/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069/\\:*?"<>|]/g,'_').replace(/^\.+|[. ]+$/g,'')||'image';
+  // Bound UTF-8 filename bytes, not UTF-16 units (Chinese/emoji can exceed filesystem limits).
+  const suffix=name.match(/\.[a-z0-9]{1,10}$/i)?.[0]||'';
+  const stem=suffix?name.slice(0,-suffix.length):name;
+  let bounded='';for(const char of stem){if(new Blob([bounded+char]).size>180)break;bounded+=char;}
+  name=(bounded||'image')+suffix;
+  if(/^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(name))name='_'+name;
+  const preferred=Object.keys(types).find(e=>types[e]===type);
+  const current=name.match(/\.([a-z0-9]+)$/i)?.[1].toLowerCase();
+  if(preferred&&types[current]!==type)name=name.replace(/\.[a-z0-9]{1,10}$/i,'')+'.'+preferred;
+  const exact=blob.slice(0,blob.size,type);
+  return {blob:exact,name,file:typeof File==='function'?new File([exact],name,{type}):null};
+}
+async function readOriginalC(response,signal) {
+  if(!response.ok)throw new Error(`原图请求失败（HTTP ${response.status}）`);
+  if(Number(response.headers.get('content-length'))>IMAGE_SAVE_LIMIT_C)throw new Error('原图超过 32 MB，请打开原图保存');
+  // Streaming enforces the limit even when Content-Length is absent or inaccurate.
+  if(!response.body?.getReader)throw new Error('浏览器不支持限量读取，请打开原图保存');
+  const reader=response.body.getReader(), chunks=[];let size=0;
+  try {
+    while(true){
+      if(signal.aborted)throw new DOMException('Aborted','AbortError');
+      const {done,value}=await reader.read();if(done)break;
+      size+=value.byteLength;if(size>IMAGE_SAVE_LIMIT_C)throw new Error('原图超过 32 MB，请打开原图保存');
+      chunks.push(value);
+    }
+    if(!size)throw new Error('原图响应为空');
+    return new Blob(chunks,{type:response.headers.get('content-type')||''});
+  } finally { try{await reader.cancel();}catch{} reader.releaseLock(); }
+}
+function prepareImageSaveC(item) {
+  disposeImageSaveC();
+  const state=imageSaveC={url:safeImageURLC(item.url),controller:new AbortController(),phase:'loading',busy:false};
+  if(!state.url){state.phase='failed';imageSaveStatusC(state,'链接不是安全的 HTTP(S) 地址，无法保存。');return;}
+  if(new URL(state.url).origin!=='https://raw.githubusercontent.com'){state.phase='failed';imageSaveStatusC(state,'此外部来源不支持直接读取原图，请使用“打开原图”保存。');return;}
+  imageSaveStatusC(state,'正在准备原图；就绪后请点击“保存图片”。');
+  state.timer=setTimeout(()=>{state.timedOut=true;state.controller.abort();},20000);
+  state.ready=(async()=>{
+    try {
+      const response=await fetch(state.url,{mode:'cors',credentials:'omit',referrerPolicy:'no-referrer',signal:state.controller.signal});
+      const blob=await readOriginalC(response,state.controller.signal);
+      if(imageSaveC!==state)return;
+      Object.assign(state,originalFileC(blob,item));state.phase='ready';
+      imageSaveStatusC(state,'原图已就绪，请点击“保存图片”；将优先打开系统分享，否则发起下载。');
+    } catch(error) {
+      if(imageSaveC!==state)return;
+      state.controller.abort();state.phase='failed';
+      if(error.name==='AbortError'&&!state.timedOut){imageSaveStatusC(state,'');return;}
+      imageSaveStatusC(state,state.timedOut?'原图读取超时，请打开原图保存。':`无法读取原图（网络、跨域限制或文件响应异常）：${error.message||'请求失败'}。请打开原图保存。`);
+    } finally {clearTimeout(state.timer);}
+  })();
+}
+function downloadOriginalC(state) {
+  if(imageSaveC!==state||!state.blob)return;
+  if(state.objectURL)URL.revokeObjectURL(state.objectURL);clearTimeout(state.revokeTimer);
+  state.objectURL=URL.createObjectURL(state.blob);
+  const link=document.createElement('a');link.href=state.objectURL;link.download=state.name;link.hidden=true;
+  document.body.appendChild(link);try{link.click();}finally{link.remove();}
+  state.revokeTimer=setTimeout(()=>{if(state.objectURL)URL.revokeObjectURL(state.objectURL);state.objectURL='';},60000);
+  imageSaveStatusC(state,'已发起原图下载；是否保存成功请查看浏览器下载记录。');
+}
+async function saveOriginalC(button) {
+  const state=imageSaveC;if(!state||state.busy)return;
+  if(state.phase==='loading'){imageSaveStatusC(state,'原图仍在准备中，就绪后请再次点击“保存图片”。');return;}
+  if(state.phase!=='ready')return;
+  state.busy=true;button.disabled=true;button.dataset.busy='1';button.setAttribute('aria-busy','true');
+  try {
+    let share=false;try{share=!!(state.file&&navigator.share&&navigator.canShare?.({files:[state.file]}));}catch{}
+    if(share&&!state.downloadOnly){
+      // No await before share: this call stays within the current button activation.
+      try {await navigator.share({files:[state.file]});imageSaveStatusC(state,'系统分享已结束；请在目标应用或下载记录中确认保存结果。');}
+      catch(error){
+        if(error.name==='AbortError')return;
+        state.downloadOnly=true;
+        imageSaveStatusC(state,'系统未能分享此文件。请再次点击“保存图片”发起原图下载，或打开原图保存。');
+      }
+    } else downloadOriginalC(state);
+  } catch {imageSaveStatusC(state,'未能发起原图下载，请打开原图保存。');}
+  finally {state.busy=false;button.disabled=false;delete button.dataset.busy;button.removeAttribute('aria-busy');}
+}
+// End detail-only saving helpers.
+function assetModal(item) { openC(`<div class="modal-head"><div><h2>${escC(item.name)}</h2><p>${escC(item.group||'根目录')} 分组 · ${escC(item.ext)} 图片资源</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><div class="asset-detail-preview"><img src="${escC(imageURLC(item))}" alt="${escC(item.name)}"></div><div class="detail-readonly"><b>GitHub Raw 直链</b><p class="detail-url">${detailLinkC(item.url)}</p></div>${detailRepositoryC(item)}${imageSaveMarkupC(item)}</div><div class="modal-actions asset-detail-actions"><button class="btn" data-action="copy" data-copy="${escC(item.url)}">⧉ 复制直链</button><button type="button" class="btn" data-action="save-original">保存图片</button><button class="btn btn-primary" data-action="asset-library" data-id="${escC(item.id)}">加入 JSON 库</button><button class="btn" data-action="rename-asset" data-id="${escC(item.id)}">改名并同步引用</button><button class="btn btn-danger" data-action="delete-asset" data-id="${escC(item.id)}">删除图片</button></div>`); prepareImageSaveC(item); }
+function iconModal(icon) { openC(`<div class="modal-head"><div><h2>${escC(icon.name)}</h2><p>JSON 图片引用详情</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><div class="json-icon-detail-preview"><img src="${escC(imageURLC(icon))}" alt="${escC(icon.name)}"></div><div class="detail-readonly"><b>GitHub Raw 直链</b><p class="detail-url">${detailLinkC(icon.url)}</p></div>${detailRepositoryC(icon)}${imageSaveMarkupC(icon)}</div><div class="modal-actions icon-detail-actions"><button class="btn" data-action="copy" data-copy="${escC(icon.url)}">⧉ 复制直链</button><button type="button" class="btn" data-action="save-original">保存图片</button><button class="btn btn-danger" data-action="delete-icon" data-index="${icon.index}">删除引用</button></div>`); prepareImageSaveC(icon); }
 function bulkModal(item=null) {
   const items=item?[item]:S.assets.filter(x=>S.selected.has(x.id));
   if(!items.length)return notify('请先选择图片','error');
@@ -344,6 +471,7 @@ document.addEventListener('click', async e => {
   if(action==='select-all-icons'){const icons=visibleIcons();if(icons.length&&icons.every(x=>S.selectedIcons.has(x.index)))icons.forEach(x=>S.selectedIcons.delete(x.index));else icons.forEach(x=>S.selectedIcons.add(x.index));syncIconSelectionUI();target.blur();return;}
   if(action==='delete-selected-icons'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary), indexes=[...S.selectedIcons];if(!lib||!indexes.length)return;confirmC('移除图片引用',`从 ${lib.name} 中移除选中的 ${indexes.length} 条图片引用？图片文件不会删除。`,async()=>{await currentClient().removeIcons(lib.file,indexes,lib.sha);S.selectedIcons.clear();closeC();await refreshCommittedC();notify('图片引用已移除');},'移除引用');return;}
   if(action==='asset-select'){e.preventDefault();e.stopImmediatePropagation();const id=target.dataset.id;S.selected.has(id)?S.selected.delete(id):S.selected.add(id);syncAssetSelectionUI([id]);target.blur();return;}
+  if(action==='save-original'){saveOriginalC(target);return;}
   if(action==='asset-open'){const item=S.assets.find(x=>x.id===target.dataset.id);if(item)assetModal(item);return;}
   if(action==='icon-open'){const lib=S.libraries.find(x=>x.id===S.selectedLibrary),index=Number(target.dataset.index),icon=lib?.icons?.[index];if(icon)iconModal({...icon,index});return;}
   if(action==='copy'){e.preventDefault();e.stopImmediatePropagation();target.blur();await runSubmission(target,'正在复制…',()=>copyC(target.dataset.copy||''));return;}
@@ -391,6 +519,7 @@ document.addEventListener('keydown',()=>{
 document.addEventListener('change',e=>{const t=e.target;if(!t||!t.matches||!t.matches('select,input[type=file],input[type=checkbox],input[type=radio]')||!hoverlessC())return;t.blur();});
 document.addEventListener('input',e=>{if(pendingSubmission)return;const b=e.target.dataset.bind;if(!b)return;if(b==='asset-search')S.assetQuery=e.target.value;if(b==='library-search')S.libraryQuery=e.target.value;if(b==='icon-search')S.iconQuery=e.target.value;const cursor=e.target.selectionStart;renderC();const next=document.querySelector(`[data-bind="${b}"]`);if(next){next.focus();next.setSelectionRange(cursor,cursor);}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!pendingSubmission)closeC();if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$c('#globalSearch')?.focus();}});
+window.addEventListener('pagehide',disposeImageSaveC);
 renderC(); void bootAuth();
 
 /* Overview quick asset panel */
