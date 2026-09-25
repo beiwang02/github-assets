@@ -356,10 +356,15 @@ function bindSubmissionC(scope,state) {
   if(!scope || state.scopes.some(entry=>entry.scope===scope))return;
   const previousBusy=scope.getAttribute('aria-busy');
   scope.dataset.busy='1'; scope.setAttribute('aria-busy','true');
-  const buttons=scope.matches('button')?[scope]:[...scope.querySelectorAll('button')];
+  const scopedButtons=scope.matches('button')?[scope]:[...scope.querySelectorAll('button')];
+  // Match the existing close-event lock visually, including X outside the form
+  // and Cancel beside a standalone confirmation button. Snapshot each only once.
+  const modal=scope.closest?.('.modal');
+  const closeButtons=modal?[...modal.querySelectorAll('button[data-action="close-modal"]')]:[];
+  const buttons=[...new Set([...scopedButtons,...closeButtons])];
   const snapshots=buttons.map(button=>({button,disabled:button.disabled,html:button.innerHTML}));
   state.scopes.push({scope,previousBusy,snapshots});
-  buttons.forEach(button=>{button.disabled=true;if(button===scope || button.type==='submit')button.textContent=state.label;});
+  buttons.forEach(button=>{button.disabled=true;if(scopedButtons.includes(button)&&(button===scope || button.type==='submit'))button.textContent=state.label;});
 }
 function restoreSubmissionC() {
   if(!submissionStateC)return;
