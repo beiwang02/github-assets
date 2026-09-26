@@ -208,5 +208,18 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 :is(.top-icon,.project-link)[data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active{background:var(--surface)!important}
 [data-feedback="surface"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active:not(:has(button:active,a:active)){border-color:var(--ui-line-focus)!important;outline:1px solid var(--ui-line-focus);outline-offset:-1px}
 [data-feedback="control"]:focus-visible{outline-color:var(--ui-line-focus)!important}
+/* Overview only: retain the existing layout, reduce repeated dashboard chrome. */
+.hero{min-height:0;padding:24px 28px;margin-bottom:16px}
+.hero-actions{margin-top:14px}
+.overview-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:0}
+.overview-stat-grid .stat-card{min-height:0;padding:15px 18px}
+.overview-stat-grid .stat-card strong{margin-top:6px}
+.overview-connection{margin:9px 0 0;color:var(--muted);font-size:11px;overflow-wrap:anywhere}
+.overview-activity-list{padding:0 2px}
+.overview-activity-list .activity-item{padding:5px 0 8px}
+.overview-activity-list .activity-item:last-child{padding-bottom:0}
+.overview-activity-empty{margin:0;color:var(--muted);font-size:11px}
+@media(max-width:700px){.hero{padding:20px 18px;margin-bottom:16px}.hero-actions{margin-top:14px}.overview-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.overview-stat-grid .stat-card{padding:12px}.dashboard-columns>.overview-activity{margin-top:18px}}
+@media(max-width:350px){.overview-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 /* Field picker popups span their trigger width; sort menus stay narrow. */
 .field-menu-popup.floating-menu{width:max-content}

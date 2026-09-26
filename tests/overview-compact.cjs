@@ -1,0 +1,14 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const source=fs.readFileSync('console.js','utf8'),css=fs.readFileSync('ui-refresh.css','utf8');
+const S={repo:{owner:'user',repo:'images'},connected:true,libraries:[],assets:[],groups:[],activity:[],syncError:''};
+const c=vm.createContext({S,statC:()=>'<div class="stat-card"></div>',activityView:()=>'<div class="activity-item"></div>',sortedLibrariesC:a=>a,escC:String,emptyC:(i,t,d,a,l)=>`<button data-action="${a}">${l}</button>`});
+vm.runInContext(source.slice(source.indexOf('function overviewView()'),source.indexOf('function librariesView()')),c);
+let html=c.overviewView();assert.equal((html.match(/class="stat-card"/g)||[]).length,2);
+assert.equal((html.match(/data-action="upload"/g)||[]).length,1);
+assert(!html.includes('<div class="card activity-card">'));assert(html.includes('overview-activity-empty'));
+assert(!html.includes('library-card-header'));assert(html.includes('overview-connection'));
+assert(css.includes('.overview-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))'));
+assert(css.includes('.hero{min-height:0;padding:24px 28px;margin-bottom:16px}'));
+S.activity=[{title:'读取了 GitHub 仓库'}];html=c.overviewView();assert(html.includes('activity-item'));assert(!html.includes('overview-activity-empty'));
+S.connected=false;S.connectionError='网络错误';html=c.overviewView();assert(html.includes('网络错误'));assert(html.includes('data-action="settings"'));
+console.log('PASS compact overview: two stats, one upload, connected/disconnected actions, compact activity, no duplicate header');
