@@ -162,8 +162,7 @@ body.dark .text-link:focus,body.dark .text-link:active { color:#d0d5ff; backgrou
 .activity-line::after { content: ""; position: absolute; top: 18px; bottom: -4px; width: 1px; background: #e9edf3; }
 .activity-item:last-child .activity-line::after { display: none; }
 .activity-dot { width: 9px; height: 9px; margin-top: 4px; border: 2px solid #fff; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 1px #9fa8fb; z-index: 1; }
-.activity-item:nth-child(3) .activity-dot { background: var(--orange); box-shadow: 0 0 0 1px #ffd0a5; }
-.activity-item:nth-child(4) .activity-dot { background: var(--green); box-shadow: 0 0 0 1px #a5e8c7; }
+/* Uniform timeline marker: color carries no status meaning. */
 .activity-copy { display: grid; gap: 5px; min-width: 0; }
 .activity-copy b { font-size: 11px; font-weight: 600; }
 .activity-copy small { color: var(--muted); font-size: 10px; }

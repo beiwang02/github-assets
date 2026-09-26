@@ -31,7 +31,7 @@ fetchImpl=async()=>response;run(`prepareImageSaveC(item)`);const old=run('imageS
 const server=fs.readFileSync(path.join(__dirname,'../server.mjs'),'utf8');assert.match(server,/connect-src 'self' https:\/\/raw\.githubusercontent\.com;/);
 // Unsafe schemes/credentials stay plain text, with no actionable fallback.
 for(const url of ['javascript:alert(1)','data:image/png;base64,AA==','https://u:p@example.test/a.png','//example.test/a.png']){
- ctx.testURL=url;assert.equal(run('safeImageURLC(testURL)'),'');assert(!run('detailLinkC(testURL)').includes('<a '));assert(!run('imageSaveMarkupC({url:testURL})').includes('<a '));
+ ctx.testURL=url;assert.equal(run('safeImageURLC(testURL)'),'');assert(!run('detailLinkC(testURL)').includes('<a '));assert(!run('imageSaveMarkupC()').includes('<a '));
 }
 assert.match(run(`detailLinkC('https://example.test/a?x=1&y=2', '\"<b>')`),/&amp;y=2/);assert(!run(`detailLinkC('https://example.test', '<b>')`).includes('<b>'));
 const branch='feature/new #图',assetPath='assets/图 /a%#?&\".png';ctx.S.repo={owner:'o name',repo:'r#图',branch};
@@ -55,7 +55,7 @@ let releaseFetch;fetchImpl=()=>new Promise(r=>releaseFetch=r);run('prepareImageS
 ctx.navigator={canShare:()=>true,share:()=>{shareCalls++;return Promise.resolve()}};
 await run('saveOriginalC(button)');assert.match(status,/再次点击/);releaseFetch(response);await run('imageSaveC.ready');assert.equal(shareCalls,0);await run('saveOriginalC(button)');assert.equal(shareCalls,1);
 // External origins do not cause CSP-blocked requests; explicit real link remains.
-let requested=0;fetchImpl=async()=>{requested++;return response};run(`prepareImageSaveC({url:'https://example.test/a.png'})`);assert.equal(requested,0);assert.match(status,/外部来源/);assert.match(run(`imageSaveMarkupC({url:'https://example.test/a.png'})`),/href="https:\/\/example.test\/a.png"/);
+let requested=0;fetchImpl=async()=>{requested++;return response};run(`prepareImageSaveC({url:'https://example.test/a.png'})`);assert.equal(requested,0);assert.match(status,/外部来源/);
 // Enforce both advertised and streamed sizes, timeout and HTTP failures.
 fetchImpl=async()=>({...response,headers:{get:k=>k==='content-length'?String(33*1024*1024):'image/png'}});run('prepareImageSaveC(item)');await run('imageSaveC.ready');assert.match(status,/32 MB/);
 let cancelled=0;fetchImpl=async()=>({...response,headers:{get:()=>null},body:{getReader:()=>({read:async()=>({value:{byteLength:33*1024*1024}}),cancel:async()=>cancelled++,releaseLock(){}})}});run('prepareImageSaveC(item)');await run('imageSaveC.ready');assert.match(status,/32 MB/);assert.equal(cancelled,1);

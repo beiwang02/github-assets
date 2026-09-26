@@ -190,12 +190,14 @@ function detailRepositoryC(item) {
   const href=`https://github.com/${encode(owner)}/${encode(repo)}/blob/${encode(branch)}/${asset.path.split('/').map(encode).join('/')}`;
   return `<div class="detail-readonly"><b>仓库路径</b><p>${detailLinkC(href,asset.path)}</p></div>`;
 }
-function imageSaveMarkupC(item) {
-  return `<div class="detail-readonly image-save-note"><p data-image-save-status role="status" aria-live="polite"></p>${safeImageURLC(item.url)?`<p>无法直接保存时，可${detailLinkC(item.url,'打开原图')}后使用浏览器保存。</p>`:''}</div>`;
+function imageSaveMarkupC() {
+  return `<div class="detail-readonly image-save-note" hidden><p data-image-save-status role="status" aria-live="polite"></p></div>`;
 }
 function imageSaveStatusC(state,text) {
   if(imageSaveC!==state)return;
-  const status=$c('#modalRoot [data-image-save-status]');if(status)status.textContent=text;
+  const note=$c('#modalRoot .image-save-note'),status=$c('#modalRoot [data-image-save-status]');
+  if(note)note.hidden=!text;
+  if(status)status.textContent=text;
 }
 function disposeImageSaveC() {
   const state=imageSaveC;if(!state)return;
@@ -247,7 +249,6 @@ function prepareImageSaveC(item) {
   const state=imageSaveC={url:safeImageURLC(item.url),controller:new AbortController(),phase:'loading',busy:false};
   if(!state.url){state.phase='failed';imageSaveStatusC(state,'链接不是安全的 HTTP(S) 地址，无法保存。');return;}
   if(new URL(state.url).origin!=='https://raw.githubusercontent.com'){state.phase='failed';imageSaveStatusC(state,'此外部来源不支持直接读取原图，请使用“打开原图”保存。');return;}
-  imageSaveStatusC(state,'正在准备原图；就绪后请点击“保存图片”。');
   state.timer=setTimeout(()=>{state.timedOut=true;state.controller.abort();},20000);
   state.ready=(async()=>{
     try {
@@ -255,7 +256,7 @@ function prepareImageSaveC(item) {
       const blob=await readOriginalC(response,state.controller.signal);
       if(imageSaveC!==state)return;
       Object.assign(state,originalFileC(blob,item));state.phase='ready';
-      imageSaveStatusC(state,'原图已就绪，请点击“保存图片”；将优先打开系统分享，否则发起下载。');
+      imageSaveStatusC(state,'');
     } catch(error) {
       if(imageSaveC!==state)return;
       state.controller.abort();state.phase='failed';
