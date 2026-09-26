@@ -14,6 +14,10 @@ assert(js.includes("${required?'required':''}"),'required preserved on hidden se
 assert(js.includes("document.querySelector(`[data-field-menu=\"${CSS.escape(target.dataset.menuName)}\"]`)"),'choose resolves owner by name after portal');
 assert(js.includes('native.dispatchEvent(new Event(\'change\',{bubbles:true}))'),'change dispatched for draft capture');
 assert(js.includes('syncFieldMenuC(owner,'),'trigger text syncs via owner');
+assert(js.includes('document.querySelectorAll(`.sort-option[data-menu-name="${CSS.escape(name)}"]`)'),'checkmark sync queries portaled options globally');
+assert(js.includes('menu.style.minWidth=`${Math.round(target.getBoundingClientRect().width)}px`'),'menu min-width equals trigger width');
+assert(js.includes('class="sort-menu field-menu-popup"'),'menu carries dedicated popup class');
+assert(css.includes('.field-menu-popup.floating-menu{width:max-content}'),'popup width content-driven');
 /* Visual reuse: field menu reuses sort-control classes, native select hidden. */
 assert(css.includes('.field-menu { width:100%; text-align:left; }'));
 assert(css.includes('.field-menu-native { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;'));

@@ -61,14 +61,18 @@ function fieldMenuC({name,id,value,options,placeholder='',required=false}){
   const list=options&&options.length?options:[{value:'',label:placeholder||'暂无选项'}];
   const current=list.find(o=>o.value===value)?.label||list[0]?.label||'';
   const items=list.map(o=>`<button type="button" role="menuitemradio" aria-checked="${o.value===value}" class="sort-option ${o.value===value?'active':''}" data-action="choose-field-menu" data-menu-name="${name}" data-value="${escC(o.value)}" data-label="${escC(o.label)}">${o.value===value?'<span aria-hidden="true">✓</span>':'<span aria-hidden="true"></span>'}${escC(o.label)}</button>`).join('');
-  return `<div class="sort-control field-menu" data-field-menu="${name}"><button type="button" class="sort-trigger field-menu-trigger" data-action="toggle-field-menu" data-menu-name="${name}" aria-haspopup="menu" aria-expanded="false">${escC(current)} <b aria-hidden="true">${uiIconC('chevron')}</b></button><div class="sort-menu" role="menu">${items}</div><select name="${name}" ${id?`id="${id}"`:''} class="field-menu-native" tabindex="-1" aria-hidden="true" ${required?'required':''}>${list.map(o=>`<option value="${escC(o.value)}" ${o.value===value?'selected':''}>${escC(o.label)}</option>`).join('')}</select></div>`;
+  return `<div class="sort-control field-menu" data-field-menu="${name}"><button type="button" class="sort-trigger field-menu-trigger" data-action="toggle-field-menu" data-menu-name="${name}" aria-haspopup="menu" aria-expanded="false">${escC(current)} <b aria-hidden="true">${uiIconC('chevron')}</b></button><div class="sort-menu field-menu-popup" role="menu">${items}</div><select name="${name}" ${id?`id="${id}"`:''} class="field-menu-native" tabindex="-1" aria-hidden="true" ${required?'required':''}>${list.map(o=>`<option value="${escC(o.value)}" ${o.value===value?'selected':''}>${escC(o.label)}</option>`).join('')}</select></div>`;
 }
 function syncFieldMenuC(owner,value,label){
   if(!owner)return;
+  const name=owner.dataset.fieldMenu;
   const native=owner.querySelector('select');if(native&&native.value!==value){native.value=value;}
   const text=owner.querySelector('.field-menu-trigger')?.firstChild;
   if(text&&text.nodeType===Node.TEXT_NODE)text.textContent=label;
-  owner.querySelectorAll('.sort-option').forEach(btn=>{const on=btn.dataset.value===value;btn.classList.toggle('active',on);btn.setAttribute('aria-checked',String(on));});
+  /* Menu is portaled to body by AnchoredMenu; query option buttons globally. */
+  document.querySelectorAll(`.sort-option[data-menu-name="${CSS.escape(name)}"]`).forEach(btn=>{
+    const on=btn.dataset.value===value;btn.classList.toggle('active',on);btn.setAttribute('aria-checked',String(on));
+  });
 }
 function imageURLC(item){const asset=item.sha?item:S.assets.find(a=>a.url===item.url);if(!asset?.sha)return item.url;try{const url=new URL(item.url);url.searchParams.set('v',asset.sha);return url.href;}catch{return item.url;}}
 function coverStack(lib) { const list=sortedIconsC(lib,(lib.icons||[]).map((item,index)=>({...item,index})),'newest').slice(0,3); return `<div class="library-preview-strip" aria-hidden="true">${list.length?list.map(x=>`<span class="library-preview-tile"><img src="${escC(imageURLC(x))}" alt="" onerror="this.closest('.library-preview-tile').classList.add('broken');this.remove()"></span>`).join(''):'<span class="library-row-icon">▦</span>'}</div>`; }
@@ -483,7 +487,7 @@ document.addEventListener('click', async e => {
   if(action==='toggle-sidebar'){ $c('#sidebar').classList.toggle('open'); return; }
   if(action==='open-project'){ window.open('https://github.com/beiwang02/github-assets','_blank'); return; }
   if(action==='open-repo'){ if(S.repo.owner&&S.repo.repo) window.open(`https://github.com/${encodeURIComponent(S.repo.owner)}/${encodeURIComponent(S.repo.repo)}`,'_blank'); else notify('当前还没有连接仓库','error'); return; }
-  if(action==='toggle-field-menu'){const owner=target.closest('[data-field-menu]');if(!owner)return;window.AnchoredMenu.open(target,owner.querySelector('.sort-menu')||document.querySelector('.floating-menu'),{placement:'bottom-start'});return;}
+  if(action==='toggle-field-menu'){const owner=target.closest('[data-field-menu]');if(!owner)return;const menu=owner.querySelector('.sort-menu')||document.querySelector('.floating-menu');menu.style.minWidth=`${Math.round(target.getBoundingClientRect().width)}px`;window.AnchoredMenu.open(target,menu,{placement:'bottom-start'});return;}
   if(action==='choose-field-menu'){const owner=document.querySelector(`[data-field-menu="${CSS.escape(target.dataset.menuName)}"]`);if(!owner)return;const native=owner.querySelector('select');if(native&&native.value!==target.dataset.value){native.value=target.dataset.value;native.dispatchEvent(new Event('change',{bubbles:true}));}syncFieldMenuC(owner,target.dataset.value,target.dataset.label);closeSortMenus(true);return;}
   if(action==='toggle-sort'){const owner=target.closest('[data-sort-menu]');if(!owner)return;window.AnchoredMenu.open(target,owner.querySelector('.sort-menu')||document.querySelector('.floating-menu'),{placement:owner.dataset.sortMenu==='assets'?'bottom-end':'bottom-start'});return;}
   if(action==='toggle-theme'){cycleAppearance();target.blur();return;}
