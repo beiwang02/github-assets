@@ -170,8 +170,8 @@ body.dark .asset-detail-preview,body.dark .json-icon-detail-preview{border-color
 /* Auxiliary entries align to their own field/content edge, not generic button insets. */
 #tokenLoginForm .token-guide-button.ui-button,
 .json-workspace .library-switch-trigger.ui-button{justify-content:flex-start;text-align:left;padding:0;min-height:44px;border:0;background:transparent;font-size:12px;color:var(--primary);text-decoration:none}
-.json-workspace .json-workspace-top{flex-direction:column;align-items:flex-start;gap:8px}
-.json-workspace .library-switch-trigger.ui-button{flex:none;color:var(--primary);white-space:nowrap}
+.json-workspace .json-workspace-top{flex-direction:row;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}
+.json-workspace .library-switch-trigger.ui-button{flex:0 0 auto;margin-left:auto;padding-right:2px;color:var(--primary);white-space:nowrap}
 .library-switch-copy small{display:block;font-size:11px;font-weight:400;color:var(--muted);white-space:normal;overflow-wrap:anywhere}
 .library-switch-copy b{white-space:normal;overflow-wrap:anywhere}
 

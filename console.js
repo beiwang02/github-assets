@@ -72,6 +72,7 @@ function syncFieldMenuC(owner,value,label){
   /* Menu is portaled to body by AnchoredMenu; query option buttons globally. */
   document.querySelectorAll(`.sort-option[data-menu-name="${CSS.escape(name)}"]`).forEach(btn=>{
     const on=btn.dataset.value===value;btn.classList.toggle('active',on);btn.setAttribute('aria-checked',String(on));
+    const mark=btn.querySelector('span');if(mark){mark.textContent=on?'✓':'';}
   });
 }
 function imageURLC(item){const asset=item.sha?item:S.assets.find(a=>a.url===item.url);if(!asset?.sha)return item.url;try{const url=new URL(item.url);url.searchParams.set('v',asset.sha);return url.href;}catch{return item.url;}}

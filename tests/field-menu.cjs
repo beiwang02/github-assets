@@ -15,6 +15,9 @@ assert(js.includes("document.querySelector(`[data-field-menu=\"${CSS.escape(targ
 assert(js.includes('native.dispatchEvent(new Event(\'change\',{bubbles:true}))'),'change dispatched for draft capture');
 assert(js.includes('syncFieldMenuC(owner,'),'trigger text syncs via owner');
 assert(js.includes('document.querySelectorAll(`.sort-option[data-menu-name="${CSS.escape(name)}"]`)'),'checkmark sync queries portaled options globally');
+assert(js.includes("const mark=btn.querySelector('span');if(mark){mark.textContent=on?'✓':'';}"),'checkmark glyph moves with the selection');
+assert(css.includes('.json-workspace .json-workspace-top{flex-direction:row;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}'),'library switch sits beside the current library on the same row');
+assert(css.includes('.json-workspace .library-switch-trigger.ui-button{flex:0 0 auto;margin-left:auto;padding-right:2px;color:var(--primary);white-space:nowrap}'),'switch hugs the right edge next to library info');
 assert(js.includes('menu.style.minWidth=`${Math.round(target.getBoundingClientRect().width)}px`'),'menu min-width equals trigger width');
 assert(js.includes('class="sort-menu field-menu-popup"'),'menu carries dedicated popup class');
 assert(css.includes('.field-menu-popup.floating-menu{width:max-content}'),'popup width content-driven');
