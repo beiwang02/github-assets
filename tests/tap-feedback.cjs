@@ -5,6 +5,7 @@ const ui=fs.readFileSync('ui-refresh.css','utf8'),js=fs.readFileSync('console.js
 assert(ui.includes(':is(.inner-search,.global-search):focus-within{border-color:var(--ui-line-focus)!important}'));
 assert(ui.includes(':is(.inner-search,.global-search):active{border-color:var(--ui-line-focus)!important}'));
 assert(!/drop-zone\):active/.test(ui),'drop zone must not flash a press border');
+assert(consoleCss.includes('button,.btn,.icon-btn,.text-link,.nav-item,.asset-select,.asset-copy,.quick-copy,input,select,textarea { -webkit-appearance:none; appearance:none; -webkit-tap-highlight-color:rgba(0,0,0,0); touch-action:manipulation; }'),'inputs and checkboxes suppress iOS pressed highlight like buttons');
 assert(consoleCss.includes('.drop-zone,.repo-switcher,.asset-card,.library-list-row,.library-empty-row { -webkit-tap-highlight-color:transparent; }'),'non-button surfaces suppress gray highlight without changing appearance or gestures');
 assert(ui.includes(':is(.asset-card,.quick-asset,.json-reference-row,.library-list-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within:not(:has(button:focus,a:focus,input:focus,select:focus,textarea:focus,[role="button"]:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}'));
 /* Bright focus rings were replaced at their source too. */

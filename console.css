@@ -227,7 +227,7 @@ body.dark .json-reference-list,.dark .library-picker-option { border-color:#3b4d
 @media(max-width:700px) { .json-workspace { padding:13px; }.json-workspace-top { align-items:stretch; flex-direction:column; gap:12px; }.json-workspace-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); }.json-workspace-actions .btn { min-width:0; padding:7px 4px; font-size:9px; }.json-reference-row { gap:8px; padding:9px; }.json-reference-row > img { width:36px; height:36px; }.json-reference-status { display:none; }.json-reference-actions { gap:3px; }.json-reference-actions .icon-btn { width:27px; height:27px; }.library-picker-copy em { max-width:220px; } }
 
 /* Prevent iOS native pressed highlight on controls */
-button,.btn,.icon-btn,.text-link,.nav-item,.asset-select,.asset-copy,.quick-copy { -webkit-appearance:none; appearance:none; -webkit-tap-highlight-color:rgba(0,0,0,0); touch-action:manipulation; }
+button,.btn,.icon-btn,.text-link,.nav-item,.asset-select,.asset-copy,.quick-copy,input,select,textarea { -webkit-appearance:none; appearance:none; -webkit-tap-highlight-color:rgba(0,0,0,0); touch-action:manipulation; }
 /* Non-button click targets: remove native gray flash only; preserve appearance and gestures. */
 .drop-zone,.repo-switcher,.asset-card,.library-list-row,.library-empty-row { -webkit-tap-highlight-color:transparent; }
 
