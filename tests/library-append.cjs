@@ -11,7 +11,8 @@ async function check(items,icons,added,skipped,retryIcons){
 }
 const source=fs.readFileSync(root+'/console.js','utf8'),messages=[];let html='',f,calls=0,fail=false,resolve;
 function form(){const button={disabled:false,innerHTML:'加入 JSON 库',textContent:'加入 JSON 库',type:'submit'};return {id:'bulkForm',dataset:{},attrs:{},buttons:[button],matches:()=>false,getAttribute(k){return this.attrs[k]??null;},setAttribute(k,v){this.attrs[k]=v;},removeAttribute(k){delete this.attrs[k];},querySelectorAll(){return this.buttons;}};}
-const ui=vm.createContext({console,Set,FormData:class{get(){return 'x.json';}},S:{selected:new Set(['b']),assets:[a,b],libraries:[{file:'x.json',name:'test',count:0}]},escC:String,openC:h=>{html=h;f=form();},$c:()=>f,notify:m=>messages.push(m),closeC(){},renderC(){},refreshRepo:async()=>ui.S.selected.clear(),currentClient:()=>({appendToLibrary:async(path,items)=>{calls++;assert.equal(items[0].id,'a');if(fail)throw new Error('mock failure');await new Promise(r=>resolve=r);return {changed:true,added:1,skipped:0};}})});
+const ui=vm.createContext({console,Set,uiIconC:()=>'<svg class="ui-icon"></svg>',FormData:class{get(){return 'x.json';}},S:{selected:new Set(['b']),assets:[a,b],libraries:[{file:'x.json',name:'test',count:0}]},escC:String,openC:h=>{html=h;f=form();},$c:()=>f,notify:m=>messages.push(m),closeC(){},renderC(){},refreshRepo:async()=>ui.S.selected.clear(),currentClient:()=>({appendToLibrary:async(path,items)=>{calls++;assert.equal(items[0].id,'a');if(fail)throw new Error('mock failure');await new Promise(r=>resolve=r);return {changed:true,added:1,skipped:0};}})});
+vm.runInContext(source.slice(source.indexOf('function sortSelectC('),source.indexOf('function imageURLC')),ui);
 vm.runInContext(source.slice(source.indexOf('function bulkModal('),source.indexOf('async function readRepo')),ui);
 vm.runInContext(source.slice(source.indexOf('// One UI operation'),source.indexOf('async function logoutC')),ui);
 (async()=>{

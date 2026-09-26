@@ -18,6 +18,13 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 @media(max-width:700px){.topbar{height:62px}.content{padding:20px 14px 34px}.page-heading{align-items:flex-start;gap:14px;flex-direction:column}.heading-actions{width:100%}.heading-actions .btn{flex:1}.stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat-card{padding:14px}.library-picker-list button{padding-inline:10px}.modal-actions{justify-content:flex-end}.modal-actions .btn{min-width:92px}.detail-url{overflow-wrap:anywhere}.repo-switcher{margin-inline:10px}}
 @media(max-width:350px){.stat-grid{grid-template-columns:1fr}.btn{padding-inline:11px;font-size:12px}}
 [data-theme=dark] body{background:#0c1729}.dark-mode body{background:#0c1729}
+/* Field picker menus reuse sort visuals; the native select stays hidden for form submission. */
+.field-menu { width:100%; text-align:left; }
+.field-menu .field-menu-trigger { width:100%; justify-content:flex-start; text-align:left; }
+.field-menu .field-menu-trigger b { position:static; inset:auto; margin-left:auto; transform:none; }
+.field-menu .sort-menu { grid-column:1; width:max-content; min-width:100%; }
+.field-menu-native { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; border:0; margin:0; padding:0; }
+@media(max-width:700px){.field-menu .field-menu-trigger{min-height:38px;padding:0 11px;font-size:11px}.field-menu .field-menu-trigger b{margin-left:auto}}
 
 /* Upload-only text entry: preserve the 7px select-to-glyph gap and 40px hit target,
    while overlapping only empty hit-box space into the following 15px form row gap. */
