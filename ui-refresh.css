@@ -124,7 +124,7 @@ input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus
 }
 
 /* Login input follows the same theme-blue editing focus without an outer ring. */
-.auth-card #mainTokenInput{width:100%;min-width:0}
+.auth-card #mainTokenInput{width:100%;min-width:0;-webkit-appearance:none;appearance:none}
 .auth-card #mainTokenInput:focus,.auth-card #mainTokenInput:focus-visible{border:1px solid var(--ui-line-focus)!important;outline:none!important;box-shadow:none!important}
 @media(max-width:700px){.auth-card #mainTokenInput{font-size:16px}}
 
