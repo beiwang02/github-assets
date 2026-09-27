@@ -21,7 +21,7 @@ assert(css.includes('.json-workspace .library-switch-trigger.ui-button{flex:0 0 
 assert(js.includes('menu.style.minWidth=`${Math.round(target.getBoundingClientRect().width)}px`'),'menu min-width equals trigger width');
 assert(js.includes('class="sort-menu field-menu-popup"'),'menu carries dedicated popup class');
 assert(css.includes('.asset-card .asset-select{position:relative;inset:auto;flex:0 0 28px;width:28px;height:28px;min-width:28px;min-height:28px;margin-left:0;padding:0;border:0;background:transparent;box-shadow:none;font-size:15px;isolation:isolate}'),'asset check frame restored to original size');
-assert(css.includes('.asset-card .asset-select .ui-icon{width:20px;height:20px;flex:0 0 20px}'),'checkmark icon matches the frame');
+assert(css.includes('.asset-card .asset-select .ui-icon{width:11px;height:11px;flex:0 0 11px;stroke-width:2.5}'),'checkmark icon is a thin line like the login checkbox');
 assert(!/最后读取：刚刚/.test(js),'dead static timestamp removed from repo stat card');
 /* Visual reuse: field menu reuses sort-control classes, native select hidden. */
 assert(css.includes('.field-menu { width:100%; text-align:left; }'));

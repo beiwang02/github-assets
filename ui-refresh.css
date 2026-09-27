@@ -78,7 +78,7 @@ body.dark :is(.asset-select,.reference-select){--multi-border:#536681;--multi-bg
 :is(.asset-card.selected .asset-select,.json-reference-row.selected .reference-select){--multi-border:var(--primary);--multi-bg:var(--primary)}
 .asset-card .asset-select{position:relative;inset:auto;flex:0 0 28px;width:28px;height:28px;min-width:28px;min-height:28px;margin-left:0;padding:0;border:0;background:transparent;box-shadow:none;font-size:15px;isolation:isolate}
 .asset-card .asset-select:before{content:'';position:absolute;inset:3px;border:1px solid var(--multi-border);border-radius:6px;background:var(--multi-bg);z-index:-1}
-.asset-card .asset-select .ui-icon{width:20px;height:20px;flex:0 0 20px}
+.asset-card .asset-select .ui-icon{width:11px;height:11px;flex:0 0 11px;stroke-width:2.5}
 .reference-select{border-color:var(--multi-border);background:var(--multi-bg)}
 :is(.asset-select,.reference-select):focus,:is(.asset-select,.reference-select):focus-visible{outline:none!important;box-shadow:none!important}
 :is(.asset-select,.reference-select):is(:disabled,[aria-busy=true]){opacity:.5;cursor:not-allowed;filter:none;transform:none}
