@@ -76,8 +76,10 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 :is(.asset-select,.reference-select){--multi-border:#c4ccde;--multi-bg:var(--surface);--multi-mark:#fff;color:var(--multi-mark)}
 body.dark :is(.asset-select,.reference-select){--multi-border:#536681;--multi-bg:#202e47}
 :is(.asset-card.selected .asset-select,.json-reference-row.selected .reference-select){--multi-border:var(--primary);--multi-bg:var(--primary)}
-.asset-card .asset-select{position:relative;inset:auto;flex:0 0 34px;width:34px;height:34px;min-width:34px;min-height:34px;margin-left:0;padding:0;border:1px solid var(--multi-border);border-radius:9px;background:var(--multi-bg);box-shadow:none;font-size:15px;isolation:isolate}
-.asset-card .asset-select:before{display:none}
+.asset-card .asset-select{position:relative;inset:auto;flex:0 0 28px;width:28px;height:28px;min-width:28px;min-height:28px;margin-left:0;padding:0;border:0;background:transparent;box-shadow:none;font-size:15px;isolation:isolate}
+.asset-card .asset-select:before{content:'';position:absolute;inset:3px;border:1px solid var(--multi-border);border-radius:6px;background:var(--multi-bg);z-index:-1}
+.asset-card .asset-select .ui-icon{width:14px;height:14px;flex:0 0 14px}
+.asset-card .asset-select.selected .ui-icon,.asset-card.selected .asset-select .ui-icon{width:13px;height:13px;flex:0 0 13px}
 .reference-select{border-color:var(--multi-border);background:var(--multi-bg)}
 :is(.asset-select,.reference-select):focus,:is(.asset-select,.reference-select):focus-visible{outline:none!important;box-shadow:none!important}
 :is(.asset-select,.reference-select):is(:disabled,[aria-busy=true]){opacity:.5;cursor:not-allowed;filter:none;transform:none}
