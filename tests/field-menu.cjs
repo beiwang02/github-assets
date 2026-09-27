@@ -20,7 +20,8 @@ assert(css.includes('.json-workspace .json-workspace-top{flex-direction:row;alig
 assert(css.includes('.json-workspace .library-switch-trigger.ui-button{flex:0 0 auto;margin-left:auto;padding-right:2px;color:var(--primary);white-space:nowrap}'),'switch hugs the right edge next to library info');
 assert(js.includes('menu.style.minWidth=`${Math.round(target.getBoundingClientRect().width)}px`'),'menu min-width equals trigger width');
 assert(js.includes('class="sort-menu field-menu-popup"'),'menu carries dedicated popup class');
-assert(css.includes('.field-menu-popup.floating-menu{width:max-content}'),'popup width content-driven');
+assert(css.includes('.asset-card .asset-select{position:relative;inset:auto;flex:0 0 34px;width:34px;height:34px;min-width:34px;min-height:34px;margin-left:0;padding:0;border:1px solid var(--multi-border);border-radius:9px;background:var(--multi-bg);box-shadow:none;font-size:15px;isolation:isolate}'),'asset check matches copy control size');
+assert(!/最后读取：刚刚/.test(js),'dead static timestamp removed from repo stat card');
 /* Visual reuse: field menu reuses sort-control classes, native select hidden. */
 assert(css.includes('.field-menu { width:100%; text-align:left; }'));
 assert(css.includes('.field-menu-native { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;'));
