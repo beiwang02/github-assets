@@ -7,4 +7,6 @@ assert(rule.includes('text-overflow:ellipsis')&&rule.includes('white-space:nowra
 assert(/\.token-input-wrap input:focus \{ text-overflow:clip; \}/.test(css),'caret visible while editing, ellipsis only when idle');
 assert(/document\.addEventListener\('focusin',e=>\{\s*const t=e\.target;if\(!t\?\.matches\?\.\('#mainTokenInput'\)\|\|t\.readOnly\|\|t\.disabled\)return;\s*const len=t\.value\.length;\s*const place=\(\)=>\{try\{t\.setSelectionRange\(len,len\);\}catch\{\}\};\s*place\(\);\s*requestAnimationFrame\(\(\)=>\{place\(\);try\{t\.scrollLeft=t\.scrollWidth;\}catch\{\}\}\);\s*setTimeout\(place,120\);\s*\}\);/.test(js),'caret is placed sync, next frame and after keyboard settle, then scrolled to the end');
 assert(js.includes('id="mainTokenInput" type="password"'),'still a real password field so the eye toggle keeps working');
+const cssAll=fs.readFileSync('ui-refresh.css','utf8');
+assert(cssAll.includes('.auth-card #mainTokenInput{-webkit-appearance:auto;appearance:auto}'),'native password appearance lets iOS paint the caret');
 console.log('PASS token field: long values ellipsis, eye toggle untouched, spacing kept');
