@@ -4,5 +4,7 @@ const rule=css.match(/\.token-input-wrap input \{([^}]+)\}/)?.[1];
 assert(rule,'token input rule');
 assert(rule.includes('padding-right:52px'),'keep clear gap to the eye button');
 assert(rule.includes('text-overflow:ellipsis')&&rule.includes('white-space:nowrap'),'overflowing token shows an ellipsis instead of a half-cut dot');
+assert(/\.token-input-wrap input:focus \{ text-overflow:clip; \}/.test(css),'caret visible while editing, ellipsis only when idle');
+assert(/document\.addEventListener\('focusin',e=>\{\s*const t=e\.target;if\(!t\?\.matches\?\.\('#mainTokenInput'\)\|\|t\.readOnly\|\|t\.disabled\)return;\s*try\{t\.setSelectionRange\(t\.value\.length,t\.value\.length\);\}catch\{\}\s*\}\);/.test(js),'tapping the token field moves the caret to the end');
 assert(js.includes('id="mainTokenInput" type="password"'),'still a real password field so the eye toggle keeps working');
 console.log('PASS token field: long values ellipsis, eye toggle untouched, spacing kept');
