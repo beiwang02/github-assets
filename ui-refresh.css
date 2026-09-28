@@ -80,7 +80,7 @@ body.dark :is(.asset-select,.reference-select){--multi-border:#536681;--multi-bg
 /* The selected colour belongs to the inset square, not its larger tap target. */
 .asset-card.selected .asset-select{background:transparent}
 .asset-card .asset-select:before{content:'';position:absolute;inset:3px;border:1px solid var(--multi-border);border-radius:6px;background:var(--multi-bg);z-index:-1}
-.asset-card .asset-select .ui-icon{width:11px;height:11px;flex:0 0 11px;stroke-width:2.5}
+.asset-card .asset-select .ui-icon{width:18px;height:18px;flex:0 0 18px;stroke-width:1.7}
 .reference-select{border-color:var(--multi-border);background:var(--multi-bg)}
 :is(.asset-select,.reference-select):focus,:is(.asset-select,.reference-select):focus-visible{outline:none!important;box-shadow:none!important}
 :is(.asset-select,.reference-select):is(:disabled,[aria-busy=true]){opacity:.5;cursor:not-allowed;filter:none;transform:none}
@@ -211,5 +211,7 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 :is(.top-icon,.project-link)[data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active{background:var(--surface)!important}
 [data-feedback="surface"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active:not(:has(button:active,a:active)){border-color:var(--ui-line-focus)!important;outline:1px solid var(--ui-line-focus);outline-offset:-1px}
 [data-feedback="control"]:focus-visible{outline-color:var(--ui-line-focus)!important}
+/* Overview JSON row has a shared dividing line; touch must not outline the whole row. */
+@media(hover:none){.library-card .library-list-row:focus,.library-card .library-list-row:focus-visible,.library-card .library-list-row:focus-within{outline:none!important;box-shadow:none!important}.library-card .library-list-row:active{outline:none!important;border-color:var(--line)!important}}
 /* Field picker popups span their trigger width; sort menus stay narrow. */
 .field-menu-popup.floating-menu{width:max-content}

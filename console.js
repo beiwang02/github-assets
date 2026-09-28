@@ -648,7 +648,8 @@ function feedbackKindC(el){
   if(el.matches('.btn-primary,.btn-github,.asset-select,.reference-select,.sidebar-overlay')||el.closest('.hero-actions'))return '';
   if(el.dataset.action==='copy')return 'control';
   if(el.matches('.library-switch-trigger,.library-picker-create'))return 'control';
-  if(el.matches('.repo-switcher,.asset-card,.quick-asset,.json-reference-row,.library-list-row,.library-empty-row'))return 'surface';
+  if(el.matches('.library-list-row'))return el.closest('.library-card')?'':'surface';
+  if(el.matches('.repo-switcher,.asset-card,.quick-asset,.json-reference-row,.library-empty-row'))return 'surface';
   return el.matches('button,.project-link,[role="button"]')?'control':'';
 }
 function enhanceControlsC(){
