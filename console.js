@@ -560,10 +560,11 @@ document.addEventListener('keydown',()=>{
    never keeps a field looking active; text fields keep their focus, exactly like any site. */
 document.addEventListener('change',e=>{const t=e.target;if(!t||!t.matches||!t.matches('select,input[type=file],input[type=checkbox],input[type=radio]')||!hoverlessC())return;t.blur();});
 /* Tapping the token field shows the caret at the end immediately, before the token
-   can be edited, instead of leaving it hidden behind the overflow ellipsis. */
+   can be edited, instead of leaving it hidden behind the overflow ellipsis.
+   iOS paints the caret only after the focus round settles, so defer and scroll. */
 document.addEventListener('focusin',e=>{
   const t=e.target;if(!t?.matches?.('#mainTokenInput')||t.readOnly||t.disabled)return;
-  try{t.setSelectionRange(t.value.length,t.value.length);}catch{}
+  setTimeout(()=>{try{t.setSelectionRange(t.value.length,t.value.length);t.scrollLeft=t.scrollWidth;}catch{}},0);
 });
 document.addEventListener('input',e=>{if(pendingSubmission)return;const b=e.target.dataset.bind;if(!b)return;if(b==='asset-search')S.assetQuery=e.target.value;if(b==='library-search')S.libraryQuery=e.target.value;if(b==='icon-search')S.iconQuery=e.target.value;const cursor=e.target.selectionStart;renderC();const next=document.querySelector(`[data-bind="${b}"]`);if(next){next.focus();next.setSelectionRange(cursor,cursor);}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!pendingSubmission)closeC();if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$c('#globalSearch')?.focus();}});
