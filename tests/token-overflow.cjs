@@ -5,6 +5,6 @@ assert(rule,'token input rule');
 assert(rule.includes('padding-right:52px'),'keep clear gap to the eye button');
 assert(rule.includes('text-overflow:ellipsis')&&rule.includes('white-space:nowrap'),'overflowing token shows an ellipsis instead of a half-cut dot');
 assert(/\.token-input-wrap input:focus \{ text-overflow:clip; \}/.test(css),'caret visible while editing, ellipsis only when idle');
-assert(/document\.addEventListener\('focusin',e=>\{\s*const t=e\.target;if\(!t\?\.matches\?\.\('#mainTokenInput'\)\|\|t\.readOnly\|\|t\.disabled\)return;\s*setTimeout\(\(\)=>\{try\{t\.setSelectionRange\(t\.value\.length,t\.value\.length\);t\.scrollLeft=t\.scrollWidth;\}catch\{\}\},0\);\s*\}\);/.test(js),'tapping the token field defers caret placement to the end with a scroll');
+assert(/document\.addEventListener\('focusin',e=>\{\s*const t=e\.target;if\(!t\?\.matches\?\.\('#mainTokenInput'\)\|\|t\.readOnly\|\|t\.disabled\)return;\s*const len=t\.value\.length;\s*const place=\(\)=>\{try\{t\.setSelectionRange\(len,len\);\}catch\{\}\};\s*place\(\);\s*requestAnimationFrame\(\(\)=>\{place\(\);try\{t\.scrollLeft=t\.scrollWidth;\}catch\{\}\}\);\s*setTimeout\(place,120\);\s*\}\);/.test(js),'caret is placed sync, next frame and after keyboard settle, then scrolled to the end');
 assert(js.includes('id="mainTokenInput" type="password"'),'still a real password field so the eye toggle keeps working');
 console.log('PASS token field: long values ellipsis, eye toggle untouched, spacing kept');
