@@ -86,7 +86,7 @@ body.dark .repo-quick { background:#202e47; border-color:var(--line); color:#b7c
 .remember-token span { cursor:default; user-select:none; }
 
 .token-input-wrap { position:relative; display:flex; align-items:center; }
-.token-input-wrap input { width:100%; padding-right:52px; }
+.token-input-wrap input { width:100%; padding-right:52px; text-overflow:ellipsis; white-space:nowrap; }
 .token-eye { position:absolute; right:9px; width:30px; height:30px; display:grid; place-items:center; padding:0; color:#8b98aa; border:0; border-radius:8px; outline:0; background:transparent; box-shadow:none; -webkit-appearance:none; -webkit-tap-highlight-color:transparent; font-size:16px; cursor:pointer; }
  .token-eye:focus, .token-eye:active { color:var(--primary); border:0; outline:0; background:transparent; box-shadow:none; }
 @media(hover:hover){.token-eye:hover{ color:var(--primary); border:0; outline:0; background:transparent; box-shadow:none; }}
