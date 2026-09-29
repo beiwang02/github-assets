@@ -213,10 +213,12 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 :is(.top-icon,.project-link)[data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active{background:var(--surface)!important}
 [data-feedback="surface"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active:not(:has(button:active,a:active)){border-color:var(--ui-line-focus)!important;outline:1px solid var(--ui-line-focus);outline-offset:-1px}
 [data-feedback="control"]:focus-visible{outline-color:var(--ui-line-focus)!important}
-/* Overview JSON row sits in a rounded, overflow-hidden card: use an inset ring so
-   the press feedback is never clipped at the card corners. */
-.library-card .library-list-row{box-shadow:inset 0 0 0 0 var(--ui-line-focus);transition:box-shadow .12s}
-.library-card .library-list-row:active{border-top-color:var(--line)!important;box-shadow:inset 0 0 0 2px var(--ui-line-focus)}
+/* Overview library entry shares one divider with its header. Its bottom corners
+   follow the card, so the inset press ring bends continuously inside the clip. */
+.library-card:has(.library-list-row) .library-card-header{border-bottom:0}
+.library-card .library-list-row{border-top-color:#f0f2f6;border-radius:0;box-shadow:inset 0 0 0 0 var(--ui-line-focus);transition:box-shadow .12s}
+.library-card .library-list-row:last-child{border-radius:0 0 calc(var(--radius) - 3px) calc(var(--radius) - 3px)}
+.library-card .library-list-row:active{border-top-color:transparent!important;box-shadow:inset 0 0 0 2px var(--ui-line-focus)}
 @media(hover:none){.library-card .library-list-row:focus,.library-card .library-list-row:focus-visible,.library-card .library-list-row:focus-within{outline:none!important}}
 /* Field picker popups span their trigger width; sort menus stay narrow. */
 .field-menu-popup.floating-menu{width:max-content}
