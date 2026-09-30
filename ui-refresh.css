@@ -256,5 +256,7 @@ body.dark .json-workspace-create.btn-primary{color:#fff;border-color:var(--prima
 .main-shell button:disabled,.sidebar button:disabled,.modal button:disabled{filter:none;transform:none;box-shadow:none}
 /* Press-only guard: override simultaneous hover filters, never resting colors or modal scrims. */
 :where(button,.btn,.ui-button,.icon-btn,.text-link,.nav-item,.asset-select,.reference-select,.asset-copy,.quick-copy,.modal-close,.top-icon,.project-link,.token-eye,.token-guide-button):not(:disabled):active{filter:none!important;box-shadow:none!important}
+/* Non-native interactive surfaces keep their approved inset focus/selection frames. */
+[role="button"]:not([aria-disabled="true"]):active{filter:none!important}
 /* Checkmark geometry is unchanged; keyboard users still get an explicit focus cue. */
 :is(.asset-select,.reference-select):focus-visible{outline:2px solid var(--ui-line-focus)!important;outline-offset:2px}

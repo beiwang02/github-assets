@@ -10,4 +10,5 @@ assert(ui.includes('.auth-head-actions>.ui-button{width:34px;height:34px;min-wid
 assert(ui.includes('body .auth-head-actions>.ui-button{box-shadow:none!important}'));
 assert(ui.includes('.auth-head-actions>.ui-button svg{width:var(--ui-icon-size);height:var(--ui-icon-size)}'));
 assert(!/:active[^{}]*\{[^{}]*brightness\(/.test(base),'unified active layer must not darken');
+assert(ui.includes('[role="button"]:not([aria-disabled="true"]):active{filter:none!important}'),'role button press must not darken');
 console.log('PASS active feedback: light/dark controls preserve normal surface on press; focus/disabled semantics retained');
