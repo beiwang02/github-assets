@@ -2,6 +2,9 @@
 :root{--ui-control-h:40px;--ui-radius:11px;--ui-gap:12px;--ui-focus:#8b70ee;--ui-canvas:#f4f6fb;--ui-line-focus:#cfd5fd}
 *,*:before,*:after{box-sizing:border-box}
 body{background:var(--ui-canvas);overflow-x:hidden}
+/* The head restores html.dark before body exists; match that first painted canvas. */
+html.dark body{background:#0b1629}
+html:not(.dark) body{background:#f6f8fc}
 button,.btn,.text-link,select,input{font:inherit}
 button,.btn{min-height:var(--ui-control-h);padding:0 15px;border-radius:var(--ui-radius);font-size:13px;font-weight:700;line-height:1;white-space:nowrap;transition:background .16s,transform .16s,box-shadow .16s}
 button:active,.btn:active{transform:translateY(1px);filter:none}
@@ -204,7 +207,7 @@ body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--i
 :is(.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within:not(:has(button:focus,a:focus,input:focus,select:focus,textarea:focus,[role="button"]:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}
 :is(.asset-card,.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):active:not(:has(button:active,a:active,input:active,select:active,textarea:active,[role="button"]:active)){border-color:var(--ui-line-focus)!important}
 /* Unified neutral feedback: no default geometry changes, no persistent pointer focus.
-   JS omits danger, primary, hero CTA and checkmarks. Copy uses the same fixed feedback. */
+   JS omits danger, GitHub login and checkmarks; blue CTAs use border-only feedback. */
 :root{--ui-feedback-ink:var(--primary)}
 body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 @media(hover:hover){
@@ -260,3 +263,17 @@ body.dark .json-workspace-create.btn-primary{color:#fff;border-color:var(--prima
 [role="button"]:not([aria-disabled="true"]):active{filter:none!important}
 /* Checkmark geometry is unchanged; keyboard users still get an explicit focus cue. */
 :is(.asset-select,.reference-select):focus-visible{outline:2px solid var(--ui-line-focus)!important;outline-offset:2px}
+
+/* Restored-layout corrections: semantic blue CTAs, pale press borders, no dark overlay. */
+body .btn.btn-primary{color:#fff;border-color:var(--primary);background:linear-gradient(135deg,#6671fc,#5860df)}
+@media(hover:hover){body .btn.btn-primary:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):hover{color:#fff;border-color:var(--ui-line-focus);background:linear-gradient(135deg,#6671fc,#5860df)}}
+[data-feedback="primary"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):active{color:#fff!important;border-color:var(--ui-line-focus)!important}
+/* A selected repository owns its border independently of transient hover/press. */
+body .repo-quick.active{--repo-selected-bg:#f3f4ff;--repo-selected-ink:var(--primary);border-color:var(--ui-line-focus)!important;background:var(--repo-selected-bg)!important;color:var(--repo-selected-ink)!important;filter:none}
+body.dark .repo-quick.active{--repo-selected-bg:#29334b;--repo-selected-ink:var(--ui-line-focus)}
+body .repo-quick.active:active:not(:disabled){border-color:var(--ui-line-focus)!important;filter:none!important}
+/* The visible settings separator is a border-top, not an hr in the final template. */
+.settings-actions{border-top-color:var(--line)}
+.settings-card hr{border:0;border-top:1px solid var(--line);color:var(--line);background:transparent}
+/* Only these three resting toolbar controls share the secondary palette. */
+body .assets-toolbar :is([data-action="select-all"],.sort-trigger,[data-action="refresh"]){background:var(--surface);border-color:var(--line);color:var(--ink)}

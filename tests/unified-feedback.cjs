@@ -11,15 +11,18 @@ assert(js.includes("if(el.dataset.action==='copy')return 'control';"));
 assert(js.includes("if(el.matches('.library-switch-trigger,.library-picker-create'))return 'control';"));
 /* Red actions and blue CTAs are explicitly excluded from the unified pale rule. */
 assert(js.includes("if(el.matches('.btn-danger,.library-picker-delete,.library-switch-delete,.group-delete-link"));
-assert(js.includes("if(el.matches('.btn-primary,.btn-github,.asset-select,.reference-select,.sidebar-overlay')||el.closest('.hero-actions'))return '';"));
+assert(js.includes("if(el.matches('.btn-github,.asset-select,.reference-select,.sidebar-overlay'))return '';"));
+assert(js.includes("if(el.matches('.btn-primary'))return 'primary';"));
+assert(css.includes('[data-feedback="primary"]'));
+assert(!js.includes("||el.closest('.hero-actions')"),'hero secondary gets normal feedback');
 /* Nested copy/select/delete controls must not activate the whole parent card. */
 assert(base.includes('.asset-card:hover:not(:where(:has(button:hover,a:hover)))'));
 assert(base.includes('.library-list-row:hover:not(:where(:has(button:hover,a:hover)))'));
 assert(consoleCss.includes(':active:not(:where(:has(button:active,a:active)))'));
 assert(consoleCss.includes('Nested actions are excluded from ancestor hover/press rules'));
 /* Static cache versions advance with the CSS/JS change. */
-assert(html.includes('styles.css?v=rollback-0395c4b-87'));
-assert(html.includes('console.css?v=rollback-0395c4b-87'));
-assert(html.includes('ui-refresh.css?v=rollback-0395c4b-87'));
-assert(html.includes('console.js?v=rollback-0395c4b-87'));
+assert(html.includes('styles.css?v=restored-feedback-theme-88'));
+assert(html.includes('console.css?v=restored-feedback-theme-88'));
+assert(html.includes('ui-refresh.css?v=restored-feedback-theme-88'));
+assert(html.includes('console.js?v=restored-feedback-theme-88'));
 console.log('PASS unified feedback: auxiliary icons, copy, library switch share pale feedback; primary/danger stay semantic');

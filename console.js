@@ -610,6 +610,7 @@ function applyAppearance() {
   const dark=mode==='dark'||(mode==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);
   document.documentElement.classList.toggle('dark',dark);
   document.body.classList.toggle('dark',dark);
+  document.documentElement.style.colorScheme=dark?'dark':'light';
   document.documentElement.style.backgroundColor=dark?'#0b1629':'#f6f8fc';
   document.body.style.backgroundColor=dark?'#0b1629':'#f6f8fc';
   const themeMeta=document.querySelector('meta[name="theme-color"]');
@@ -670,7 +671,8 @@ function uiIconC(name){
 function feedbackKindC(el){
   if(el.matches('.drop-zone'))return '';
   if(el.matches('.btn-danger,.library-picker-delete,.library-switch-delete,.group-delete-link,[data-ui="danger"],[data-action^="delete-"],[data-action^="confirm-delete-"],[data-action="bulk-delete"]'))return '';
-  if(el.matches('.btn-primary,.btn-github,.asset-select,.reference-select,.sidebar-overlay')||el.closest('.hero-actions'))return '';
+  if(el.matches('.btn-github,.asset-select,.reference-select,.sidebar-overlay'))return '';
+  if(el.matches('.btn-primary'))return 'primary';
   if(el.dataset.action==='copy')return 'control';
   if(el.matches('.library-switch-trigger,.library-picker-create'))return 'control';
   if(el.matches('.library-list-row'))return el.closest('.library-card')?'':'surface';

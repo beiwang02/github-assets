@@ -3,11 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0c1729" />
+  <meta name="theme-color" content="#0b1629" />
+  <meta name="color-scheme" content="light dark" />
+  <script>
+    // Restore browser chrome hints before styles paint; storage may be unavailable.
+    (()=>{let mode='system';try{mode=localStorage.getItem('gh-image-theme')||mode;}catch{}
+      const dark=mode==='dark'||(mode!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);
+      const root=document.documentElement,color=dark?'#0b1629':'#f6f8fc';
+      root.classList.toggle('dark',dark);root.style.colorScheme=dark?'dark':'light';root.style.backgroundColor=color;
+      document.querySelector('meta[name="theme-color"]').content=color;
+    })();
+  </script>
   <title>GitHub 图床</title>
-  <link rel="stylesheet" href="styles.css?v=rollback-0395c4b-87" />
-  <link rel="stylesheet" href="console.css?v=rollback-0395c4b-87" />
-  <link rel="stylesheet" href="ui-refresh.css?v=rollback-0395c4b-87" />
+  <link rel="stylesheet" href="styles.css?v=restored-feedback-theme-88" />
+  <link rel="stylesheet" href="console.css?v=restored-feedback-theme-88" />
+  <link rel="stylesheet" href="ui-refresh.css?v=restored-feedback-theme-88" />
 </head>
 <body>
   <div class="app-shell">
@@ -60,6 +70,6 @@
   <script src="vendor/floating-ui/core-1.8.0.umd.min.js"></script>
   <script src="vendor/floating-ui/dom-1.8.0.umd.min.js"></script>
   <script src="popup.js?v=ui-refresh-25-stat-spacing"></script>
-  <script src="console.js?v=rollback-0395c4b-87"></script>
+  <script src="console.js?v=restored-feedback-theme-88"></script>
 </body>
 </html>

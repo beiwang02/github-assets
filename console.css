@@ -70,7 +70,7 @@ body.dark .account-panel b { color:var(--ink); }
 .settings-grid > .settings-card:first-child > form { clear:both; }
 @media(max-width:700px){ .settings-grid > .settings-card:first-child > .btn { margin-right:4px; margin-bottom:12px; padding-left:10px; padding-right:10px; font-size:10px; } }
  .repo-quick.active { color:var(--primary); border-color:#bfc6fd; background:#f3f4ff; }
-@media(hover:hover){.repo-quick:hover{ color:var(--primary); border-color:#bfc6fd; background:#f3f4ff; }}
+@media(hover:hover){.repo-quick:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):hover{ color:var(--primary); border-color:#bfc6fd; background:#f3f4ff; }}
 body.dark .repo-quick { background:#202e47; border-color:var(--line); color:#b7c2d3; }
 
 .token-login-link { display:block; margin:15px auto 0; padding:6px 10px; color:#8f9db4; background:transparent; font-size:10px; text-decoration:underline; cursor:pointer; }
