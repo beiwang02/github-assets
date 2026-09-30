@@ -9,7 +9,7 @@ assert(!/\.(?:asset-select|reference-select):focus[^\{]*\{[^}]*var\(--primary\)/
 assert(!/closest\(['"]button['"]\)[\s\S]{0,120}focus\(/.test(js));
 assert(!/action==='(?:toggle-theme|select-all|asset-select|copy)'[\s\S]{0,260}target\.focus\(/.test(js));
 // Existing transient press feedback and intentional semantic colors remain.
-assert(css.includes('.ui-button:active:not(:disabled){transform:translateY(1px);filter:brightness(.92)}'));
+assert(css.includes('.ui-button:active:not(:disabled){transform:translateY(1px);filter:none}'));
 assert(css.includes('.ui-button[data-ui=danger]'));
 assert(css.includes(':is(.asset-card.selected .asset-select,.json-reference-row.selected .reference-select)'));
 assert(css.includes('--multi-mark:#fff'));
