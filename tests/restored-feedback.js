@@ -11,7 +11,7 @@ window.auditRestoredFeedback=async function(dark){
  const failures=[],evidence=[],counts={active:0,hover:0,hoverActive:0,focus:0,disabled:0,busy:0,selected:0};
  const check=(ok,label,data)=>{if(!ok)failures.push({label,data});};
  const sample=e=>{const c=getComputedStyle(e);return {bg:c.backgroundColor,image:c.backgroundImage,border:c.borderTopColor,ink:c.color,filter:c.filter,shadow:c.boxShadow,outline:c.outlineStyle,outlineColor:c.outlineColor,opacity:c.opacity,w:e.offsetWidth,h:e.offsetHeight};};
- const line='rgb(207, 213, 253)',blue='linear-gradient(135deg, rgb(102, 113, 252), rgb(88, 96, 223))';
+ const line='rgb(155, 187, 217)',blue='linear-gradient(135deg, rgb(102, 113, 252), rgb(88, 96, 223))';
  localStorage.setItem('gh-image-theme',dark?'dark':'light');S.auth={login:'fixture-user'};
  const settle=()=>new Promise(r=>setTimeout(r,25));
  async function controls(selector,label){await settle();for(const e of document.querySelectorAll(selector)){

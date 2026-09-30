@@ -1,5 +1,5 @@
 /* GitHub Assets UI Refresh — production presentation layer */
-:root{--ui-control-h:40px;--ui-radius:11px;--ui-gap:12px;--ui-focus:#8b70ee;--ui-canvas:#f4f6fb;--ui-line-focus:#cfd5fd}
+:root{--ui-control-h:40px;--ui-radius:11px;--ui-gap:12px;--ui-focus:#7ea8cf;--ui-canvas:#f4f6fb;--ui-line-focus:#9bbbd9;--ui-selection-bg:#edf5fc;--ui-selection-ink:#315d86}
 *,*:before,*:after{box-sizing:border-box}
 body{background:var(--ui-canvas);overflow-x:hidden}
 /* The head restores html.dark before body exists; match that first painted canvas. */
@@ -81,7 +81,7 @@ body .auth-head-actions>.ui-button{box-shadow:none!important}
 /* Local multi-select palette; never affects native form checkboxes or card outlines. */
 :is(.asset-select,.reference-select){--multi-border:#c4ccde;--multi-bg:var(--surface);--multi-mark:#fff;color:var(--multi-mark)}
 body.dark :is(.asset-select,.reference-select){--multi-border:#536681;--multi-bg:#202e47}
-:is(.asset-card.selected .asset-select,.json-reference-row.selected .reference-select){--multi-border:var(--primary);--multi-bg:var(--primary)}
+:is(.asset-card.selected .asset-select,.json-reference-row.selected .reference-select){--multi-border:var(--ui-line-focus);--multi-bg:var(--ui-line-focus);--multi-mark:#183b59}
 .asset-card .asset-select{position:relative;inset:auto;flex:0 0 28px;width:28px;height:28px;min-width:28px;min-height:28px;margin-left:0;padding:0;border:0;background:transparent;box-shadow:none;font-size:15px;isolation:isolate}
 /* The selected colour belongs to the inset square, not its larger tap target. */
 .asset-card.selected .asset-select{background:transparent}
@@ -208,8 +208,8 @@ body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--i
 :is(.asset-card,.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):active:not(:has(button:active,a:active,input:active,select:active,textarea:active,[role="button"]:active)){border-color:var(--ui-line-focus)!important}
 /* Unified neutral feedback: no default geometry changes, no persistent pointer focus.
    JS omits danger, GitHub login and checkmarks; blue CTAs use border-only feedback. */
-:root{--ui-feedback-ink:var(--primary)}
-body.dark{--ui-feedback-ink:var(--ui-line-focus)}
+:root{--ui-feedback-ink:#315d86}
+body.dark{--ui-feedback-ink:#b5d1e8;--ui-selection-bg:#24384c;--ui-selection-ink:#c3ddf0}
 @media(hover:hover){
 [data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):hover{color:var(--ui-feedback-ink)!important;border-color:var(--ui-line-focus)!important}
 :is(.top-icon,.project-link)[data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):hover{background:var(--surface)!important}
@@ -237,10 +237,10 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 @media(max-width:360px){.json-workspace .library-outside-actions>div{gap:4px}.json-workspace .library-outside-actions .btn{gap:2px;padding-inline:2px}.json-workspace-create .ui-icon{width:14px;height:14px;flex-basis:14px}.json-workspace .library-outside-actions .json-workspace-create{padding-inline:0;gap:0;font-size:11px}.json-workspace .json-workspace-create .ui-icon{width:12px;height:12px;flex-basis:12px}}
 /* Pointer focus is not selection. Keyboard focus belongs to the card itself only. */
 .asset-card:not(.selected):not(:focus-visible){outline:none!important}
-.asset-card:focus-visible{outline:2px solid var(--ui-line-focus);outline-offset:2px}
+body .asset-card:not(.selected):focus-visible,body .asset-card.selected:focus-visible{outline:2px solid var(--ui-line-focus)!important;outline-offset:2px}
 @media(hover:hover){.asset-card:not(.selected):hover:not(:focus-visible){border-color:var(--line)!important;box-shadow:none!important}}
 body.dark .json-workspace-create.btn-primary{color:#fff;border-color:var(--primary);background:linear-gradient(135deg,#6671fc,#5860df)}
-@media(hover:none){.asset-card:active{filter:none!important;outline:none!important}.asset-card.selected:active{box-shadow:0 0 0 2px rgba(89,101,242,.1)!important}}
+@media(hover:none){.asset-card:active{filter:none!important;outline:none!important}.asset-card.selected:active{box-shadow:0 0 0 2px rgba(126,168,207,.1)!important}}
 /* Field picker popups span their trigger width; sort menus stay narrow. */
 .field-menu-popup.floating-menu{width:max-content}
 
@@ -269,11 +269,24 @@ body .btn.btn-primary{color:#fff;border-color:var(--primary);background:linear-g
 @media(hover:hover){body .btn.btn-primary:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):hover{color:#fff;border-color:var(--ui-line-focus);background:linear-gradient(135deg,#6671fc,#5860df)}}
 [data-feedback="primary"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):active{color:#fff!important;border-color:var(--ui-line-focus)!important}
 /* A selected repository owns its border independently of transient hover/press. */
-body .repo-quick.active{--repo-selected-bg:#f3f4ff;--repo-selected-ink:var(--primary);border-color:var(--ui-line-focus)!important;background:var(--repo-selected-bg)!important;color:var(--repo-selected-ink)!important;filter:none}
-body.dark .repo-quick.active{--repo-selected-bg:#29334b;--repo-selected-ink:var(--ui-line-focus)}
+body .repo-quick.active{--repo-selected-bg:var(--ui-selection-bg);--repo-selected-ink:var(--ui-selection-ink);border-color:var(--ui-line-focus)!important;background:var(--repo-selected-bg)!important;color:var(--repo-selected-ink)!important;filter:none}
+body.dark .repo-quick.active{--repo-selected-bg:var(--ui-selection-bg);--repo-selected-ink:var(--ui-selection-ink)}
 body .repo-quick.active:active:not(:disabled){border-color:var(--ui-line-focus)!important;filter:none!important}
 /* The visible settings separator is a border-top, not an hr in the final template. */
 .settings-actions{border-top-color:var(--line)}
 .settings-card hr{border:0;border-top:1px solid var(--line);color:var(--line);background:transparent}
 /* Only these three resting toolbar controls share the secondary palette. */
 body .assets-toolbar :is([data-action="select-all"],.sort-trigger,[data-action="refresh"]){background:var(--surface);border-color:var(--line);color:var(--ink)}
+
+/* Soft blue feedback only: do not change geometry, hit areas or CTA/danger semantics. */
+body .group-pill.active,body .library-picker-option.selected{border-color:var(--ui-line-focus)!important;background:var(--ui-selection-bg);color:var(--ui-selection-ink)}
+body .asset-card.selected{border-color:var(--ui-line-focus)!important;background:var(--ui-selection-bg);outline-color:var(--ui-line-focus);box-shadow:0 0 0 2px rgba(126,168,207,.1)}
+body .json-reference-row.selected{background:var(--ui-selection-bg)}
+body .sort-option.active,body.dark .sort-option.active,body .library-switch-option[aria-checked=true],body.dark .library-switch-option[aria-checked=true]{background:var(--ui-selection-bg);color:var(--ui-selection-ink)}
+body .sort-option span{color:var(--ui-selection-ink)}
+body .filter-pill.active{color:var(--ui-selection-ink)}
+body .nav-item.active{background:linear-gradient(90deg,#456e96,#52799d);box-shadow:0 8px 18px rgba(49,93,134,.25)}
+body .nav-item.active .nav-count{color:#e2effa}
+body .remember-token input:checked{border-color:var(--ui-line-focus);background:var(--ui-line-focus)}
+body .remember-token input:checked::after{border-color:#183b59}
+@media(hover:hover){body .group-pill:not(.active):not(:disabled):hover{border-color:var(--ui-line-focus);background:var(--ui-selection-bg);color:var(--ui-feedback-ink)}body .detail-link:hover{color:var(--ui-feedback-ink)}}
