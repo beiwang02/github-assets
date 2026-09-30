@@ -20,6 +20,6 @@ assert(consoleCss.includes('Nested actions are excluded from ancestor hover/pres
 /* Static cache versions advance with the CSS/JS change. */
 assert(html.includes('styles.css?v=no-sync-nav-83'));
 assert(html.includes('console.css?v=no-sync-nav-83'));
-assert(html.includes('ui-refresh.css?v=no-sync-nav-83'));
-assert(html.includes('console.js?v=no-sync-nav-83'));
+assert(html.includes('ui-refresh.css?v=json-create-label-84'));
+assert(html.includes('console.js?v=json-create-label-84'));
 console.log('PASS unified feedback: auxiliary icons, copy, library switch share pale feedback; primary/danger stay semantic');

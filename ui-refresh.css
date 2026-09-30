@@ -228,7 +228,7 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 /* Local equal-width actions; shrink tracks rather than overflowing small screens. */
 .json-workspace .library-outside-actions>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:8px}
 .json-workspace .library-outside-actions .btn{width:100%;min-width:0;height:40px;min-height:40px;padding:0 4px;font-size:12px;gap:4px;white-space:nowrap;justify-content:center}
-@media(max-width:360px){.json-workspace .library-outside-actions>div{gap:4px}.json-workspace .library-outside-actions .btn{gap:2px;padding-inline:2px}.json-workspace-create .ui-icon{width:14px;height:14px;flex-basis:14px}}
+@media(max-width:360px){.json-workspace .library-outside-actions>div{gap:4px}.json-workspace .library-outside-actions .btn{gap:2px;padding-inline:2px}.json-workspace-create .ui-icon{width:14px;height:14px;flex-basis:14px}.json-workspace .library-outside-actions .json-workspace-create{padding-inline:0;gap:0;font-size:11px}.json-workspace .json-workspace-create .ui-icon{width:12px;height:12px;flex-basis:12px}}
 /* Pointer focus is not selection. Keyboard focus belongs to the card itself only. */
 .asset-card:not(.selected):not(:focus-visible){outline:none!important}
 .asset-card:focus-visible{outline:2px solid var(--ui-line-focus);outline-offset:2px}
