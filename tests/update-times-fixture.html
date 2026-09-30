@@ -34,13 +34,17 @@ function relativeTimeC(value){
   if(diff<60_000)return '刚刚';
   if(diff<3_600_000)return `${Math.floor(diff/60_000)} 分钟前`;
   if(diff<86_400_000)return `${Math.floor(diff/3_600_000)} 小时前`;
-  const then=new Date(value),now=new Date();
-  const sameYear=then.getFullYear()===now.getFullYear();
-  const day=String(then.getDate()).padStart(2,'0'),month=String(then.getMonth()+1).padStart(2,'0');
-  const clock=`${String(then.getHours()).padStart(2,'0')}:${String(then.getMinutes()).padStart(2,'0')}`;
-  const yesterday=new Date(now);yesterday.setDate(now.getDate()-1);
-  if(then.toDateString()===yesterday.toDateString())return `昨天 ${clock}`;
-  return sameYear?`${month}-${day} ${clock}`:`${then.getFullYear()}-${month}-${day}`;
+  const parts=time=>Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(time).map(p=>[p.type,p.value]));
+  const then=parts(value),now=parts(Date.now()),yesterday=parts(Date.now()-86_400_000);
+  const clock=`${then.hour}:${then.minute}`;
+  if(['year','month','day'].every(k=>then[k]===yesterday[k]))return `昨天 ${clock}`;
+  return then.year===now.year?`${then.month}-${then.day} ${clock}`:`${then.year}-${then.month}-${then.day}`;
+}
+function updateActivityTimesC(){
+  document.querySelectorAll('[data-activity-time]').forEach(node=>{
+    const value=Number(node.dataset.activityTime);
+    if(Number.isFinite(value))node.textContent=relativeTimeC(value);
+  });
 }
 
 const icons=[{"name":"A","url":"https://example.invalid/a","addedAt":"2020-01-01","updatedAt":"2026-09-01","index":0},{"name":"B","url":"https://example.invalid/b","addedAt":"2025-01-01","index":1},{"name":"C","url":"https://example.invalid/c","addedAt":"2026-01-01","index":2},{"name":"D","url":"https://example.invalid/d","addedAt":"2026-09-02","index":3},{"name":"unknown","url":"https://example.invalid/u","index":4}];for(const i of icons)i.url='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="70" height="70"><rect width="70" height="70" fill="lightblue"/><text x="15" y="40">'+i.name+'</text></svg>');const lib={icons};document.getElementById('result').innerHTML=['newest','oldest','name-asc','name-desc'].map(mode=>{S.iconSort=mode;return '<section><h2>UI '+mode+'</h2>封面应始终 D / C / B'+coverStack(lib)+'<p>库顺序：'+sortedIconsC(lib,icons).map(i=>i.name+' [原索引 '+i.index+']').join(' → ')+'</p></section>'}).join('');</script>

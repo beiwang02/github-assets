@@ -198,7 +198,7 @@ body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--i
 /* Drop zone opens the OS picker instantly; the preview after selection is the real
    feedback, and iOS' gray pressed highlight is suppressed below. No purple on tap. */
 :is(.inner-search,.global-search):active{border-color:var(--ui-line-focus)!important}
-:is(.asset-card,.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within:not(:has(button:focus,a:focus,input:focus,select:focus,textarea:focus,[role="button"]:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}
+:is(.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within:not(:has(button:focus,a:focus,input:focus,select:focus,textarea:focus,[role="button"]:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}
 :is(.asset-card,.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):active:not(:has(button:active,a:active,input:active,select:active,textarea:active,[role="button"]:active)){border-color:var(--ui-line-focus)!important}
 /* Unified neutral feedback: no default geometry changes, no persistent pointer focus.
    JS omits danger, primary, hero CTA and checkmarks. Copy uses the same fixed feedback. */
@@ -225,9 +225,14 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 .assets-toolbar button,.asset-card{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .assets-toolbar .ui-button:active:not(:disabled){filter:none!important;box-shadow:none!important;transform:none!important}
 .assets-toolbar [data-feedback="control"]:active{color:inherit!important}
-/* Current-library actions retain normal button sizing and wrap on narrow screens. */
-.json-workspace .library-outside-actions>div{flex-wrap:wrap}
-.json-workspace .library-outside-actions .btn{flex:0 0 auto;width:auto;font-size:12px}
+/* Local equal-width actions; shrink tracks rather than overflowing small screens. */
+.json-workspace .library-outside-actions>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:8px}
+.json-workspace .library-outside-actions .btn{width:100%;min-width:0;height:40px;min-height:40px;padding:0 4px;font-size:12px;gap:4px;white-space:nowrap;justify-content:center}
+@media(max-width:360px){.json-workspace .library-outside-actions>div{gap:4px}.json-workspace .library-outside-actions .btn{gap:2px;padding-inline:2px}.json-workspace-create .ui-icon{width:14px;height:14px;flex-basis:14px}}
+/* Pointer focus is not selection. Keyboard focus belongs to the card itself only. */
+.asset-card:not(.selected):not(:focus-visible){outline:none!important}
+.asset-card:focus-visible{outline:2px solid var(--ui-line-focus);outline-offset:2px}
+@media(hover:hover){.asset-card:not(.selected):hover:not(:focus-visible){border-color:var(--line)!important;box-shadow:none!important}}
 body.dark .json-workspace-create.btn-primary{color:#fff;border-color:var(--primary);background:linear-gradient(135deg,#6671fc,#5860df)}
 @media(hover:none){.asset-card:active{filter:none!important;outline:none!important}.asset-card.selected:active{box-shadow:0 0 0 2px rgba(89,101,242,.1)!important}}
 /* Field picker popups span their trigger width; sort menus stay narrow. */
