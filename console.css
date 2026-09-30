@@ -173,7 +173,7 @@ body.dark .token-guide-button { color:#c4caff; border-color:transparent; backgro
 body.dark .token-guide-body { color:#e8edf7; }
 
 /* Keep dashboard sections visually separated on mobile */
-.dashboard-columns { margin-top:28px; }
+.dashboard-columns { margin-top:28px; grid-template-columns:minmax(0,1fr); }
 .dashboard-columns > section + section { margin-top:0; }
 .overview-assets-section + .dashboard-columns { margin-top:32px; }
 
