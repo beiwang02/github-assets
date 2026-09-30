@@ -225,8 +225,10 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 .assets-toolbar button,.asset-card{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .assets-toolbar .ui-button:active:not(:disabled){filter:none!important;box-shadow:none!important;transform:none!important}
 .assets-toolbar [data-feedback="control"]:active{color:inherit!important}
-/* Only the already-connected JSON workspace: creation is secondary to the current library. */
-.json-workspace-heading .heading-actions .json-workspace-create{flex:0 0 auto;width:auto;max-width:100%;padding:0 14px;color:var(--ink);border:1px solid var(--line);background:var(--surface);box-shadow:none}
+/* Current-library actions retain normal button sizing and wrap on narrow screens. */
+.json-workspace .library-outside-actions>div{flex-wrap:wrap}
+.json-workspace .library-outside-actions .btn{flex:0 0 auto;width:auto;font-size:12px}
+body.dark .json-workspace-create.btn-primary{color:#fff;border-color:var(--primary);background:linear-gradient(135deg,#6671fc,#5860df)}
 @media(hover:none){.asset-card:active{filter:none!important;outline:none!important}.asset-card.selected:active{box-shadow:0 0 0 2px rgba(89,101,242,.1)!important}}
 /* Field picker popups span their trigger width; sort menus stay narrow. */
 .field-menu-popup.floating-menu{width:max-content}

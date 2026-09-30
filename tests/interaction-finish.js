@@ -26,7 +26,7 @@ window.auditInteractionFinish=async()=>{
     row.classList.remove('test-active');row.classList.add('test-focus-visible');check('keyboard row ring',ring(row).color===pressed.color&&row.tabIndex===0,{focus:ring(row),pressed,tab:row.tabIndex});row.classList.remove('test-focus-visible');
     row.classList.add('selected');const bg=getComputedStyle(row).backgroundColor;row.classList.add('test-active');check('selected retained',getComputedStyle(row).backgroundColor===bg);row.classList.remove('test-active');
    }
-   const create=document.querySelector('.json-workspace-create'),cs=getComputedStyle(create);check('secondary content width',create.offsetWidth<250&&!create.classList.contains('btn-primary'),{width:cs.width,bg:cs.backgroundColor});
+   const create=document.querySelector('.json-workspace-create'),cs=getComputedStyle(create);check('primary content width and first action',create.offsetWidth<250&&create.classList.contains('btn-primary')&&create===document.querySelector('.library-outside-actions button'),{width:cs.width,bg:cs.backgroundColor});
    for(const b of document.querySelectorAll('.main-shell button')){b.disabled=true;b.classList.add('test-active');const c=getComputedStyle(b);check('disabled '+b.dataset.action,c.filter==='none'&&c.transform==='none'&&c.boxShadow==='none');b.disabled=false;b.classList.remove('test-active');}
    const cb=rows[0].querySelector('button');cb.classList.add('test-focus-visible');check('checkbox focus',getComputedStyle(cb).outlineStyle==='solid');
    check('no horizontal overflow',document.documentElement.scrollWidth<=innerWidth);
