@@ -7,9 +7,7 @@ let rendered='',meta='',closed=0;
 const S={auth:{login:'fixture'},view:'activity',activity:[{title:'retained'}]};
 const c=vm.createContext({S,closeSortMenus(){closed++},document:{body:{classList:{toggle(){}}}},$c:()=>({set innerHTML(x){rendered=x}}),loginView:()=>'<login>',overviewView:()=>'<overview>',librariesView:()=>'<libraries>',assetsView:()=>'<assets>',settingsPage:()=>'<settings>',adminPage:()=>'<admin>',setMetaC(){meta=S.view},applyAppearance(){},restoreSubmissionC(){}});
 vm.runInContext(js.slice(js.indexOf('function renderC()'),js.indexOf('function openC(')),c);
-for(const auth of [null,{login:'fixture'}]){S.auth=auth;S.view='activity';c.renderC();assert.equal(S.view,'assets');assert.equal(rendered,auth?'<assets>':'<login>');assert.equal(S.activity.length,1);}
-for(const v of ['assets','libraries','settings','admin']){S.view=v;c.renderC();assert.equal(S.view,v);assert.equal(meta,v);assert.equal(rendered,'<'+v+'>');}
-assert.equal(closed,6);
+for(const auth of [null,{login:'fixture'}]){S.auth=auth;S.view='activity';c.renderC();assert.equal(S.view,'overview');assert.equal(rendered,auth?'<overview>':'<login>');assert.equal(S.activity.length,1);}
+for(const v of ['overview','assets','libraries','settings','admin']){S.view=v;c.renderC();assert.equal(S.view,v);assert.equal(meta,v);assert.equal(rendered,'<'+v+'>');}
+assert.equal(closed,7);
 console.log('PASS no-sync-nav: no visible entry/route, legacy activity falls back before auth/meta, remaining views and internal logs/sync retained');
-
-for(const view of ['overview','activity']){S.view=view;c.renderC();assert.equal(S.view,'assets');assert.equal(rendered,'<assets>');}assert(!/data-view=["']overview["']|id=["']sidebar["']|toggle-sidebar/.test(html));

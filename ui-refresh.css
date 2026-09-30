@@ -260,22 +260,3 @@ body.dark .json-workspace-create.btn-primary{color:#fff;border-color:var(--prima
 [role="button"]:not([aria-disabled="true"]):active{filter:none!important}
 /* Checkmark geometry is unchanged; keyboard users still get an explicit focus cue. */
 :is(.asset-select,.reference-select):focus-visible{outline:2px solid var(--ui-line-focus)!important;outline-offset:2px}
-
-/* Approved flat production shell: resource/card/reference styles are intentionally unchanged. */
-.app-shell{display:block}.main-shell{width:100%;margin-left:0;min-width:0}
-.topbar{height:auto;min-height:72px;gap:14px;flex-wrap:wrap;padding:12px max(18px,env(safe-area-inset-left));top:env(safe-area-inset-top);z-index:20}
-.top-title{min-width:0;flex:0 1 160px}.top-title h1{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.primary-nav{display:flex;gap:6px;margin:0;padding:0;flex:1;min-width:0}.primary-nav .nav-item{width:auto;min-width:0;margin:0;padding:10px 14px;justify-content:center;gap:7px;color:var(--muted);background:transparent;border:1px solid transparent}.primary-nav .nav-item.active{color:var(--primary);background:color-mix(in srgb,var(--primary) 10%,var(--surface));border-color:var(--ui-line-focus)}.primary-nav .nav-count{color:inherit;background:transparent;margin:0}
-.top-actions{flex:0 0 auto}.settings-button .nav-icon{display:grid;place-items:center;width:20px;height:20px}.settings-button svg{width:20px;height:20px}.settings-button.active{color:var(--primary);border-color:var(--ui-line-focus)}
-.main-shell>.repo-switcher{display:flex;align-items:center;width:100%;max-width:1100px;margin:12px auto 0;padding:0 18px;color:var(--muted);border:0;background:transparent;box-shadow:none;gap:8px;min-width:0}.main-shell>.repo-switcher .repo-avatar{display:none}.main-shell>.repo-switcher .repo-meta{display:flex;align-items:center;gap:8px;min-width:0;flex:1}.main-shell>.repo-switcher .repo-label{display:none}.main-shell>.repo-switcher #repoName{min-width:0;max-width:60%;color:var(--ink)}.main-shell>.repo-switcher .repo-name-text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.main-shell>.repo-switcher #repoOwner{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.main-shell>.repo-switcher .repo-open-icon{flex:0 0 16px;width:16px;height:16px}
-.content{max-width:1100px;margin:auto;padding:16px max(18px,env(safe-area-inset-left)) max(30px,env(safe-area-inset-bottom))}.settings-account-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.settings-card .info-list{min-width:0;grid-template-columns:minmax(0,1fr)}.settings-card .info-list>.btn{min-width:0;max-width:100%}.settings-card .info-row b{min-width:0;overflow-wrap:anywhere}.settings-card .info-row{min-width:0;gap:12px}.settings-card .info-row>span{flex:0 0 auto}.settings-card .repo-quick{max-width:100%}.page-heading>div{min-width:0}.page-heading h2,.page-heading p{overflow-wrap:anywhere}
-.auth-screen .main-shell>.repo-switcher{display:none}
-@media(max-width:900px){.topbar .global-search{display:none}}
-@media(max-width:700px){.topbar{gap:8px;min-height:0;padding:10px max(16px,env(safe-area-inset-left))}.top-title{flex:1;max-width:calc(100% - 130px)}.top-actions{gap:6px}.topbar .top-icon{width:34px;min-width:34px;height:34px}.primary-nav{order:3;flex:1 1 100%;padding-top:4px}.primary-nav .nav-item{flex:1;padding:9px 7px;white-space:nowrap}.content{padding:12px max(16px,env(safe-area-inset-left)) max(24px,env(safe-area-inset-bottom))}.main-shell>.repo-switcher{padding:0 16px;margin-top:10px}.main-shell>.repo-switcher .repo-meta{gap:6px}.main-shell>.repo-switcher #repoOwner{font-size:10px}}
-
-/* Full JSON link wording must fit without shrinking the approved controls. */
-@media(min-width:701px){.json-workspace .library-outside-actions>div{max-width:650px}}
-@media(max-width:700px){.json-workspace .library-outside-actions>div{grid-template-columns:1.15fr .95fr 1.25fr}}
-@media(max-width:360px){.json-workspace .library-outside-actions>div{grid-template-columns:repeat(2,minmax(0,1fr))}.json-workspace .library-outside-actions [data-action="copy"]{grid-column:1 / -1}.json-workspace .library-outside-actions .json-workspace-create{font-size:12px;gap:4px}}
-/* Keep one brand and two primary labels; page title remains available to assistive technology. */
-.top-title #pageTitle{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.top-title .eyebrow{font-size:13px;color:var(--ink);font-weight:600}

@@ -17,7 +17,7 @@ vm.runInContext(source.slice(source.indexOf('// One UI operation'),source.indexO
  if(mode.startsWith('stale'))vm.runInContext('repositoryEpoch++',ctx);
  if(mode.endsWith('failure'))reject(Error('mock failure'));else resolve({root:'assets',groups:[],assets:[],libraries:[]});await p;
  assert.equal(active.buttons[0].disabled,false);assert.equal(active.buttons[0].innerHTML,'保存并读取仓库');assert.equal(S.loading,false);
- assert.equal(S.view,mode==='success'?'assets':'settings');assert.equal(messages.length,mode.startsWith('stale')?0:1);
+ assert.equal(S.view,mode==='success'?'overview':'settings');assert.equal(messages.length,mode.startsWith('stale')?0:1);
  assert.equal(active.values.repo,'fixture');
  }console.log('PASS repo-read: immediate label/disabled, no start toast, duplicate suppression, redraw, success/failure, stale success/error, loading release, input preservation (mock only).');
 })().catch(e=>{console.error(e);process.exitCode=1});
