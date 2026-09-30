@@ -4,7 +4,7 @@ const source=fs.readFileSync(require('node:path').join(__dirname,'../console.js'
 const listeners={},messages=[];
 const context=vm.createContext({console,Set,FormData:class{constructor(f){this.f=f;}get(k){return this.f.values?.[k]||'';}},document:{addEventListener:(t,f)=>listeners[t]=f},notify:m=>messages.push(m),S:{modalConfirm:null,uploadDraft:null,group:''},closeC(){},refreshRepo:async()=>{},uploadModal(){},currentClient:()=>context.client});
 vm.runInContext(source.slice(source.indexOf('// One UI operation'),source.indexOf('async function logoutC')),context);
-vm.runInContext(source.slice(source.indexOf("document.addEventListener('click', async"),source.indexOf("document.addEventListener('click',e=>")),context);
+vm.runInContext(source.slice(source.indexOf("document.addEventListener('click', async"),source.indexOf("document.addEventListener('submit',formSubmit)")),context);
 function node(button=false){return {dataset:{},attrs:{},disabled:false,innerHTML:'保存',textContent:'保存',type:'submit',matches:()=>button,getAttribute(k){return this.attrs[k]??null;},setAttribute(k,v){this.attrs[k]=v;},removeAttribute(k){delete this.attrs[k];},querySelectorAll(){return this.buttons;}};}
 function form(id){const f=node();f.id=id;f.buttons=[node(true)];f.values={name:'test'};f.elements={group:{value:'test'},file:{files:[{}]},name:{value:'test'},library:{value:''}};return f;}
 function deferred(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};}

@@ -1,0 +1,19 @@
+window.auditFlatMenuC=async(dark=false)=>{
+ await fixtureReady;const checks=[],check=(n,v)=>checks.push({name:n,pass:!!v}),tick=()=>new Promise(r=>setTimeout(r,90));
+ closeC();S.auth={login:'fixture-user'};S.connected=true;S.view='libraries';localStorage.setItem('gh-image-theme',dark?'dark':'light');renderC();await tick();
+ const saved=S.libraries;S.libraries=Array.from({length:60},(_,i)=>({...saved[0],id:'many'+i,name:'长库名'.repeat(15)+' '+i,file:'folder/'.repeat(15)+i+'.json'}));S.selectedLibrary='many12';renderC();await tick();
+ const trigger=document.querySelector('[data-action="open-library-picker"]');trigger.focus();trigger.click();await tick();
+ const list=document.querySelector('.library-switch-list'),modal=list.closest('.modal'),body=list.closest('.modal-body');
+ check('modal above sticky',+getComputedStyle(document.querySelector('.modal-backdrop')).zIndex>+getComputedStyle(document.querySelector('.topbar')).zIndex);
+ check('library current focus',document.activeElement.matches('.library-switch-option[aria-checked="true"]'));check('library aria expanded',trigger.getAttribute('aria-expanded')==='true');
+ check('library scroll container',body.scrollHeight>body.clientHeight||modal.scrollHeight>modal.clientHeight||list.scrollHeight>list.clientHeight);check('no overflow',document.documentElement.scrollWidth<=innerWidth);
+ const buttons=[...modal.querySelectorAll('button')];buttons.at(-1).focus();document.dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',bubbles:true,cancelable:true}));check('library Tab wrap',document.activeElement===buttons[0]);buttons[0].focus();document.dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',shiftKey:true,bubbles:true,cancelable:true}));check('library Shift Tab wrap',document.activeElement===buttons.at(-1));
+ document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));check('library escape focus',document.activeElement===trigger&&!document.querySelector('.modal')&&trigger.getAttribute('aria-expanded')==='false');
+ S.libraries=saved;S.selectedLibrary='lib0';S.view='assets';renderC();await tick();const sort=document.querySelector('[data-action="toggle-sort"]');sort.focus();sort.click();await tick();
+ let menu=document.querySelector('.floating-menu'),r=menu.getBoundingClientRect();check('sort position clipped to viewport',r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight);check('sort layer above sticky',+getComputedStyle(menu).zIndex>+getComputedStyle(document.querySelector('.topbar')).zIndex);
+ window.scrollTo(0,100);await tick();r=menu.getBoundingClientRect();check('sort on scroll stays in viewport',r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight);document.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true,cancelable:true}));check('sort keyboard item',document.activeElement.matches('.sort-option'));document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));check('sort Escape focus',!document.querySelector('.floating-menu')&&document.activeElement===sort);
+ sort.click();await tick();document.querySelector('.top-title').click();check('sort outside close',!document.querySelector('.floating-menu'));window.scrollTo(0,0);
+ const theme=document.querySelector('.top-actions [data-action="toggle-theme"]');localStorage.setItem('gh-image-theme','system');for(const mode of ['light','dark','system']){theme.click();check('theme cycle '+mode,localStorage.getItem('gh-image-theme')===mode);}
+ let opened='';const nativeOpen=window.open;window.open=url=>{opened=url;};const repo=document.querySelector('.repo-switcher');repo.focus();repo.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true}));check('repo keyboard real github route',opened.includes('https://github.com/fixture-user/'));window.open=nativeOpen;
+ return {width:innerWidth,dark,pass:checks.every(x=>x.pass),checks};
+};
