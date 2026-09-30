@@ -5,7 +5,7 @@ assert(css.includes('.asset-card.selected .asset-select{background:transparent}'
 assert(css.includes('.asset-card .asset-select:before{content:\'\';position:absolute;inset:3px;border:1px solid var(--multi-border);border-radius:6px;background:var(--multi-bg);z-index:-1}'),'selected and unselected both use inset square');
 assert(css.includes('.library-card:has(.library-list-row) .library-card-header{border-bottom:0}'),'overview card has only one separator');
 assert(css.includes('.library-card .library-list-row:last-child{border-radius:0 0 calc(var(--radius) - 3px) calc(var(--radius) - 3px)}'),'last clickable row shares card bottom radius');
-assert(css.includes('.library-card .library-list-row:active{border-top-color:transparent!important;box-shadow:inset 0 0 0 2px var(--ui-line-focus)}'),'overview JSON row press ring joins corners without duplicate divider');
-assert(css.includes('@media(hover:none){.library-card .library-list-row:focus,.library-card .library-list-row:focus-visible,.library-card .library-list-row:focus-within{outline:none!important}'),'overview JSON row keeps touch focus quiet');
+assert(css.includes('.library-card .library-list-row:active:not(:has(button:active,a:active,input:active)){border-top-color:transparent!important;box-shadow:inset 0 0 0 2px var(--ui-line-focus)}'),'overview JSON row press ring joins corners without duplicate divider');
+assert(!css.includes('.library-list-row:focus-visible,.library-card .library-list-row:focus-within{outline:none!important}'),'touch devices must retain keyboard focus');
 assert(css.includes('.library-list-row:focus-visible{outline:2px solid var(--ui-line-focus);outline-offset:-2px}'),'keyboard navigation keeps visible focus');
 console.log('PASS equal selection frames and library row focus styles');

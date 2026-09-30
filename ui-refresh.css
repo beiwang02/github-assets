@@ -198,8 +198,8 @@ body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--i
 /* Drop zone opens the OS picker instantly; the preview after selection is the real
    feedback, and iOS' gray pressed highlight is suppressed below. No purple on tap. */
 :is(.inner-search,.global-search):active{border-color:var(--ui-line-focus)!important}
-:is(.asset-card,.quick-asset,.json-reference-row,.library-list-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within:not(:has(button:focus,a:focus,input:focus,select:focus,textarea:focus,[role="button"]:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}
-:is(.asset-card,.quick-asset,.json-reference-row,.repo-switcher,.group-pill,.library-picker,.library-picker-option):active:not(:has(button:active,a:active,input:active,select:active,textarea:active,[role="button"]:active)){border-color:var(--ui-line-focus)!important}
+:is(.asset-card,.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within:not(:has(button:focus,a:focus,input:focus,select:focus,textarea:focus,[role="button"]:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}
+:is(.asset-card,.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):active:not(:has(button:active,a:active,input:active,select:active,textarea:active,[role="button"]:active)){border-color:var(--ui-line-focus)!important}
 /* Unified neutral feedback: no default geometry changes, no persistent pointer focus.
    JS omits danger, primary, hero CTA and checkmarks. Copy uses the same fixed feedback. */
 :root{--ui-feedback-ink:var(--primary)}
@@ -207,19 +207,19 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 @media(hover:hover){
 [data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):hover{color:var(--ui-feedback-ink)!important;border-color:var(--ui-line-focus)!important}
 :is(.top-icon,.project-link)[data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):hover{background:var(--surface)!important}
-[data-feedback="surface"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):hover:not(:has(button:hover,a:hover)){border-color:var(--ui-line-focus)!important;outline:1px solid var(--ui-line-focus);outline-offset:-1px}
+[data-feedback="surface"]:not(.json-reference-row):not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):hover:not(:has(button:hover,a:hover)){border-color:var(--ui-line-focus)!important;outline:1px solid var(--ui-line-focus);outline-offset:-1px}
 }
 [data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active{color:var(--ui-feedback-ink)!important;border-color:var(--ui-line-focus)!important}
 :is(.top-icon,.project-link)[data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active{background:var(--surface)!important}
-[data-feedback="surface"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active:not(:has(button:active,a:active)){border-color:var(--ui-line-focus)!important;outline:1px solid var(--ui-line-focus);outline-offset:-1px}
+[data-feedback="surface"]:not(.json-reference-row):not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active:not(:has(button:active,a:active)){border-color:var(--ui-line-focus)!important;outline:1px solid var(--ui-line-focus);outline-offset:-1px}
 [data-feedback="control"]:focus-visible{outline-color:var(--ui-line-focus)!important}
 /* Overview library entry shares one divider with its header. Its bottom corners
    follow the card, so the inset press ring bends continuously inside the clip. */
 .library-card:has(.library-list-row) .library-card-header{border-bottom:0}
 .library-card .library-list-row{border-top-color:#f0f2f6;border-radius:0;box-shadow:inset 0 0 0 0 var(--ui-line-focus);transition:box-shadow .12s}
 .library-card .library-list-row:last-child{border-radius:0 0 calc(var(--radius) - 3px) calc(var(--radius) - 3px)}
-.library-card .library-list-row:active{border-top-color:transparent!important;box-shadow:inset 0 0 0 2px var(--ui-line-focus)}
-@media(hover:none){.library-card .library-list-row:focus,.library-card .library-list-row:focus-visible,.library-card .library-list-row:focus-within{outline:none!important}}
+.library-card .library-list-row:active:not(:has(button:active,a:active,input:active)){border-top-color:transparent!important;box-shadow:inset 0 0 0 2px var(--ui-line-focus)}
+
 /* Image resources: prevent iOS text selection on pressable cards/toolbar, and
    avoid stacking dark pressed overlays on the site's pale line feedback. */
 .assets-toolbar button,.asset-card{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
@@ -230,3 +230,19 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 @media(hover:none){.asset-card:active{filter:none!important;outline:none!important}.asset-card.selected:active{box-shadow:0 0 0 2px rgba(89,101,242,.1)!important}}
 /* Field picker popups span their trigger width; sort menus stay narrow. */
 .field-menu-popup.floating-menu{width:max-content}
+
+/* Reference rows own one inner ring, never a clipped outer outline or divider tint.
+   12px container minus its 1px border = 11px inner corner. */
+.json-reference-list{--reference-inner-radius:11px}
+.json-reference-row{position:relative;--reference-top:0px;--reference-bottom:0px}
+.json-reference-row:first-child{--reference-top:var(--reference-inner-radius)}
+.json-reference-row:last-child{--reference-bottom:var(--reference-inner-radius)}
+.json-reference-row::after{content:'';position:absolute;inset:0 0 -1px;pointer-events:none;border:2px solid transparent;border-radius:var(--reference-top) var(--reference-top) var(--reference-bottom) var(--reference-bottom)}
+.json-reference-row:last-child::after{bottom:0}
+.json-reference-row:active:not(:has(button:active,a:active,input:active,select:active,textarea:active)),.json-reference-row:focus-visible{outline:none;filter:none;box-shadow:none}
+.json-reference-row:active:not(:has(button:active,a:active,input:active,select:active,textarea:active))::after,.json-reference-row:focus-visible::after{border-color:var(--ui-line-focus)}
+/* Preserve text/URL/input selection; only actual controls suppress native callouts. */
+.main-shell button,.sidebar button,.modal button{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.main-shell button:disabled,.sidebar button:disabled,.modal button:disabled{filter:none;transform:none;box-shadow:none}
+/* Checkmark geometry is unchanged; keyboard users still get an explicit focus cue. */
+:is(.asset-select,.reference-select):focus-visible{outline:2px solid var(--ui-line-focus)!important;outline-offset:2px}

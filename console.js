@@ -676,7 +676,7 @@ function enhanceControlsC(){
     if(el.matches('.mobile-menu'))el.setAttribute('aria-label','打开侧栏');
     if(el.matches('.modal-close'))el.setAttribute('aria-label','关闭弹窗');
   });
-  document.querySelectorAll('.library-list-row[data-action],.library-empty-row[data-action]').forEach(el=>{el.tabIndex=0;el.setAttribute('role','button');el.removeAttribute('aria-haspopup');});
+  document.querySelectorAll('.library-list-row[data-action],.library-empty-row[data-action],.json-reference-row[data-action],.asset-card[data-action],.quick-asset[data-action]').forEach(el=>{el.tabIndex=0;el.setAttribute('role','button');el.removeAttribute('aria-haspopup');});
   document.querySelectorAll('button,.project-link,[role="button"],.asset-card,.quick-asset,.json-reference-row,.drop-zone').forEach(el=>{
     const kind=feedbackKindC(el);
     if(kind){if(el.dataset.feedback!==kind)el.dataset.feedback=kind;}
@@ -685,4 +685,4 @@ function enhanceControlsC(){
 }
 const uiObserverC=new MutationObserver(()=>{uiObserverC.disconnect();enhanceControlsC();uiObserverC.observe(document.body,{childList:true,subtree:true});});
 enhanceControlsC();uiObserverC.observe(document.body,{childList:true,subtree:true});
-document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.library-list-row[data-action],.library-empty-row[data-action]')){e.preventDefault();e.target.click();}});
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.library-list-row[data-action],.library-empty-row[data-action],.json-reference-row[data-action],.asset-card[data-action],.quick-asset[data-action]')){e.preventDefault();e.target.click();}});
