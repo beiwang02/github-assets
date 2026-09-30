@@ -7,7 +7,8 @@ for (const entry of ['upload','new-library','new-icon','new-group','new-group-fr
 }
 /* Heads hide repo actions until a repository is connected; the empty-state card carries the CTA. */
 assert(js.includes('${S.connected?`<div class="heading-actions"><button class="btn" data-action="new-group">＋ 新建分组</button>'));
-assert.equal((js.match(/\$\{S\.connected\?`<div class="heading-actions"><button class="btn btn-primary" data-action="new-library">/g)||[]).length,2);
+assert.equal((js.match(/\$\{S\.connected\?`<div class="heading-actions"><button class="btn btn-primary" data-action="new-library">/g)||[]).length,1);
+assert.equal((js.match(/\$\{S\.connected\?`<div class="heading-actions"><button class="btn json-workspace-create" data-action="new-library">/g)||[]).length,1);
 assert(js.includes("'settings',S.connected?'上传第一张图片':'连接我的仓库'"));
 assert(js.includes("'new-library','连接我的仓库'" )||js.includes("S.connected?'新建 JSON 库':'连接我的仓库'"));
 console.log('PASS repo gate: no group/library/upload action without a connected repository');
