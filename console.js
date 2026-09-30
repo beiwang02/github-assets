@@ -171,11 +171,13 @@ function adminPage() {
 }
 
 function renderC() {
+  // Retired navigation: stale history or legacy entries return to the overview.
+  if(S.view==='activity') S.view='overview';
   closeSortMenus();
   document.body.classList.toggle('auth-screen', !S.auth);
   if (!S.auth) { $c('#app').innerHTML=loginView(); applyAppearance(); return; }
   if(S.view==='library-detail') S.view='libraries';
-  const views={overview:overviewView,libraries:librariesView,assets:assetsView,activity:activityPage,settings:settingsPage,admin:adminPage};
+  const views={overview:overviewView,libraries:librariesView,assets:assetsView,settings:settingsPage,admin:adminPage};
   $c('#app').innerHTML=(views[S.view]||overviewView)(); setMetaC();
   applyAppearance();
   restoreSubmissionC();
