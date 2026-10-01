@@ -11,11 +11,11 @@ window.auditRestoration=async()=>{
  for(const dark of [false,true]){
   window.matchMedia=q=>q==='(prefers-color-scheme: dark)'?{matches:dark,addEventListener(){}}:mm(q);
   localStorage.setItem('gh-image-theme','system');S.auth={login:'fixture-user'};S.view='overview';renderC();applyAppearance();await new Promise(r=>setTimeout(r,30));
-  const buttons=[...document.querySelectorAll('.hero-actions .btn')],bounds=buttons.map(b=>{const r=b.getBoundingClientRect();return {top:r.top,left:r.left,right:r.right,overflow:b.scrollWidth>b.clientWidth};});
+  const buttons=[...document.querySelectorAll('.overview-assets-section .text-link,.dashboard-columns .text-link')],bounds=buttons.map(b=>{const r=b.getBoundingClientRect();return {top:r.top,left:r.left,right:r.right,overflow:b.scrollWidth>b.clientWidth};});
   const multiline=buttons.some(b=>{const w=document.createTreeWalker(b,NodeFilter.SHOW_TEXT);while(w.nextNode()){if(!w.currentNode.textContent.trim())continue;const r=document.createRange();r.selectNodeContents(w.currentNode);if(r.getClientRects().length>1)return true;}return false;});
   const icons=()=>[...document.querySelectorAll('.appearance-button svg')].map(s=>({html:s.outerHTML,filled:s.querySelector('path').getAttribute('fill')==='currentColor'&&getComputedStyle(s.querySelector('path')).fill===getComputedStyle(s).color,outline:!!s.querySelector('circle[fill="none"]')}));
   const header=icons(),pageOverflow=document.documentElement.scrollWidth>innerWidth;S.auth=null;renderC();applyAppearance();await new Promise(r=>setTimeout(r,30));const login=icons();
-  results.push({width:innerWidth,dark,bounds,singleRow:new Set(bounds.map(b=>b.top)).size===1,multiline,overflow:pageOverflow||bounds.some(b=>b.overflow||b.right>innerWidth),iconFilled:[...header,...login].every(i=>i.filled&&i.outline),sameIcon:login.every(i=>i.html===header[0].html)});
+  results.push({width:innerWidth,dark,bounds,singleRow:bounds.length===2&&!document.querySelector('.hero'),multiline,overflow:pageOverflow||bounds.some(b=>b.overflow||b.right>innerWidth),iconFilled:[...header,...login].every(i=>i.filled&&i.outline),sameIcon:login.every(i=>i.html===header[0].html)});
  }
  window.matchMedia=mm;S.auth={login:'fixture-user'};S.view='overview';renderC();return results;
 };

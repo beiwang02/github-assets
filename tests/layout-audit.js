@@ -2,7 +2,7 @@ window.auditLayout=async()=>{
  await fixtureReady;const wait=()=>new Promise(r=>setTimeout(r,100)),rect=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom}},checks=[];
  const check=(name,ok,detail)=>checks.push({name,ok,detail});
  const sample=S.assets[0];S.assets=Array.from({length:6},(_,i)=>({...sample,id:'audit'+i,name:i?'Aurora '+i:'超长图片名称用于截断测试Aurora',ext:'svg'}));
- const restoration=await auditRestoration();check('system/header/login/hero',restoration.every(r=>r.singleRow&&!r.multiline&&!r.overflow&&r.iconFilled&&r.sameIcon),restoration);
+ const restoration=await auditRestoration();check('system/header/login/overview',restoration.every(r=>r.singleRow&&!r.multiline&&!r.overflow&&r.iconFilled&&r.sameIcon),restoration);
  for(const theme of ['light','dark']){
  localStorage.setItem('gh-image-theme',theme);applyAppearance();
  for(const view of ['overview','assets']){

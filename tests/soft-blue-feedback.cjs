@@ -7,5 +7,5 @@ assert(css.includes('body .asset-card.selected{border-color:var(--ui-line-focus)
 assert(css.includes('--multi-mark:#183b59'));
 assert(css.includes('body .btn.btn-primary{color:#fff;border-color:var(--primary);background:linear-gradient(135deg,#6671fc,#5860df)}'));
 for(const f of ['styles.css','console.css','ui-refresh.css'])assert(!fs.readFileSync(f,'utf8').includes('#cfd5fd'),f+' legacy feedback hue');
-assert(fs.readFileSync('index.html','utf8').includes('ui-refresh.css?v=soft-blue-feedback-89'));
+assert(fs.readFileSync('index.html','utf8').includes('ui-refresh.css?v=overview-no-hero-90'));
 console.log('PASS soft blue: shared feedback hue, visible selected borders, theme tints, unchanged CTA and geometry contract');

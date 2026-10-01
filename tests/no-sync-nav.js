@@ -21,11 +21,11 @@ window.auditNoSyncNavC=async(dark)=>{
   }
  }
  S.view='activity';renderC();
- check('legacy direct view falls back',S.view==='overview'&&document.querySelector('.hero')&&document.querySelector('.nav-item[data-view="overview"].active'));
+ check('legacy direct view falls back',S.view==='overview'&&document.querySelector('#app > .stat-grid')&&document.querySelector('.nav-item[data-view="overview"].active'));
  const legacy=document.createElement('button');legacy.dataset.view='activity';document.body.append(legacy);legacy.click();legacy.remove();
- check('legacy entry falls back',S.view==='overview'&&document.querySelector('.hero'));
+ check('legacy entry falls back',S.view==='overview'&&document.querySelector('#app > .stat-grid'));
  window.dispatchEvent(new PopStateEvent('popstate',{state:{ghView:'activity',depth:2}}));
- check('legacy history falls back',S.view==='overview'&&document.querySelector('.hero')&&history.state.ghView==='overview');
+ check('legacy history falls back',S.view==='overview'&&document.querySelector('#app > .stat-grid')&&history.state.ghView==='overview');
  check('internal log retained',S.activity.length===1);
  check('sync summary retained',document.querySelector('#app').textContent.includes('本次同步'));
  check('theme applied',document.documentElement.classList.contains('dark')===dark);
