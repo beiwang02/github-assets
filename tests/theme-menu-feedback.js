@@ -12,9 +12,9 @@ window.auditThemeMenu=async function(dark){
   for(const mode of ['toggle','outside','escape','choose','different']){
    e=get();base=sample(e);e.click();await settle();
    check(e.getAttribute('aria-expanded')==='true',label+' '+mode+' aria open');
-   check(sample(e).bg===tint&&sample(e).border===line,label+' '+mode+' persistent open tint',sample(e));
+   check(sample(e).bg===base.bg&&sample(e).border===line&&sample(e).ink!==base.ink,label+' '+mode+' persistent open border/text only',sample(e));
    const menu=document.querySelector('.sort-menu.floating-menu');check(!!menu,label+' portaled menu');
-   check(menu?.querySelector('[aria-checked="true"]')?.classList.contains('active'),label+' selected option kept');
+   check(menu?.querySelector('[aria-checked="true"]')?.classList.contains('active'),label+' selected option kept');for(const o of menu.querySelectorAll('.sort-option'))check(sample(o).bg==='rgba(0, 0, 0, 0)',label+' option no selection fill',sample(o));
    if(mode==='toggle')e.click();
    if(mode==='outside')document.querySelector('.page-heading,.modal-head').click();
    if(mode==='escape')document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
@@ -39,7 +39,7 @@ window.auditThemeMenu=async function(dark){
  uploadModal();await settle();for(const name of ['group','library'])await audit(()=>document.querySelector(`[data-field-menu="${name}"] .sort-trigger`),'field '+name);closeC();
  S.view='assets';S.group=S.assets[0].group;S.selected=new Set([S.assets[0].id]);renderC();applyAppearance();await settle();
  const group=document.querySelector('.group-pill.active'),card=document.querySelector('.asset-card.selected'),box=card.querySelector('.asset-select');
- check(sample(group).border===line&&sample(group).bg===tint,'group selected border and tint',sample(group));check(sample(card).border===line,'card selected frame',sample(card));
+ check(sample(group).border===line&&sample(group).bg===(dark?'rgb(23, 36, 58)':'rgb(255, 255, 255)'),'group selected border without tint',sample(group));check(sample(card).border===line,'card selected frame',sample(card));
  for(const state of ['test-hover','test-active','test-focus-visible']){group.classList.add(state);check(sample(group).border===line,'selected group stable '+state,sample(group));group.classList.remove(state);}
  const before=getComputedStyle(box,'::before');check(box.offsetWidth===28&&box.offsetHeight===28&&before.left==='3px'&&before.right==='3px','28px hit target and 22px square unchanged');
  check(before.backgroundColor===(dark?'rgb(82, 96, 191)':'rgb(89, 101, 242)'),'theme check square',before.backgroundColor);

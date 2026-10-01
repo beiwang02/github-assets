@@ -27,7 +27,7 @@ function walk(prelude,body,gated,file,naked){
   if(prelude.includes(':hover')&&!gated)naked.push(file+': '+prelude.trim().slice(0,70));
 }
 for(const file of sheets){
-  const css=read(file), naked=[];
+  const css=read(file).replace(/\/\*[\s\S]*?\*\//g,''), naked=[];
   for(const [p,b] of parse(css)) walk(p,b,false,file,naked);
   assert.deepEqual(naked,[],'hover must not fire on touch devices');
   assert(css.includes('@media(hover:hover)'),file+' must gate hover');

@@ -7,5 +7,5 @@ assert.match(css,/:is\(\.asset-select,\.reference-select\):focus,:is\(\.asset-se
 assert(!css.includes('--multi-fill:#626b78'));assert(!css.includes('--multi-focus'));assert(!css.includes('data-focus-active'));
 const base=fs.readFileSync('console.css','utf8');
 assert(base.includes('.asset-card.selected { outline:2px solid var(--ui-line-focus); }'));
-assert(base.includes('.json-reference-row.selected { background:rgba(89,101,242,.07); }'));
+assert(base.includes('.json-reference-row.selected { color:var(--ui-selection-ink); }'));
 console.log('PASS selected checkboxes: primary blue fill, white mark, neutral unchecked borders, no focus ring; historical card/row selection retained');

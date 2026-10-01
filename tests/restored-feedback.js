@@ -19,13 +19,15 @@ window.auditRestoredFeedback=async function(dark){
   const feedback=e.dataset.feedback,selected=e.matches('.repo-quick.active');
   if(feedback==='primary')check(before.image===blue&&before.ink==='rgb(255, 255, 255)',id+' primary baseline',before);
   if(selected){counts.selected++;check(before.border===line&&before.filter==='none',id+' persistent selection',before);}
-  e.classList.add('test-hover');const hover=sample(e);counts.hover++;if((feedback==='control'&&!e.matches('.active,.selected,[aria-checked="true"],[aria-pressed="true"]'))||feedback==='primary'||selected)check(hover.border===line,id+' hover border',hover);
+  e.classList.add('test-hover');const hover=sample(e);counts.hover++;if((feedback==='control'&&!e.matches('.active,.selected,[aria-checked="true"],[aria-pressed="true"]'))||selected)check(hover.border===line,id+' hover border',hover);
+  check(hover.bg===before.bg&&hover.image===before.image,id+' hover background unchanged',hover);if(feedback==='primary')check(hover.border===before.border,id+' primary no purple hover border',hover);
   if(selected)check(hover.bg===before.bg&&hover.ink===before.ink&&hover.filter==='none',id+' selected hover palette stable',hover);
   e.classList.add('test-active');const both=sample(e);counts.hoverActive++;check(both.filter==='none'&&both.shadow==='none',id+' hover+active no dim',both);
   if(feedback==='primary')check(both.image===before.image&&both.ink===before.ink,id+' primary hover+active semantics',both);
   e.classList.remove('test-hover');const press=sample(e);counts.active++;
   if(feedback==='primary')check(press.border===before.border,id+' primary active retains blue border',press);
   if((feedback==='control'&&!e.matches('.active,.selected,[aria-checked="true"],[aria-pressed="true"]'))||selected)check(press.border===line,id+' active border',press);
+  check(press.bg===before.bg&&press.image===before.image,id+' press background unchanged',press);check(both.bg===before.bg&&both.image===before.image,id+' hover+press background unchanged',both);
   check(press.filter==='none'&&press.shadow==='none'&&press.w===before.w&&press.h===before.h,id+' no overlay or resize',press);
   if(feedback==='primary')check(press.image===before.image&&press.ink===before.ink,id+' primary active semantics',press);
   e.classList.remove('test-active');check(sample(e).border===before.border,id+' release restores border',sample(e));

@@ -6,5 +6,5 @@ assert(css.includes('body .asset-card.selected{border-color:var(--ui-line-focus)
 assert(css.includes('.sort-trigger[aria-expanded="true"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"])'));
 assert(css.includes('body .btn.btn-primary{color:#fff;border-color:var(--primary);background:linear-gradient(135deg,#6671fc,#5860df)}'));
 for(const f of ['styles.css','console.css','ui-refresh.css'])for(const hue of ['#9bbbd9','#edf5fc','#24384c','#315d86','#183b59','#456e96'])assert(!fs.readFileSync(f,'utf8').includes(hue),f+' gray-blue removed');
-assert(fs.readFileSync('index.html','utf8').includes('ui-refresh.css?v=policy-native-primary-94'));
+assert(fs.readFileSync('index.html','utf8').includes('ui-refresh.css?v=outline-text-feedback-95'));
 console.log('PASS theme-local blue-purple: light restored, dark dimmed, selected frames retained, real expanded menu feedback, unchanged CTA');

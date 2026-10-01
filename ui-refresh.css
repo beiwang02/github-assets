@@ -9,7 +9,7 @@ button,.btn,.text-link,select,input{font:inherit}
 button,.btn{min-height:var(--ui-control-h);padding:0 15px;border-radius:var(--ui-radius);font-size:13px;font-weight:700;line-height:1;white-space:nowrap;transition:background .16s,transform .16s,box-shadow .16s}
 button:active,.btn:active{transform:translateY(1px);filter:none}
 button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid color-mix(in srgb,var(--ui-focus) 35%,transparent);outline-offset:2px;box-shadow:none}
-.btn-danger{color:#b23c55;background:#fff1f3;border:1px solid #f3cbd3}@media(hover:hover){.btn-danger:hover{background:#ffe4e9}}
+.btn-danger{color:#b23c55;background:#fff1f3;border:1px solid #f3cbd3}
 .topbar{height:72px;padding-inline:clamp(18px,3vw,40px);align-items:center}.top-actions{gap:9px}.top-icon{width:40px;min-width:40px;padding:0}
 .content{max-width:1440px;padding:28px clamp(18px,3vw,40px) 48px;margin:auto}.page-heading{margin-bottom:22px;align-items:end}.heading-actions,.hero-actions,.modal-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .card,.stat-card,.hero{border-radius:16px;box-shadow:0 8px 24px rgba(31,47,82,.055)}
@@ -112,7 +112,7 @@ body.dark :is(.asset-select,.reference-select){--multi-border:#536681;--multi-bg
 body.dark .ui-button.top-icon,body.dark .ui-button.project-link{background:#1b293f;color:#e4eaf5;border-color:#34435b}
 @media(max-width:700px){.library-outside-actions{gap:4px}.library-outside-actions>div{gap:4px}.library-outside-actions .ui-button{font-size:11px;padding-inline:8px}.library-picker-copy em{font-size:10px}}
 
-.modal:has(.library-switch-modal-body){width:min(560px,calc(100vw - 28px))}.library-switch-modal-body{display:flex;flex-direction:column;gap:10px;min-height:0}.library-switch-list{display:grid;gap:8px;max-height:min(58vh,520px);overflow:auto;padding-right:2px}.library-switch-row{display:flex;align-items:center;gap:4px;padding-right:2px}.library-switch-option{flex:1;min-width:0;min-height:54px;padding:9px 12px;gap:8px;justify-content:flex-start;border:0;background:transparent;color:inherit;text-align:left}.library-switch-option[aria-checked=true]{background:var(--ui-canvas);border-radius:10px}body.dark .library-switch-option[aria-checked=true]{background:#24334b}.library-switch-copy{flex:1;min-width:0}.library-switch-copy b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-switch-check{display:inline-flex;align-items:center;justify-content:center;width:14px;flex:0 0 14px;font-size:12px}.library-switch-delete.ui-button{width:auto;height:44px;min-width:44px;min-height:44px;padding:0 12px;background:transparent;border:0;color:#c6445e;flex:0 0 auto;font-size:12px}body.dark .library-switch-delete.ui-button{color:#ff9cac}.library-picker-create{width:100%;margin-top:2px}
+.modal:has(.library-switch-modal-body){width:min(560px,calc(100vw - 28px))}.library-switch-modal-body{display:flex;flex-direction:column;gap:10px;min-height:0}.library-switch-list{display:grid;gap:8px;max-height:min(58vh,520px);overflow:auto;padding-right:2px}.library-switch-row{display:flex;align-items:center;gap:4px;padding-right:2px}.library-switch-option{flex:1;min-width:0;min-height:54px;padding:9px 12px;gap:8px;justify-content:flex-start;border:0;background:transparent;color:inherit;text-align:left}.library-switch-option[aria-checked=true]{color:var(--ui-selection-ink);border-radius:10px}.library-switch-copy{flex:1;min-width:0}.library-switch-copy b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-switch-check{display:inline-flex;align-items:center;justify-content:center;width:14px;flex:0 0 14px;font-size:12px}.library-switch-delete.ui-button{width:auto;height:44px;min-width:44px;min-height:44px;padding:0 12px;background:transparent;border:0;color:#c6445e;flex:0 0 auto;font-size:12px}body.dark .library-switch-delete.ui-button{color:#ff9cac}.library-picker-create{width:100%;margin-top:2px}
 @media(max-width:700px){.modal:has(.library-switch-modal-body){width:min(560px,calc(100vw - 20px));padding:18px}.modal:has(.library-switch-modal-body) .modal-head{margin-bottom:14px}}
 
 /* Only the repository name truncates; reserve room for the status halo. */
@@ -152,7 +152,7 @@ input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus
 .preview-file span{flex:1;min-width:0}
 .preview-file .preview-clear{position:static;transform:none;width:32px;height:32px;min-width:32px;min-height:32px;flex:0 0 32px;padding:0;border-radius:8px;color:var(--muted);background:var(--surface);border:1px solid var(--line)}
 .preview-clear.ui-button svg{width:16px;height:16px;flex-basis:16px}
-@media(hover:hover){.preview-file .preview-clear:hover{color:var(--ink);background:var(--ui-canvas)}}
+@media(hover:hover){.preview-file .preview-clear:hover{color:var(--ink)}}
 /* Historical outlined copy controls: surface only, never a filled grey/black tile.
    JSON copy matches its unchanged X: 34px minimum box, 9px radius, 18px SVG. */
 .copy-control.ui-button{--copy-bg:var(--surface);--copy-line:var(--line);--copy-ink:#8090a6;color:var(--copy-ink);background:var(--copy-bg);border:1px solid var(--copy-line);transition:background .12s,border-color .12s,filter .12s}
@@ -205,18 +205,18 @@ body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--i
    feedback, and iOS' gray pressed highlight is suppressed below. No purple on tap. */
 :is(.inner-search,.global-search):active{border-color:var(--ui-line-focus)!important}
 :is(.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within:not(:has(button:focus,a:focus,input:focus,select:focus,textarea:focus,[role="button"]:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}
-:is(.asset-card,.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):active:not(:has(button:active,a:active,input:active,select:active,textarea:active,[role="button"]:active)){border-color:var(--ui-line-focus)!important}
+:is(.asset-card,.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):active:not(:has(button:active,a:active,input:active,select:active,textarea:active,[role="button"]:active)){border-color:var(--ui-line-focus)!important}
 /* Unified neutral feedback: no default geometry changes, no persistent pointer focus.
    JS omits danger, GitHub login and checkmarks; blue CTAs use border-only feedback. */
 :root{--ui-feedback-ink:var(--primary)}
 body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 @media(hover:hover){
 [data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):hover{color:var(--ui-feedback-ink)!important;border-color:var(--ui-line-focus)!important}
-:is(.top-icon,.project-link)[data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):hover{background:var(--surface)!important}
+
 [data-feedback="surface"]:not(.json-reference-row):not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):hover:not(:has(button:hover,a:hover)){border-color:var(--ui-line-focus)!important;outline:1px solid var(--ui-line-focus);outline-offset:-1px}
 }
 [data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active{color:var(--ui-feedback-ink)!important;border-color:var(--ui-line-focus)!important}
-:is(.top-icon,.project-link)[data-feedback="control"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active{background:var(--surface)!important}
+
 [data-feedback="surface"]:not(.json-reference-row):not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active:not(:has(button:active,a:active)){border-color:var(--ui-line-focus)!important;outline:1px solid var(--ui-line-focus);outline-offset:-1px}
 [data-feedback="control"]:focus-visible{outline-color:var(--ui-line-focus)!important}
 /* Overview library entry shares one divider with its header. Its bottom corners
@@ -230,7 +230,7 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
    avoid stacking dark pressed overlays on the site's pale line feedback. */
 .assets-toolbar button,.asset-card{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .assets-toolbar .ui-button:active:not(:disabled){filter:none!important;box-shadow:none!important;transform:none!important}
-.assets-toolbar [data-feedback="control"]:active{color:inherit!important}
+.assets-toolbar [data-feedback="control"]:active:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]){color:var(--ui-feedback-ink)!important}
 /* Local equal-width actions; shrink tracks rather than overflowing small screens. */
 .json-workspace .library-outside-actions>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:8px}
 .json-workspace .library-outside-actions .btn{width:100%;min-width:0;height:40px;min-height:40px;padding:0 4px;font-size:12px;gap:4px;white-space:nowrap;justify-content:center}
@@ -266,11 +266,11 @@ body.dark .json-workspace-create.btn-primary{color:#fff;border-color:var(--prima
 
 /* Restored-layout corrections: semantic blue CTAs, pale press borders, no dark overlay. */
 body .btn.btn-primary{color:#fff;border-color:var(--primary);background:linear-gradient(135deg,#6671fc,#5860df)}
-@media(hover:hover){body .btn.btn-primary:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):hover{color:#fff;border-color:var(--ui-line-focus);background:linear-gradient(135deg,#6671fc,#5860df)}}
+@media(hover:hover){body .btn.btn-primary:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):hover{color:#fff;border-color:var(--primary);background:linear-gradient(135deg,#6671fc,#5860df)}}
 [data-feedback="primary"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):active{color:#fff!important;border-color:var(--primary)!important}
 /* A selected repository owns its border independently of transient hover/press. */
-body .repo-quick.active{--repo-selected-bg:#f3f4ff;--repo-selected-ink:var(--primary);border-color:var(--ui-line-focus)!important;background:var(--repo-selected-bg)!important;color:var(--repo-selected-ink)!important;filter:none}
-body.dark .repo-quick.active{--repo-selected-bg:#29334b;--repo-selected-ink:var(--ui-line-focus)}
+body .repo-quick.active{--repo-selected-bg:#fbfcfe;--repo-selected-ink:var(--primary);border-color:var(--ui-line-focus)!important;background:var(--repo-selected-bg)!important;color:var(--repo-selected-ink)!important;filter:none}
+body.dark .repo-quick.active{--repo-selected-bg:#202e47;--repo-selected-ink:var(--ui-line-focus)}
 body .repo-quick.active:active:not(:disabled){border-color:var(--ui-line-focus)!important;filter:none!important}
 /* The visible settings separator is a border-top, not an hr in the final template. */
 .settings-actions{border-top-color:var(--line)}
@@ -285,19 +285,30 @@ body .assets-toolbar .sort-trigger b{color:inherit}
    uses the same hue at reduced luminance, not the former gray-blue palette. */
 body.dark{--ui-line-focus:#7785c8;--ui-feedback-ink:#b2bbef;--ui-selection-bg:#293451;--ui-selection-ink:#b2bbef;--ui-check-bg:#5260bf;--ui-check-mark:#dfe3f6;--ui-selection-shadow:rgba(119,133,200,.12)}
 /* Preserve the selected-group border fix; independent of hover and pointer focus. */
-body .group-pill.active{border-color:var(--ui-line-focus)!important;background:var(--ui-selection-bg);color:var(--ui-selection-ink)}
+body .group-pill.active{border-color:var(--ui-line-focus)!important;color:var(--ui-selection-ink)}
 body .asset-card.selected{border-color:var(--ui-line-focus)!important;outline-color:var(--ui-line-focus);box-shadow:0 0 0 2px var(--ui-selection-shadow)}
 body .asset-card:not(.selected):focus-visible,body .asset-card.selected:focus-visible{outline:2px solid var(--ui-line-focus)!important;outline-offset:2px}
-body.dark :is(.repo-quick.active,.library-picker-option.selected,.sort-option.active,.library-switch-option[aria-checked=true],.json-reference-row.selected){background:var(--ui-selection-bg)!important;color:var(--ui-selection-ink)}
+body.dark :is(.repo-quick.active,.library-picker-option.selected,.sort-option.active,.library-switch-option[aria-checked=true],.json-reference-row.selected){color:var(--ui-selection-ink)}
 body.dark :is(.repo-quick.active,.library-picker-option.selected){border-color:var(--ui-line-focus)!important}
 body.dark .sort-option span{color:var(--ui-selection-ink)}
-body.dark .asset-card.selected{background:var(--ui-selection-bg)}
-body.dark .drop-zone.dragging{border-color:var(--ui-line-focus);background:var(--ui-selection-bg);color:var(--ui-feedback-ink)}
-@media(hover:hover){body.dark .group-pill:not(.active):not(:disabled):hover,body.dark .drop-zone:hover{border-color:var(--ui-line-focus);background:var(--ui-selection-bg);color:var(--ui-feedback-ink)}}
+body.dark .asset-card.selected{background:var(--surface)}
+body.dark .drop-zone.dragging{border-color:var(--ui-line-focus);color:var(--ui-feedback-ink)}
+@media(hover:hover){body.dark .group-pill:not(.active):not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):hover,body.dark .drop-zone:hover{border-color:var(--ui-line-focus);color:var(--ui-feedback-ink)}}
 body.dark .remember-token input:checked{border-color:var(--ui-check-bg);background:var(--ui-check-bg)}
 body.dark .remember-token input:checked::after{border-color:var(--ui-check-mark)}
 /* Native permission checkbox alone retains a visible keyboard focus cue. */
 .policy-toggle input[type="checkbox"]:focus-visible{outline:2px solid var(--ui-line-focus)!important;outline-offset:3px;box-shadow:none!important}
 /* Open feedback belongs to actual menu lifetime, never :focus-within/:active.
    AnchoredMenu clears aria-expanded on choose, toggle, outside click and Escape. */
-body .sort-trigger[aria-expanded="true"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]){border-color:var(--ui-line-focus)!important;background:var(--ui-selection-bg)!important;color:var(--ui-selection-ink)!important;filter:none!important}
+body .sort-trigger[aria-expanded="true"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]){border-color:var(--ui-line-focus)!important;color:var(--ui-selection-ink)!important;filter:none!important}
+
+/* Outline/text feedback only. Backgrounds are inherited from each component's
+   resting rule; never reset a card, semantic CTA, or check square to transparent. */
+@media(hover:hover){
+[data-feedback="control"], [data-feedback="primary"], .ui-button[data-ui="danger"]{filter:none!important}
+}
+/* Guard legacy hover selectors as well as the enhancer's neutral feedback. */
+:is(.group-pill,.repo-quick,.sort-trigger,.sort-option,.library-picker-option,.library-switch-option):is(:disabled,[aria-disabled="true"],[aria-busy="true"]){filter:none!important}
+body .sort-trigger b{color:inherit}
+body .library-picker-option.selected{color:var(--ui-selection-ink);border-color:var(--ui-line-focus)!important}
+/* Native/check-square selection fill remains the selection indicator. */

@@ -1,0 +1,13 @@
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const css=fs.readFileSync('ui-refresh.css','utf8'),base=fs.readFileSync('styles.css','utf8'),legacy=fs.readFileSync('console.css','utf8');
+const expanded=css.match(/body \.sort-trigger\[aria-expanded="true"\][^{]+\{([^}]+)\}/)[1];
+assert(!expanded.includes('background'));assert(expanded.includes('border-color:var(--ui-line-focus)!important'));assert(expanded.includes('color:var(--ui-selection-ink)!important'));
+assert(!legacy.includes('.sort-option.active{color:var(--primary);background:'));
+assert(!legacy.includes('.json-reference-row.selected { background:'));
+assert(css.includes('body.dark .asset-card.selected{background:var(--surface)}'));
+assert(css.includes('--repo-selected-bg:#fbfcfe;'));assert(css.includes('--repo-selected-bg:#202e47;'));
+assert(!/\.group-pill\.active\{[^}]*background:/.test(css));
+assert(css.includes('[data-feedback="primary"]'));assert(css.includes(':active{color:#fff!important;border-color:var(--primary)!important}'));
+assert(css.includes('--multi-bg:var(--ui-check-bg)'));assert(base.includes('.drop-zone {'));assert(!base.includes('border-color: #aeb6fa; background: #f5f6ff;'));
+assert(css.includes(':not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):active:not(:has('));
+console.log('PASS outline/text contract: scoped resting backgrounds, menu selection check preserved, semantic primary and checked fills, disabled nested guards. Browser audit: outline-text-feedback.js');
