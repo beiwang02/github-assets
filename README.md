@@ -61,13 +61,15 @@ json/
 
 ## 部署
 
-服务内外统一使用 `8765` 端口。部署成功后访问：
+默认访问端口为 `8765`（可修改 `.env` 中的 `GITHUB_IMAGE_HOST_PORT`）。部署成功后访问：
 
 ```text
 http://服务器IP:8765
 ```
 
 ### 步骤 1：安装 Docker
+
+已安装 Docker 和 Compose 的服务器可跳过这一步。
 
 ```bash
 curl -fsSL https://get.docker.com | sh
@@ -77,37 +79,39 @@ curl -fsSL https://get.docker.com | sh
 
 > Docker Compose 方法
 
+以下命令在服务器的 root 终端执行，部署目录固定为 `/opt/stacks/github-assets/`。
+
 ```bash
-git clone https://github.com/beiwang02/github-assets.git
-cd github-assets
+mkdir -p /opt/stacks
+git clone https://github.com/beiwang02/github-assets.git /opt/stacks/github-assets
+cd /opt/stacks/github-assets
 cp .env.example .env
 docker compose up -d --build
 ```
 
-常用命令：
+常用命令（先进入部署目录）：
 
 ```bash
+cd /opt/stacks/github-assets
 # 查看状态
 docker compose ps
-
 # 查看日志
 docker compose logs -f github-assets
-
 # 更新版本
-git pull origin main
-docker compose up -d --build --force-recreate
+git pull --ff-only
+docker compose up -d --build
 ```
 
-> 自动化脚本方式（不想手动敲命令时）
+> 自动化脚本方式（备选，不想手动执行以上步骤时）
 
 ```bash
-git clone https://github.com/beiwang02/github-assets.git
-cd github-assets
-chmod +x install.sh
-sudo ./install.sh
+mkdir -p /opt/stacks
+git clone https://github.com/beiwang02/github-assets.git /opt/stacks/github-assets
+cd /opt/stacks/github-assets
+sudo bash install.sh
 ```
 
-脚本会安装 Docker（如未安装），将项目复制至 `/opt/stacks/github-assets`，再通过 Docker Compose 构建并启动服务。
+脚本自动检查并安装 Docker、保留已有 `.env`，然后构建启动服务。两种方式的编排文件位置一致：`/opt/stacks/github-assets/compose.yaml`。
 
 ### Compose 编排
 
@@ -168,15 +172,3 @@ ALLOWED_GITHUB_LOGINS=
 ## 许可证
 
 项目代码采用 [MIT License](LICENSE)。第三方 Floating UI 与 Inter 字体仍适用各自许可，分别见 `vendor/floating-ui/LICENSE` 和 `fonts/OFL.txt`。
-
-## 本地测试
-
-在仓库根目录运行：
-
-```bash
-for file in tests/*.cjs; do node "$file" || exit 1; done
-```
-
-部分回归测试会读取 Git 历史中的已验收版本；克隆时需保留完整历史，不要使用浅克隆。
-
-`tests/*.js` 是浏览器布局/交互审计，`.html` 是测试夹具；它们与 `.cjs` Node 测试职责不同，不因同名而删除。详见 [`tests/README.md`](tests/README.md)。本地测试不替代真实 iPhone/WebKit 操作验收。

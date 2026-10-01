@@ -16,7 +16,9 @@ if ! docker compose version >/dev/null 2>&1; then
   exit 1
 fi
 mkdir -p "$APP_DIR"
-cp -a ./. "$APP_DIR/"
+if [[ "$(pwd -P)" != "$(cd "$APP_DIR" && pwd -P)" ]]; then
+  cp -a ./. "$APP_DIR/"
+fi
 cd "$APP_DIR"
 if [[ ! -f .env ]]; then
   cp .env.example .env
