@@ -78,8 +78,11 @@ body.dark .repo-quick { background:#202e47; border-color:var(--line); color:#b7c
 
 .admin-code { padding:14px; overflow:auto; color:#cbd6ea; border-radius:10px; background:#111d31; font:11px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace; white-space:pre-wrap; }
 
-.policy-toggle { display:flex; align-items:center; gap:9px; color:var(--ink); font-size:12px; font-weight:700; }
-.policy-toggle input { width:17px; height:17px; accent-color:var(--primary); }
+.policy-toggle { display:flex; align-items:center; gap:9px; color:var(--ink); font-size:12px; font-weight:700; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+/* Restore the native checkbox after the shared input appearance reset. */
+.policy-toggle input[type="checkbox"] { -webkit-appearance:checkbox; appearance:auto; flex:0 0 17px; width:17px; height:17px; margin:0; padding:0; accent-color:var(--primary); cursor:pointer; }
+.policy-toggle:has(input:disabled),.policy-toggle input:disabled { cursor:not-allowed; }
+.policy-toggle:has(input:disabled) { opacity:.5; }
 
 .remember-token { display:flex; align-items:center; gap:8px; margin-top:12px; color:#7f8da4; font-size:10px; }
 .remember-token input { width:16px; height:16px; margin:0; accent-color:var(--primary); cursor:pointer; }

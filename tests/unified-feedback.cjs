@@ -22,7 +22,7 @@ assert(consoleCss.includes(':active:not(:where(:has(button:active,a:active)))'))
 assert(consoleCss.includes('Nested actions are excluded from ancestor hover/press rules'));
 /* Static cache versions advance with the CSS/JS change. */
 assert(html.includes('styles.css?v=theme-menu-feedback-91'));
-assert(html.includes('console.css?v=theme-menu-feedback-91'));
-assert(html.includes('ui-refresh.css?v=overview-no-bar-93'));
-assert(html.includes('console.js?v=overview-no-bar-93'));
+assert(html.includes('console.css?v=policy-native-primary-94'));
+assert(html.includes('ui-refresh.css?v=policy-native-primary-94'));
+assert(html.includes('console.js?v=policy-native-primary-94'));
 console.log('PASS unified feedback: auxiliary icons, copy, library switch share pale feedback; primary/danger stay semantic');

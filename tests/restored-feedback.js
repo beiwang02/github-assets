@@ -24,7 +24,8 @@ window.auditRestoredFeedback=async function(dark){
   e.classList.add('test-active');const both=sample(e);counts.hoverActive++;check(both.filter==='none'&&both.shadow==='none',id+' hover+active no dim',both);
   if(feedback==='primary')check(both.image===before.image&&both.ink===before.ink,id+' primary hover+active semantics',both);
   e.classList.remove('test-hover');const press=sample(e);counts.active++;
-  if(feedback==='primary'||(feedback==='control'&&!e.matches('.active,.selected,[aria-checked="true"],[aria-pressed="true"]'))||selected)check(press.border===line,id+' active border',press);
+  if(feedback==='primary')check(press.border===before.border,id+' primary active retains blue border',press);
+  if((feedback==='control'&&!e.matches('.active,.selected,[aria-checked="true"],[aria-pressed="true"]'))||selected)check(press.border===line,id+' active border',press);
   check(press.filter==='none'&&press.shadow==='none'&&press.w===before.w&&press.h===before.h,id+' no overlay or resize',press);
   if(feedback==='primary')check(press.image===before.image&&press.ink===before.ink,id+' primary active semantics',press);
   e.classList.remove('test-active');check(sample(e).border===before.border,id+' release restores border',sample(e));

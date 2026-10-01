@@ -1,9 +1,11 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),cp=require('node:child_process');
 const js=fs.readFileSync('console.js','utf8'),old=cp.execFileSync('git',['show','f84318d:console.js'],{encoding:'utf8'});
 const bar=/<section class="overview-quickbar"[\s\S]*?<\/section>(?=<div class="stat-grid">)/;
-assert(!bar.test(js));assert.equal(js,old,'Removing only the quickbar restores the exact pre-bar production JS');
+const omitAdmin=s=>s.replace(/function adminPage\(\)[^]*?(?=function renderC\(\))/,'');
+assert(!bar.test(js));assert.equal(omitAdmin(js),omitAdmin(old),'Outside admin copy, exact pre-bar production JS retained');
 const currentCSS=fs.readFileSync('ui-refresh.css','utf8'),approvedCSS=cp.execFileSync('git',['show','a20d300:ui-refresh.css'],{encoding:'utf8'});
-assert.equal(currentCSS,approvedCSS.replace(/\/\* Compact overview shortcuts only;[^]*?\n(?=\n\n\/\* Theme-local feedback)/,''),'Only quickbar CSS removed; auxiliary ink and feedback unchanged');
+const omitPolicy=s=>s.replace('border-color:var(--primary)!important}', 'border-color:var(--ui-line-focus)!important}').replace(/\/\* Native permission checkbox alone[^]*?(?=\/\* Open feedback belongs)/,'');
+assert.equal(omitPolicy(currentCSS),omitPolicy(approvedCSS.replace(/\/\* Compact overview shortcuts only;[^]*?\n(?=\n\n\/\* Theme-local feedback)/,'')),'Outside permission focus and primary press, feedback unchanged');
 const S={connected:false,assets:[],groups:[],libraries:[]},c=vm.createContext({S,escC:String,statC:()=>'<div class="stat-card"></div>',emptyC:(i,t,d,a,l)=>`<button data-action="${a}">${l}</button>`,sortedLibrariesC:x=>x,sortedAssetsC:x=>x,coverStack:()=>'',imageURLC:x=>x.url});
 vm.runInContext(js.slice(js.indexOf('function overviewView()'),js.indexOf('function librariesView()')),c);
 vm.runInContext(js.slice(js.indexOf('function overviewQuickAssets()'),js.indexOf('\nrenderC();',js.indexOf('const originalOverviewView'))),c);

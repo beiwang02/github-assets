@@ -1,0 +1,6 @@
+const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('node:vm');
+const js=fs.readFileSync('console.js','utf8'),css=fs.readFileSync('console.css','utf8'),ui=fs.readFileSync('ui-refresh.css','utf8');
+const c={S:{adminConfigured:true,isAdmin:true,allowAll:false,allowedUsers:['existing-user']},escC:s=>s};vm.createContext(c);vm.runInContext(js.slice(js.indexOf('function adminPage()'),js.indexOf('function renderC()')),c);
+const html=c.adminPage();assert(html.includes('允许名单（GitHub 用户名）'));assert(html.includes('placeholder="例如：user1,user2"'));assert(html.includes('不是昵称、邮箱或 Token'));assert(html.includes('多个用户名用英文逗号分隔'));assert(html.includes('管理员始终保留权限'));assert(html.includes('value="existing-user"'));assert(!html.includes('name="allowAll" checked'));c.S.allowAll=true;assert(c.adminPage().includes('name="allowAll" checked'));
+assert(js.includes("allowAll:data.get('allowAll')==='on'"));assert(css.includes('appearance:auto; flex:0 0 17px'));assert(ui.includes('.policy-toggle input[type="checkbox"]:focus-visible{outline:2px solid var(--ui-line-focus)!important'));assert(ui.includes(':active{color:#fff!important;border-color:var(--primary)!important}'));
+console.log('PASS policy UI: native checkbox, keyboard outline, blue primary active, GitHub username wording and unchanged FormData semantics');

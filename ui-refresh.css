@@ -267,7 +267,7 @@ body.dark .json-workspace-create.btn-primary{color:#fff;border-color:var(--prima
 /* Restored-layout corrections: semantic blue CTAs, pale press borders, no dark overlay. */
 body .btn.btn-primary{color:#fff;border-color:var(--primary);background:linear-gradient(135deg,#6671fc,#5860df)}
 @media(hover:hover){body .btn.btn-primary:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):hover{color:#fff;border-color:var(--ui-line-focus);background:linear-gradient(135deg,#6671fc,#5860df)}}
-[data-feedback="primary"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):active{color:#fff!important;border-color:var(--ui-line-focus)!important}
+[data-feedback="primary"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):active{color:#fff!important;border-color:var(--primary)!important}
 /* A selected repository owns its border independently of transient hover/press. */
 body .repo-quick.active{--repo-selected-bg:#f3f4ff;--repo-selected-ink:var(--primary);border-color:var(--ui-line-focus)!important;background:var(--repo-selected-bg)!important;color:var(--repo-selected-ink)!important;filter:none}
 body.dark .repo-quick.active{--repo-selected-bg:#29334b;--repo-selected-ink:var(--ui-line-focus)}
@@ -296,6 +296,8 @@ body.dark .drop-zone.dragging{border-color:var(--ui-line-focus);background:var(-
 @media(hover:hover){body.dark .group-pill:not(.active):not(:disabled):hover,body.dark .drop-zone:hover{border-color:var(--ui-line-focus);background:var(--ui-selection-bg);color:var(--ui-feedback-ink)}}
 body.dark .remember-token input:checked{border-color:var(--ui-check-bg);background:var(--ui-check-bg)}
 body.dark .remember-token input:checked::after{border-color:var(--ui-check-mark)}
+/* Native permission checkbox alone retains a visible keyboard focus cue. */
+.policy-toggle input[type="checkbox"]:focus-visible{outline:2px solid var(--ui-line-focus)!important;outline-offset:3px;box-shadow:none!important}
 /* Open feedback belongs to actual menu lifetime, never :focus-within/:active.
    AnchoredMenu clears aria-expanded on choose, toggle, outside click and Escape. */
 body .sort-trigger[aria-expanded="true"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]){border-color:var(--ui-line-focus)!important;background:var(--ui-selection-bg)!important;color:var(--ui-selection-ink)!important;filter:none!important}
