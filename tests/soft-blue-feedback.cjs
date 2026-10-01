@@ -1,11 +1,10 @@
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const css=fs.readFileSync('ui-refresh.css','utf8');
-assert(css.includes('--ui-line-focus:#9bbbd9'));
-assert(css.includes('--ui-selection-bg:#edf5fc'));assert(css.includes('--ui-selection-bg:#24384c'));
-assert(css.includes('body .group-pill.active,body .library-picker-option.selected{border-color:var(--ui-line-focus)!important'));
-assert(css.includes('body .asset-card.selected{border-color:var(--ui-line-focus)!important;background:var(--ui-selection-bg)'));
-assert(css.includes('--multi-mark:#183b59'));
+for(const value of ['--ui-line-focus:#cfd5fd','--ui-selection-bg:#f4f5ff','--ui-line-focus:#7785c8','--ui-selection-bg:#293451','--ui-selection-ink:#b2bbef','--ui-check-bg:#5260bf'])assert(css.includes(value),value);
+assert(css.includes('body .group-pill.active{border-color:var(--ui-line-focus)!important'));
+assert(css.includes('body .asset-card.selected{border-color:var(--ui-line-focus)!important;outline-color:var(--ui-line-focus)'));
+assert(css.includes('.sort-trigger[aria-expanded="true"]:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"])'));
 assert(css.includes('body .btn.btn-primary{color:#fff;border-color:var(--primary);background:linear-gradient(135deg,#6671fc,#5860df)}'));
-for(const f of ['styles.css','console.css','ui-refresh.css'])assert(!fs.readFileSync(f,'utf8').includes('#cfd5fd'),f+' legacy feedback hue');
-assert(fs.readFileSync('index.html','utf8').includes('ui-refresh.css?v=overview-no-hero-90'));
-console.log('PASS soft blue: shared feedback hue, visible selected borders, theme tints, unchanged CTA and geometry contract');
+for(const f of ['styles.css','console.css','ui-refresh.css'])for(const hue of ['#9bbbd9','#edf5fc','#24384c','#315d86','#183b59','#456e96'])assert(!fs.readFileSync(f,'utf8').includes(hue),f+' gray-blue removed');
+assert(fs.readFileSync('index.html','utf8').includes('ui-refresh.css?v=theme-menu-feedback-91'));
+console.log('PASS theme-local blue-purple: light restored, dark dimmed, selected frames retained, real expanded menu feedback, unchanged CTA');

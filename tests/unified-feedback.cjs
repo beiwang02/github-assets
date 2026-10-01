@@ -21,8 +21,8 @@ assert(base.includes('.library-list-row:hover:not(:where(:has(button:hover,a:hov
 assert(consoleCss.includes(':active:not(:where(:has(button:active,a:active)))'));
 assert(consoleCss.includes('Nested actions are excluded from ancestor hover/press rules'));
 /* Static cache versions advance with the CSS/JS change. */
-assert(html.includes('styles.css?v=overview-no-hero-90'));
-assert(html.includes('console.css?v=overview-no-hero-90'));
-assert(html.includes('ui-refresh.css?v=overview-no-hero-90'));
-assert(html.includes('console.js?v=overview-no-hero-90'));
+assert(html.includes('styles.css?v=theme-menu-feedback-91'));
+assert(html.includes('console.css?v=theme-menu-feedback-91'));
+assert(html.includes('ui-refresh.css?v=theme-menu-feedback-91'));
+assert(html.includes('console.js?v=theme-menu-feedback-91'));
 console.log('PASS unified feedback: auxiliary icons, copy, library switch share pale feedback; primary/danger stay semantic');
