@@ -169,9 +169,7 @@ ALLOWED_GITHUB_LOGINS=
 
 项目代码采用 [MIT License](LICENSE)。第三方 Floating UI 与 Inter 字体仍适用各自许可，分别见 `vendor/floating-ui/LICENSE` 和 `fonts/OFL.txt`。
 
-## 测试与自动检查
-
-计划启用 GitHub Actions（当前凭据缺少 workflow 权限，工作流尚未上传），届时在 push 和 pull request 时检查生产 JavaScript 语法、运行所有 `tests/*.cjs` Node 回归测试，并构建 Docker 镜像。
+## 本地测试
 
 在仓库根目录运行：
 
@@ -181,4 +179,4 @@ for file in tests/*.cjs; do node "$file" || exit 1; done
 
 部分回归测试会读取 Git 历史中的已验收版本；克隆时需保留完整历史，不要使用浅克隆。
 
-`tests/*.js` 是浏览器布局/交互审计，`.html` 是测试夹具；它们与 `.cjs` Node 测试职责不同，不因同名而删除。详见 [`tests/README.md`](tests/README.md)。CI 不替代真实 iPhone/WebKit 操作验收，也不会自动发布或限制合并；强制通过检查后才能合并需另设分支保护。
+`tests/*.js` 是浏览器布局/交互审计，`.html` 是测试夹具；它们与 `.cjs` Node 测试职责不同，不因同名而删除。详见 [`tests/README.md`](tests/README.md)。本地测试不替代真实 iPhone/WebKit 操作验收。
