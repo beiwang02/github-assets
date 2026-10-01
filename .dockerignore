@@ -1,0 +1,12 @@
+.git
+.gitignore
+.env*
+!*.example
+tests/
+fonts/
+*.log
+.DS_Store
+README*
+install.sh
+deploy/
+*.md
