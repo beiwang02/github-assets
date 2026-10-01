@@ -276,7 +276,15 @@ body .repo-quick.active:active:not(:disabled){border-color:var(--ui-line-focus)!
 .settings-actions{border-top-color:var(--line)}
 .settings-card hr{border:0;border-top:1px solid var(--line);color:var(--line);background:transparent}
 /* Only these three resting toolbar controls share the secondary palette. */
-body .assets-toolbar :is([data-action="select-all"],.sort-trigger,[data-action="refresh"]){background:var(--surface);border-color:var(--line);color:var(--ink)}
+body .assets-toolbar :is([data-action="select-all"],.sort-trigger,[data-action="refresh"]){background:var(--surface);border-color:var(--line);color:var(--muted)}
+/* The sort caret inherits the same resting and transient feedback ink. */
+body .assets-toolbar .sort-trigger b{color:inherit}
+/* Compact overview shortcuts only; no marketing hero or decorative layers. */
+.overview-quickbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;margin-bottom:24px;border:1px solid var(--line);border-left:3px solid var(--ui-line-focus);border-radius:12px;background:var(--surface)}
+.overview-quickbar h2{margin:0;font-size:14px;line-height:20px;font-weight:600;color:var(--ink)}
+.overview-quickbar-actions{display:flex;align-items:center;gap:8px;min-width:0}
+.overview-quickbar-actions .btn{min-width:0}
+@media(max-width:700px){.overview-quickbar{flex-direction:column;align-items:stretch;gap:10px;padding:12px}.overview-quickbar-actions .btn{flex:1;padding-inline:8px;font-size:12px}}
 
 
 /* Theme-local feedback. Light keeps the e1e972d blue-purple palette; dark

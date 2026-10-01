@@ -23,6 +23,6 @@ assert(consoleCss.includes('Nested actions are excluded from ancestor hover/pres
 /* Static cache versions advance with the CSS/JS change. */
 assert(html.includes('styles.css?v=theme-menu-feedback-91'));
 assert(html.includes('console.css?v=theme-menu-feedback-91'));
-assert(html.includes('ui-refresh.css?v=theme-menu-feedback-91'));
-assert(html.includes('console.js?v=theme-menu-feedback-91'));
+assert(html.includes('ui-refresh.css?v=auxiliary-muted-92'));
+assert(html.includes('console.js?v=auxiliary-muted-92'));
 console.log('PASS unified feedback: auxiliary icons, copy, library switch share pale feedback; primary/danger stay semantic');
