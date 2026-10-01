@@ -171,7 +171,7 @@ ALLOWED_GITHUB_LOGINS=
 
 ## 测试与自动检查
 
-GitHub Actions 在 push 和 pull request 时检查生产 JavaScript 语法、运行所有 `tests/*.cjs` Node 回归测试，并构建 Docker 镜像。
+计划启用 GitHub Actions（当前凭据缺少 workflow 权限，工作流尚未上传），届时在 push 和 pull request 时检查生产 JavaScript 语法、运行所有 `tests/*.cjs` Node 回归测试，并构建 Docker 镜像。
 
 在仓库根目录运行：
 
