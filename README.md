@@ -67,38 +67,7 @@ json/
 http://服务器IP:8765
 ```
 
-### 步骤 1：安装 Docker
-
-```bash
-curl -fsSL https://get.docker.com | sh
-```
-
-### 步骤 2：Docker Compose 部署
-
-> Docker Compose 方法
-
-```bash
-git clone https://github.com/beiwang02/github-assets.git
-cd github-assets
-cp .env.example .env
-docker compose up -d --build
-```
-
-常用命令：
-
-```bash
-# 查看状态
-docker compose ps
-
-# 查看日志
-docker compose logs -f github-assets
-
-# 更新版本
-git pull origin main
-docker compose up -d --build --force-recreate
-```
-
-> 自动化脚本方式（不想手动敲命令时）
+### 一键安装（Ubuntu / Debian）
 
 ```bash
 git clone https://github.com/beiwang02/github-assets.git
@@ -142,6 +111,29 @@ volumes:
 - `8765:8765`：宿主机和容器均使用 `8765` 端口。
 - `access-policy`：仅保存管理员访问策略，不保存图片、JSON 或 Token。
 - `read_only` 与 `no-new-privileges`：限制容器运行权限。
+
+### 手动 Docker Compose 部署
+
+```bash
+git clone https://github.com/beiwang02/github-assets.git
+cd github-assets
+cp .env.example .env
+docker compose up -d --build
+```
+
+常用命令：
+
+```bash
+# 查看状态
+docker compose ps
+
+# 查看日志
+docker compose logs -f github-assets
+
+# 更新版本
+git pull origin main
+docker compose up -d --build --force-recreate
+```
 
 默认不需要修改 `.env`。域名反向代理、访问名单等高级配置见 [`deploy/README.md`](deploy/README.md)。
 
