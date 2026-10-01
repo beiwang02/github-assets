@@ -8,7 +8,7 @@ for(const connected of [false,true])for(const isAdmin of [false,true]){
  Object.assign(S,{connected,isAdmin,connectionError:''});const overview=c.overviewView(),settings=c.settingsPage();
  assert(!overview.includes('create-repo'));assert(settings.includes('data-action="create-repo"'));
  assert(overview.includes(connected?'新建 JSON 库':'前往仓库设置'));
- assert(!overview.includes('class="hero"'));assert(overview.startsWith('<section class="overview-quickbar"'));
+ assert(!overview.includes('class="hero"'));assert(overview.startsWith('<div class="stat-grid">'));assert(!overview.includes('overview-quickbar'));
  const assets=js.slice(js.indexOf('function assetsView()'),js.indexOf('function settingsPage()'));
  const libraries=js.slice(js.indexOf('function librariesView()'),js.indexOf('function assetsView()'));
  assert(assets.includes('data-action="upload"'));assert(libraries.includes('data-action="new-library"'));
