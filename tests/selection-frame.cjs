@@ -3,7 +3,7 @@ const css=fs.readFileSync('ui-refresh.css','utf8');
 assert(css.includes('.asset-card .asset-select{position:relative;inset:auto;flex:0 0 28px;width:28px;height:28px;min-width:28px;min-height:28px;margin-left:0;padding:0;border:0;background:transparent;box-shadow:none;font-size:15px;isolation:isolate}'));
 assert(css.includes('.asset-card.selected .asset-select{background:transparent}'),'selected tap target must stay transparent');
 assert(css.includes('.asset-card .asset-select:before{content:\'\';position:absolute;inset:3px;border:1px solid var(--multi-border);border-radius:6px;background:var(--multi-bg);z-index:-1}'),'selected and unselected both use inset square');
-assert(css.includes('.library-card:has(.library-list-row) .library-card-header{border-bottom:0}'),'overview card has only one separator');
+assert(css.includes('.library-card .library-list-row:first-child,.library-card .library-empty-row:first-child{border-top:0;border-top-left-radius:calc(var(--radius) - 3px);border-top-right-radius:calc(var(--radius) - 3px)}'),'overview first row shares card top corners without a header separator');
 assert(css.includes('.library-card .library-list-row:last-child{border-radius:0 0 calc(var(--radius) - 3px) calc(var(--radius) - 3px)}'),'last clickable row shares card bottom radius');
 assert(css.includes('.library-card .library-list-row:active:not(:has(button:active,a:active,input:active)){border-top-color:transparent!important;box-shadow:inset 0 0 0 2px var(--ui-line-focus)}'),'overview JSON row press ring joins corners without duplicate divider');
 assert(!css.includes('.library-list-row:focus-visible,.library-card .library-list-row:focus-within{outline:none!important}'),'touch devices must retain keyboard focus');

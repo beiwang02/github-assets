@@ -5,5 +5,5 @@ for(const cls of ['library-list-row','library-empty-row','json-reference-row','a
  let clicked=0,prevented=0;handler({key,preventDefault(){prevented++},target:{matches:s=>s.split(',').includes('.'+cls+'[data-action]'),click(){clicked++}}});assert.equal(clicked,key==='Escape'?0:1);assert.equal(prevented,clicked);
 }
 let nested=0;handler({key:'Enter',preventDefault(){nested++},target:{matches:()=>false,click(){nested++}}});assert.equal(nested,0,'nested buttons keep their own native keyboard activation');
-const html=fs.readFileSync('index.html','utf8');for(const file of ['styles.css','console.css','ui-refresh.css','console.js'])assert(html.includes(file+'?v='+(['console.css','ui-refresh.css','console.js'].includes(file)?'outline-text-feedback-95':'outline-text-feedback-95')));
+const html=fs.readFileSync('index.html','utf8');for(const file of ['styles.css','console.css','ui-refresh.css','console.js'])assert(html.includes(file+'?v='+(['console.css','ui-refresh.css','console.js'].includes(file)?'overview-library-header-96':'overview-library-header-96')));
 console.log('PASS final interaction: Enter/Space activates each row/card, Escape and nested controls remain independent; all four resource versions match. Runtime geometry matrix: tests/interaction-finish.js');

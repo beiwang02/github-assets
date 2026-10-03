@@ -219,11 +219,11 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 
 [data-feedback="surface"]:not(.json-reference-row):not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):not(.active):not(.selected):not([aria-checked="true"]):not([aria-pressed="true"]):active:not(:has(button:active,a:active)){border-color:var(--ui-line-focus)!important;outline:1px solid var(--ui-line-focus);outline-offset:-1px}
 [data-feedback="control"]:focus-visible{outline-color:var(--ui-line-focus)!important}
-/* Overview library entry shares one divider with its header. Its bottom corners
-   follow the card, so the inset press ring bends continuously inside the clip. */
-.library-card:has(.library-list-row) .library-card-header{border-bottom:0}
+/* Overview entries now start at the card edge; the inset press ring follows
+   the first and last row corners without an obsolete header separator. */
 .library-card .library-list-row{border-top-color:#f0f2f6;border-radius:0;box-shadow:inset 0 0 0 0 var(--ui-line-focus);transition:box-shadow .12s}
 .library-card .library-list-row:last-child{border-radius:0 0 calc(var(--radius) - 3px) calc(var(--radius) - 3px)}
+.library-card .library-list-row:first-child,.library-card .library-empty-row:first-child{border-top:0;border-top-left-radius:calc(var(--radius) - 3px);border-top-right-radius:calc(var(--radius) - 3px)}
 .library-card .library-list-row:active:not(:has(button:active,a:active,input:active)){border-top-color:transparent!important;box-shadow:inset 0 0 0 2px var(--ui-line-focus)}
 
 /* Image resources: prevent iOS text selection on pressable cards/toolbar, and
