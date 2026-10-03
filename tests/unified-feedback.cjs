@@ -23,6 +23,6 @@ assert(consoleCss.includes('Nested actions are excluded from ancestor hover/pres
 /* Static cache versions advance with the CSS/JS change. */
 assert(html.includes('styles.css?v=library-alignment-98'));
 assert(html.includes('console.css?v=library-alignment-98'));
-assert(html.includes('ui-refresh.css?v=library-alignment-98'));
+assert(html.includes('ui-refresh.css?v=copy-outline-99'));
 assert(html.includes('console.js?v=library-alignment-98'));
 console.log('PASS unified feedback: auxiliary icons, copy, library switch share pale feedback; primary/danger stay semantic');

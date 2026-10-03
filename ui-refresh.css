@@ -159,7 +159,7 @@ input:focus,input:focus-visible,select:focus,select:focus-visible,textarea:focus
    JSON copy matches its unchanged X: 34px minimum box, 9px radius, 18px SVG. */
 .copy-control.ui-button{--copy-bg:var(--surface);--copy-line:var(--line);--copy-ink:#8090a6;color:var(--copy-ink);background:var(--copy-bg);border:1px solid var(--copy-line);transition:background .12s,border-color .12s,filter .12s}
 body.dark .copy-control.ui-button{--copy-ink:var(--ink);color:var(--copy-ink);background:var(--copy-bg);border-color:var(--copy-line)}
-.copy-control.copy-control-icon.ui-button{--copy-line:var(--ui-small-action-line);width:34px!important;height:34px!important;min-width:34px;min-height:34px;max-width:34px;max-height:34px;flex:0 0 34px;padding:0;gap:0;border-radius:9px;box-sizing:border-box}
+.copy-control.copy-control-icon.ui-button{width:34px!important;height:34px!important;min-width:34px;min-height:34px;max-width:34px;max-height:34px;flex:0 0 34px;padding:0;gap:0;border-radius:9px;box-sizing:border-box}
 .copy-control.copy-control-icon .ui-icon{width:18px;height:18px;flex:0 0 18px}
 .asset-meta .copy-control{margin-left:auto}
 @media(hover:hover){.copy-control.ui-button:not(:disabled):hover{background:var(--copy-bg);border-color:var(--copy-ink)}}

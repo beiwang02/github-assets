@@ -58,8 +58,8 @@ window.smallActionAudit=async(dark=false)=>{
   S.view=view;S.selectedLibrary='lib0';renderC();await new Promise(r=>setTimeout(r,0));
   document.activeElement?.blur();
   const copy=document.querySelector('.copy-control-icon'),select=document.querySelector('.asset-select,.reference-select');
-  const border=getComputedStyle(copy).borderTopColor,expected=dark?'rgb(83, 102, 129)':'rgb(196, 204, 222)';if(border!==expected)throw Error('copy outline '+view+' '+border);
-  if(select){const chosen=select.classList.contains('asset-select')?getComputedStyle(select,'::before').borderTopColor:getComputedStyle(select).borderTopColor;if(chosen!==border)throw Error('selection outline mismatch');}
+  const border=getComputedStyle(copy).borderTopColor,expected=dark?'rgb(40, 54, 77)':'rgb(232, 236, 243)';if(border!==expected)throw Error('copy outline '+view+' '+border);
+  if(select){const chosen=select.classList.contains('asset-select')?getComputedStyle(select,'::before').borderTopColor:getComputedStyle(select).borderTopColor;if(chosen!==(dark?'rgb(83, 102, 129)':'rgb(196, 204, 222)'))throw Error('selection outline changed');}
   results.push({view,border,matched:!!select});
  }
  return {width:innerWidth,dark,passed:true,results};

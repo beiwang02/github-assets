@@ -1,6 +1,8 @@
 const fs=require('node:fs'),assert=require('node:assert/strict');const css=fs.readFileSync('ui-refresh.css','utf8'),js=fs.readFileSync('console.js','utf8');
 assert(css.includes(':root{--ui-small-action-line:#c4ccde}'));assert(css.includes('body.dark{--ui-small-action-line:#536681}'));
-assert(css.includes('.copy-control.copy-control-icon.ui-button{--copy-line:var(--ui-small-action-line);'));
+assert(css.includes('.copy-control.copy-control-icon.ui-button{width:34px'));
+assert(!css.includes('--copy-line:var(--ui-small-action-line)'));
+assert(css.includes('--copy-line:var(--line)'));
 assert(css.includes('--multi-border:var(--ui-small-action-line)'));
 assert(css.includes('body .quick-asset[data-feedback="surface"]:active,body .quick-asset[data-pointer-focus]{outline:none!important}'));
 assert(js.includes("e.target.closest('.quick-asset')?.setAttribute('data-pointer-focus','')"));assert(js.includes("document.querySelectorAll('.quick-asset[data-pointer-focus]')"));
