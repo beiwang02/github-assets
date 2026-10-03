@@ -4,8 +4,9 @@ const sorting=source.slice(source.indexOf('const collatorC='),source.indexOf('fu
 const ui=vm.createContext({URL,S:{assets:[],iconSort:'newest',assetSort:'newest',librarySort:'updated-desc'},escC:String,window:{}});
 vm.runInContext(sorting,ui);
 const icons=[{name:'A',url:'https://example.invalid/a',addedAt:'2020-01-01',updatedAt:'2026-09-01',index:0},{name:'B',url:'https://example.invalid/b',addedAt:'2025-01-01',index:1},{name:'C',url:'https://example.invalid/c',addedAt:'2026-01-01',index:2},{name:'D',url:'https://example.invalid/d',addedAt:'2026-09-02',index:3},{name:'unknown',url:'https://example.invalid/u',index:4}];
-const original=JSON.stringify(icons),lib={icons};
-for(const mode of ['newest','oldest','name-asc','name-desc']){ui.S.iconSort=mode;const html=ui.coverStack(lib);assert(html.indexOf('/d')<html.indexOf('/c'));assert(html.indexOf('/c')<html.indexOf('/b'));assert(!html.includes('invalid/a'));}
+const original=JSON.stringify(icons),lib={name:'真实库',icons};
+assert.equal(ui.coverStack(lib),'<span class="library-row-icon" aria-hidden="true">真</span>');
+assert.deepEqual(Array.from(ui.sortedIconsC(lib,icons),i=>i.index),[3,0,2,1,4]);
 assert.equal(ui.sortedIconsC(lib,icons,'oldest')[0].index,0);assert.equal(ui.sortedIconsC(lib,icons,'newest')[0].index,3);assert.equal(JSON.stringify(icons),original);
 assert.equal(ui.compareTimedC({}, {}, 'latest',-1),0);assert.equal(ui.compareTimedC({updatedAt:'bad',addedAt:'2020-01-01'},{addedAt:'2020-01-01'},'latest',-1),0);
 const asset={name:'A',path:'a',url:'https://raw.githubusercontent.com/o/r/main/a.png',sha:'blob2',createdAt:'2020-01-01',updatedAt:'2026-09-01'};ui.S.assets=[asset];assert(ui.imageURLC({url:asset.url}).endsWith('?v=blob2'));assert(!asset.url.includes('?'));assert.equal(ui.sortedAssetsC([asset,{path:'b',createdAt:'2025-01-01'}],'newest')[0].path,'b');assert.equal(ui.sortedAssetsC([asset,{path:'b',createdAt:'2025-01-01'}],'oldest')[0].path,'a');
@@ -26,6 +27,3 @@ let changes;const snap=()=>({head:'h',entries:[{path:'assets/g/a.png',sha:'blob'
  assert.throws(()=>c.metadataFromSnapshot({entries:[{path:'.github-assets-meta.json',content:btoa('bad')}]}));
  console.log('PASS update-times: covers all UI sorts; latest/oldest; stable unknown/equal; immutable original indexes; upload/add/edit/no-op; asset/group rename linked refs; unrelated library unchanged; raw URL/cache; corrupt metadata safe. Mock only.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
-// Browser fixture executes the same production sorting helpers, never the app bootstrap.
-const fixture=`<!doctype html><meta charset="utf-8"><title>最近更新安全夹具</title><style>body{font:16px sans-serif;padding:30px}img{width:70px;height:70px}section{padding:16px;border:1px solid #ddd;margin:15px}</style><h1>最近更新排序 · 无网络写入夹具</h1><div id="result"></div><script>const S={assets:[],iconSort:'name-desc',assetSort:'oldest',librarySort:'updated-desc'};const escC=String;${sorting}\nconst icons=${JSON.stringify(icons)};for(const i of icons)i.url='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="70" height="70"><rect width="70" height="70" fill="lightblue"/><text x="15" y="40">'+i.name+'</text></svg>');const lib={icons};document.getElementById('result').innerHTML=['newest','oldest','name-asc','name-desc'].map(mode=>{S.iconSort=mode;return '<section><h2>UI '+mode+'</h2>封面应始终 D / C / B'+coverStack(lib)+'<p>库顺序：'+sortedIconsC(lib,icons).map(i=>i.name+' [原索引 '+i.index+']').join(' → ')+'</p></section>'}).join('');</script>`;
-fs.writeFileSync(__dirname+'/update-times-fixture.html',fixture);

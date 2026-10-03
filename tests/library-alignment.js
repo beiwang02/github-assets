@@ -1,35 +1,35 @@
 /* Production DOM/CSS audit with synthetic libraries; not a physical iPhone test. */
 window.libraryAlignmentAudit=async(dark=false)=>{
  const checks=[];const check=(ok,label)=>{checks.push({label,ok:!!ok});if(!ok)throw Error(label)};
- for(const shape of ['empty','mixed','long']){
-  libraryDisplayFixture(shape==='empty'?0:7,dark);
-  if(shape!=='empty'){
-   S.libraries.forEach((lib,i)=>{const n=i%4;lib.count=n;lib.icons=Array.from({length:n},(_,j)=>({name:'图片'+j,url:S.assets[0].url}));if(shape==='long'){lib.name='很长的真实库名'.repeat(30)+i;lib.description='说明'.repeat(80);}});renderC();
-  }
+ for(const shape of ['empty','single','mixed','long']){
+  libraryDisplayFixture(shape==='empty'?0:shape==='single'?1:7,dark);
+  S.libraries.forEach((lib,i)=>{const n=i%4;lib.count=n;lib.icons=Array.from({length:n},(_,j)=>({name:'图片'+j,url:S.assets[0].url}));lib.description=i%3===0?'用户真实说明':i%3===1?'':'   ';if(shape==='long'){lib.name='很长的真实库名'.repeat(30)+i;if(i%2===0)lib.description='说明'.repeat(80);}});renderC();
   await new Promise(resolve=>setTimeout(resolve,0));
   const rows=[...document.querySelectorAll('.library-card .library-list-row')];
-  check(rows.length===(shape==='empty'?0:5),'five-row cap '+shape);
+  check(rows.length===(shape==='empty'?0:shape==='single'?1:5),'five-row cap '+shape);
+  check(!!document.querySelector('#sidebar .main-nav'),'original sidebar');
+  check(!!document.querySelector('.section-row [data-view="libraries"]'),'outer all-libraries action');
   check(!document.querySelector('.library-card-header'),'header remains absent');
   check(document.documentElement.scrollWidth<=innerWidth,'page overflow '+shape);
   if(!rows.length){check(!!document.querySelector('.library-card .empty-state'),'emptyC preserved');continue;}
-  const positions=()=>rows.map(r=>({name:r.querySelector('.list-info b').getBoundingClientRect().left,description:r.querySelector('small').getBoundingClientRect().left,meta:r.querySelector('.list-meta').getBoundingClientRect().right,preview:r.querySelector('.library-preview-strip').getBoundingClientRect().width}));
-  const before=positions();
+  const first=rows[0].querySelector('b').getBoundingClientRect().left;
   for(const [i,r] of rows.entries()){
+   const lib=S.libraries.find(l=>l.id===r.dataset.id),icon=r.querySelector('.library-row-icon'),small=r.querySelector('small');
    check(r.scrollWidth<=r.clientWidth,'row overflow '+shape+i);
-   check(r.querySelectorAll('img').length===i%4,'preview count '+i);
-   check(r.querySelector('b').textContent===S.libraries.find(l=>l.id===r.dataset.id).name,'real library name');
-   check(Math.abs(before[i].name-before[0].name)<.1&&Math.abs(before[i].description-before[0].name)<.1,'text origin aligned '+i);
-   check(Math.abs(before[i].meta-before[0].meta)<.1,'right meta aligned '+i);
-   check(before[i].preview===(innerWidth<=700?96:168),'fixed preview '+i);
-   check(r.tabIndex===0&&r.getAttribute('role')==='button','keyboard row semantics '+i);
+   check(!r.querySelector('img')&&!r.querySelector('.library-preview-strip'),'no previews '+i);
+   check(icon.textContent===lib.name.slice(0,1),'real initial '+i);
+   check(icon.getBoundingClientRect().width===36,'fixed compact icon '+i);
+   check(getComputedStyle(icon).backgroundImage.includes('117, 128, 255')&&getComputedStyle(icon).backgroundImage.includes('140, 100, 233'),'fixed purple '+i);
+   check(r.querySelector('b').textContent===lib.name,'real name '+i);
+   check(!!small===!!lib.description.trim()&&(!small||small.textContent===lib.description),'real description only '+i);
+   check(Math.abs(r.querySelector('b').getBoundingClientRect().left-first)<.1,'text alignment '+i);
+   check(Math.abs(r.querySelector('b').getBoundingClientRect().left-icon.getBoundingClientRect().right-12)<.1,'natural icon text gap '+i);
+   check(r.getBoundingClientRect().height===72,'compact row height '+i);
+   check(r.querySelector('strong').textContent===lib.count+' 个'&&r.querySelector('.list-meta span').textContent==='已读取','count status '+i);
+   check(getComputedStyle(r.querySelector('b')).textOverflow==='ellipsis','long name ellipsis '+i);
+   check(r.tabIndex===0&&r.getAttribute('role')==='button','keyboard semantics '+i);
   }
-  const empty=rows[0];check(empty.querySelector('small').textContent==='暂无图片引用'&&empty.querySelector('strong').textContent==='0 个'&&empty.querySelector('.list-meta span').textContent==='已读取','empty text and status');
-  check(getComputedStyle(empty.querySelector('.library-row-icon')).backgroundImage==='none','placeholder not purple');
-  rows.forEach(r=>r.querySelectorAll('img').forEach(img=>img.dispatchEvent(new Event('error'))));
-  const after=positions();check(JSON.stringify(before)===JSON.stringify(after),'broken image keeps geometry');
-  empty.focus();empty.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true}));
-  check(S.view==='libraries'&&S.selectedLibrary===empty.dataset.id,'keyboard opens empty library');
-  check(getComputedStyle(document.querySelector('.library-logo')).backgroundImage.includes('117, 128, 255'),'workspace purple preserved');
+  for(const key of ['Enter',' ']){const row=document.querySelector('.library-list-row');row.focus();row.dispatchEvent(new KeyboardEvent('keydown',{key,bubbles:true,cancelable:true}));check(S.view==='libraries'&&S.selectedLibrary===row.dataset.id,'keyboard opens '+key);check(getComputedStyle(document.querySelector('.library-logo')).backgroundImage.includes('117, 128, 255'),'workspace purple preserved');S.view='overview';renderC();}
  }
  return {width:innerWidth,dark,passed:true,checks:checks.length};
 };

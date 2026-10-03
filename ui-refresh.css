@@ -321,10 +321,16 @@ body .sort-trigger[aria-expanded="true"]:not(:disabled):not([aria-disabled="true
 body .sort-trigger b{color:inherit}
 body .library-picker-option.selected{color:var(--ui-selection-ink);border-color:var(--ui-line-focus)!important}
 /* Native/check-square selection fill remains the selection indicator. */
-/* Empty libraries are ordinary compact rows, not page-level empty states. */
-/* Reserve the same three-tile preview column for empty and populated rows. */
-.library-card .library-preview-strip{flex:0 0 168px;width:168px;height:56px}
-.library-card .library-preview-empty .library-row-icon{flex:0 0 36px;width:36px;height:36px;font-size:16px;background:#f4f6fb;color:#7d8ba5;box-shadow:none}
-body.dark .library-card .library-preview-empty .library-row-icon{background:#24334b;color:#a7b4ca}
-@media(max-width:700px){.library-card .library-preview-strip{flex-basis:96px;width:96px}}
-body .library-logo{background:linear-gradient(135deg,#7580ff,#8c64e9)}
+/* Empty and populated libraries share one compact initial icon, with no preview column. */
+.library-card .library-list-row{min-height:72px;height:72px;gap:12px;padding:12px 16px}
+.library-card .library-row-icon{flex:0 0 36px;width:36px;height:36px;font-size:16px;color:#fff}
+body .library-logo,body .library-row-icon{background:linear-gradient(135deg,#7580ff,#8c64e9)}
+body.dark .library-card .library-row-icon{background:linear-gradient(135deg,#7580ff,#8c64e9);color:#fff}
+/* Search owns a full row; compact actions stay below, never stretch into half-width buttons. */
+.assets-toolbar,.json-reference-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.assets-toolbar>.inner-search,.json-reference-toolbar>.inner-search{flex:0 0 100%;width:100%;max-width:none;min-width:0}
+.assets-toolbar>.ui-button,.json-reference-toolbar>.ui-button{flex:0 0 auto;width:auto}
+.assets-toolbar>.toolbar-spacer,.json-reference-toolbar>.toolbar-spacer{flex:1 1 0;min-width:0}
+.assets-toolbar .asset-bulk-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.assets-toolbar .asset-bulk-actions:empty{display:none}
+@media(max-width:700px){.assets-toolbar>.ui-button,.json-reference-toolbar>.ui-button{flex:0 0 auto;width:auto}.assets-toolbar .asset-bulk-actions:not(:empty){order:3;flex-basis:100%}}

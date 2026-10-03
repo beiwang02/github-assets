@@ -10,6 +10,7 @@ for(const [fn,field] of [['sortedAssetsC','createdAt'],['sortedIconsC','addedAt'
  assert.deepEqual(sort('newest'),['new','same','old','u1','u2']);assert.deepEqual(sort('oldest'),['old','new','same','u1','u2']);
 }
 assert.equal(ctx.sortedLibrariesC([{name:'old',updatedAt:'2026-01-01'},{name:'new',updatedAt:'2025-01-01'}],'updated-desc')[0].name,'old');
-assert(source.includes("sortedAssetsC(S.assets,'newest').slice(0,6)"));assert(source.includes("sortedLibrariesC(S.libraries,'updated-desc').slice(0,5)"));assert(source.includes("})),'newest').slice(0,3)"));
-assert.equal(source.split("[['newest','最近添加'],['oldest','最早添加']").length-1,2);
-console.log('PASS added-sort: both areas newest/oldest/name; invalid and unknown stable last; ties stable; rename invariant; overview images added-desc, library rows updated-desc; labels identical.');
+assert(source.includes("sortedAssetsC(S.assets,'updated-desc').slice(0,6)"));assert(source.includes("sortedLibrariesC(S.libraries,'updated-desc').slice(0,5)"));
+assert(!source.includes("sortSelectC('assets'"));assert(!source.includes("sortSelectC('icons'"));
+for(const fn of ['sortedAssetsC','sortedIconsC']){const items=[{id:'old',createdAt:'2020-01-01',addedAt:'2020-01-01',updatedAt:'2026-01-01'},{id:'new',createdAt:'2025-01-01',addedAt:'2025-01-01'},{id:'tie',createdAt:'2025-01-01',addedAt:'2025-01-01'},{id:'unknown'},{id:'bad',updatedAt:'bad'}];const run=()=>Array.from(fn==='sortedAssetsC'?ctx[fn](items):ctx[fn]({},items),x=>x.id);assert.deepEqual(run(),['old','new','tie','unknown','bad']);items[1].updatedAt='2027-01-01';assert.deepEqual(run(),['new','old','tie','unknown','bad']);}
+console.log('PASS fixed latest: new/modified first, stable ties/unknown last, retained sort helpers, no toolbar menus');
