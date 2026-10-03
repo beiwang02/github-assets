@@ -204,7 +204,10 @@ body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--i
 /* Drop zone opens the OS picker instantly; the preview after selection is the real
    feedback, and iOS' gray pressed highlight is suppressed below. No purple on tap. */
 :is(.inner-search,.global-search):active{border-color:var(--ui-line-focus)!important}
-:is(.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within:not(:has(button:focus,a:focus,input:focus,select:focus,textarea:focus,[role="button"]:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}
+:is(.repo-switcher,.group-pill,.library-picker,.library-picker-option):focus-within:not(:has(button:focus,a:focus,input:focus,select:focus,textarea:focus,[role="button"]:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}
+/* Recent-image copy is a child action: pointer focus must never leave a card ring.
+   Only direct keyboard focus owns the persistent accessible outline. */
+.quick-asset:focus-visible:not(:has(button:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}
 :is(.asset-card,.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):active:not(:has(button:active,a:active,input:active,select:active,textarea:active,[role="button"]:active)){border-color:var(--ui-line-focus)!important}
 /* Unified neutral feedback: no default geometry changes, no persistent pointer focus.
    JS omits danger, GitHub login and checkmarks; blue CTAs use border-only feedback. */
@@ -312,3 +315,7 @@ body .sort-trigger[aria-expanded="true"]:not(:disabled):not([aria-disabled="true
 body .sort-trigger b{color:inherit}
 body .library-picker-option.selected{color:var(--ui-selection-ink);border-color:var(--ui-line-focus)!important}
 /* Native/check-square selection fill remains the selection indicator. */
+/* Empty libraries are ordinary compact rows, not page-level empty states. */
+.library-card .library-preview-empty{width:36px;height:36px}
+.library-card .library-preview-empty .library-row-icon{flex:0 0 36px;width:36px;height:36px;font-size:16px}
+body .library-logo,body .library-row-icon{background:linear-gradient(135deg,#7580ff,#8c64e9)}

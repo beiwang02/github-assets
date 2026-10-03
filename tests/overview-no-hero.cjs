@@ -2,8 +2,11 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const js=fs.readFileSync('console.js','utf8'),old=cp.execFileSync('git',['show','f84318d:console.js'],{encoding:'utf8'});
 const bar=/<section class="overview-quickbar"[\s\S]*?<\/section>(?=<div class="stat-grid">)/;
 const omitAdmin=s=>s.replace(/function adminPage\(\)[^]*?(?=function renderC\(\))/,'');
+// Library display has dedicated structural/color regressions; retain the historical
+// boundary for every other production function, especially recent images.
+const omitLibraryDisplay=s=>omitAdmin(s).replace(/function overviewView\(\)[^]*?(?=function librariesView\(\))/,'').replace(/function coverStack\(lib\)[^]*?(?=function relativeTimeC\()/,'').replace(/lib\.gradient\|\|'linear-gradient\(135deg,#[a-f0-9]+,#[a-f0-9]+\)'/g,'LIBRARY_COLOR').replace(/data\.libraries\.map\([^;]+\);/g,'LIBRARY_MAP;');
 const oldHeader='<div class="library-card-header"><div class="library-title"><div class="library-logo" style="background:linear-gradient(135deg,#6672ff,#8d64e8)">▦</div><div><b>我的 JSON 库</b><small>GitHub 上的 JSON 引用集合</small></div></div></div>';
-assert(!bar.test(js));assert.equal(omitAdmin(js),omitAdmin(old).replace(oldHeader,''),'Outside admin copy and exact overview header removal, production JS retained');
+assert(!bar.test(js));assert.equal(omitLibraryDisplay(js),omitLibraryDisplay(old).replace(oldHeader,''),'Outside admin copy and separately tested library display, production JS retained');
 // Feedback CSS is covered by outline-text-feedback tests; overview markup stays frozen.
 const S={connected:false,assets:[],groups:[],libraries:[]},c=vm.createContext({S,escC:String,statC:()=>'<div class="stat-card"></div>',emptyC:(i,t,d,a,l)=>`<button data-action="${a}">${l}</button>`,sortedLibrariesC:x=>x,sortedAssetsC:x=>x,coverStack:()=>'',imageURLC:x=>x.url});
 vm.runInContext(js.slice(js.indexOf('function overviewView()'),js.indexOf('function librariesView()')),c);

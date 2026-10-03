@@ -27,7 +27,7 @@ function syncFieldMenuC(owner,value,label){
   });
 }
 function imageURLC(item){const asset=item.sha?item:S.assets.find(a=>a.url===item.url);if(!asset?.sha)return item.url;try{const url=new URL(item.url);url.searchParams.set('v',asset.sha);return url.href;}catch{return item.url;}}
-function coverStack(lib) { const list=sortedIconsC(lib,(lib.icons||[]).map((item,index)=>({...item,index})),'newest').slice(0,3); return `<div class="library-preview-strip" aria-hidden="true">${list.length?list.map(x=>`<span class="library-preview-tile"><img src="${escC(imageURLC(x))}" alt="" onerror="this.closest('.library-preview-tile').classList.add('broken');this.remove()"></span>`).join(''):'<span class="library-row-icon">▦</span>'}</div>`; }
+function coverStack(lib) { const list=sortedIconsC(lib,(lib.icons||[]).map((item,index)=>({...item,index})),'newest').slice(0,3); return `<div class="library-preview-strip${list.length?'':' library-preview-empty'}" aria-hidden="true">${list.length?list.map(x=>`<span class="library-preview-tile"><img src="${escC(imageURLC(x))}" alt="" onerror="this.closest('.library-preview-tile').classList.add('broken');this.remove()"></span>`).join(''):'<span class="library-row-icon">▦</span>'}</div>`; }
 function relativeTimeC(value){
   if(typeof value!=='number'||!Number.isFinite(value))return String(value??'');
   const diff=Date.now()-value;

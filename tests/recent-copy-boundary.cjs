@@ -1,0 +1,11 @@
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const css=fs.readFileSync('ui-refresh.css','utf8'),js=fs.readFileSync('console.js','utf8');
+assert(css.includes('.quick-asset:focus-visible:not(:has(button:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}'));
+assert(!css.split('\n').some(l=>l.includes('quick-asset')&&l.includes(':focus-within')),'no pointer/sticky parent focus rule');
+assert(css.includes(':active:not(:has(button:active,a:active))'),'child press does not light surface');
+assert(css.includes(':hover:not(:has(button:hover,a:hover))'),'child hover does not light surface');
+assert(js.includes("const target=e.target.closest('[data-action],[data-view]')"),'closest action boundary');
+assert(js.includes("if(action==='copy'){e.preventDefault();e.stopImmediatePropagation();target.blur();await runSubmission(target,'正在复制…',()=>copyC(target.dataset.copy||''));return;}"),'copy returns without card action');
+assert(css.includes('body .asset-card.selected{border-color:var(--ui-line-focus)!important;outline-color:var(--ui-line-focus)'),'asset selection retained');
+assert(css.includes('body.dark :is(.repo-quick.active,.library-picker-option.selected,.sort-option.active,.library-switch-option[aria-checked=true],.json-reference-row.selected)'),'JSON selection retained');
+console.log('PASS recent copy boundary: parent pointer focus removed locally; keyboard-visible focus/direct press retained; child press/hover/action excluded; asset/JSON selections unchanged. Runtime DOM/CSSOM: library-display.js');
