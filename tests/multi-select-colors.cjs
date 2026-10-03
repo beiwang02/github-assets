@@ -1,7 +1,7 @@
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const css=fs.readFileSync('ui-refresh.css','utf8');
-assert.match(css,/:is\(\.asset-select,\.reference-select\)\{--multi-border:#c4ccde;--multi-bg:var\(--surface\);--multi-mark:#fff;color:var\(--multi-mark\)\}/);
-assert.match(css,/body\.dark :is\(\.asset-select,\.reference-select\)\{--multi-border:#536681;--multi-bg:#202e47\}/);
+assert.match(css,/:is\(\.asset-select,\.reference-select\)\{--multi-border:var\(--ui-small-action-line\);--multi-bg:var\(--surface\);--multi-mark:#fff;color:var\(--multi-mark\)\}/);
+assert.match(css,/body\.dark :is\(\.asset-select,\.reference-select\)\{--multi-border:var\(--ui-small-action-line\);--multi-bg:#202e47\}/);
 assert.match(css,/:is\(\.asset-card\.selected \.asset-select,\.json-reference-row\.selected \.reference-select\)\{--multi-border:var\(--ui-check-bg\);--multi-bg:var\(--ui-check-bg\);--multi-mark:var\(--ui-check-mark\)\}/);
 assert.match(css,/:is\(\.asset-select,\.reference-select\):focus,:is\(\.asset-select,\.reference-select\):focus-visible\{outline:none!important;box-shadow:none!important\}/);
 assert(!css.includes('--multi-fill:#626b78'));assert(!css.includes('--multi-focus'));assert(!css.includes('data-focus-active'));

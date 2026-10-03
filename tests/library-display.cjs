@@ -21,6 +21,11 @@ const maps=[...js.matchAll(/data\.libraries\.map\(([^;]+)\);/g)];assert.equal(ma
 for(const map of maps){const fn=vm.runInNewContext(`(${map[1]})`);for(const items of [[{id:'e'}],[{id:'a'},{id:'e'},{id:'b'}],[{id:'e'},{id:'b'},{id:'a'},{id:'new'}]]){const before=JSON.stringify(items);const result=items.map(fn);assert(result.every(x=>x.gradient===purple));assert.equal(JSON.stringify(items),before);}}
 assert(!js.includes('i%3'));assert(!js.includes('#ffb26d'));assert(!js.includes('#6672ff,#7b8af1'));
 assert.equal((js.match(/lib\.gradient\|\|'linear-gradient\(135deg,#7580ff,#8c64e9\)'/g)||[]).length,2);
-assert(css.includes('body .library-logo,body .library-row-icon{background:'+purple+'}'));
-assert(css.includes('.library-card .library-preview-empty{width:36px;height:36px}'));
+assert(css.includes('body .library-logo{background:'+purple+'}'));
+assert(css.includes('.library-card .library-preview-strip{flex:0 0 168px;width:168px;height:56px}'));
+assert(css.includes('.library-card .library-preview-strip{flex-basis:96px;width:96px}'));
+assert(css.includes('background:#f4f6fb;color:#7d8ba5;box-shadow:none'));
+assert(css.includes('body.dark .library-card .library-preview-empty .library-row-icon{background:#24334b;color:#a7b4ca}'));
+for(const count of [0,1,2,3,4]){const html=ctx.coverStack({icons:Array.from({length:count},()=>({url:'image'}))});assert.equal((html.match(/<img /g)||[]).length,Math.min(count,3));assert(html.includes('library-preview-strip'));}
+assert(!css.includes('body .library-logo,body .library-row-icon{background:'));
 console.log('PASS library display: empty/one/mixed/5-limit; real names/0/read status; fixed read/refresh color across add/reorder; source inputs unchanged; both fallback entries and light/dark icon CSS');

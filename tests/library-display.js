@@ -1,5 +1,6 @@
 /* Browser fixture only: production render/actions/CSS, synthetic repository data. */
 window.libraryDisplayFixture=(count=3,dark=false)=>{
+ localStorage.setItem('gh-image-theme',dark?'dark':'light');
  document.body.classList.toggle('dark',dark);document.documentElement.classList.toggle('dark',dark);
  S.auth={login:'fixture'};S.connected=true;S.repo={owner:'fixture',repo:'fixture',branch:'main',assetsPath:'assets'};S.view='overview';
  const url='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><circle cx="32" cy="32" r="23" fill="#7580ff"/></svg>');

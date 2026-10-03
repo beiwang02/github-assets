@@ -550,6 +550,10 @@ document.addEventListener('click', async e => {
 });
 document.addEventListener('click',e=>{ const sidebar=$c('#sidebar'); if(sidebar?.classList.contains('open')&&!e.target.closest('#sidebar')&&!e.target.closest('.mobile-menu')){ sidebar.classList.remove('open'); e.preventDefault(); e.stopImmediatePropagation(); } },true);
 document.addEventListener('submit',formSubmit);
+/* Only recent cards track pointer-origin focus; keyboard navigation restores
+   their accessible focus-visible ring without changing other cards. */
+document.addEventListener('pointerdown',e=>{e.target.closest('.quick-asset')?.setAttribute('data-pointer-focus','');},true);
+document.addEventListener('keydown',()=>{document.querySelectorAll('.quick-asset[data-pointer-focus]').forEach(card=>card.removeAttribute('data-pointer-focus'));},true);
 // Clear Safari's sticky button focus after each touch release.
 document.addEventListener('pointerup',e=>{const button=e.target.closest('button');if(button&&e.pointerType==='touch')button.blur();});
 /* Native upload pickers: only switch from focus to :open after this exact control

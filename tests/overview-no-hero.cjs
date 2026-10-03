@@ -4,7 +4,7 @@ const bar=/<section class="overview-quickbar"[\s\S]*?<\/section>(?=<div class="s
 const omitAdmin=s=>s.replace(/function adminPage\(\)[^]*?(?=function renderC\(\))/,'');
 // Library display has dedicated structural/color regressions; retain the historical
 // boundary for every other production function, especially recent images.
-const omitLibraryDisplay=s=>omitAdmin(s).replace(/function overviewView\(\)[^]*?(?=function librariesView\(\))/,'').replace(/function coverStack\(lib\)[^]*?(?=function relativeTimeC\()/,'').replace(/lib\.gradient\|\|'linear-gradient\(135deg,#[a-f0-9]+,#[a-f0-9]+\)'/g,'LIBRARY_COLOR').replace(/data\.libraries\.map\([^;]+\);/g,'LIBRARY_MAP;');
+const omitLibraryDisplay=s=>omitAdmin(s).replace(/\/\* Only recent cards track pointer-origin focus;[^]*?(?=\/\/ Clear Safari's sticky button focus)/,'').replace(/function overviewView\(\)[^]*?(?=function librariesView\(\))/,'').replace(/function coverStack\(lib\)[^]*?(?=function relativeTimeC\()/,'').replace(/lib\.gradient\|\|'linear-gradient\(135deg,#[a-f0-9]+,#[a-f0-9]+\)'/g,'LIBRARY_COLOR').replace(/data\.libraries\.map\([^;]+\);/g,'LIBRARY_MAP;');
 const oldHeader='<div class="library-card-header"><div class="library-title"><div class="library-logo" style="background:linear-gradient(135deg,#6672ff,#8d64e8)">▦</div><div><b>我的 JSON 库</b><small>GitHub 上的 JSON 引用集合</small></div></div></div>';
 assert(!bar.test(js));assert.equal(omitLibraryDisplay(js),omitLibraryDisplay(old).replace(oldHeader,''),'Outside admin copy and separately tested library display, production JS retained');
 // Feedback CSS is covered by outline-text-feedback tests; overview markup stays frozen.

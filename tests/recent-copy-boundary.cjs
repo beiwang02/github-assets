@@ -1,6 +1,6 @@
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const css=fs.readFileSync('ui-refresh.css','utf8'),js=fs.readFileSync('console.js','utf8');
-assert(css.includes('.quick-asset:focus-visible:not(:has(button:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}'));
+assert(css.includes('.quick-asset:focus-visible:not([data-pointer-focus]):not(:has(button:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}'));
 assert(!css.split('\n').some(l=>l.includes('quick-asset')&&l.includes(':focus-within')),'no pointer/sticky parent focus rule');
 assert(css.includes(':active:not(:has(button:active,a:active))'),'child press does not light surface');
 assert(css.includes(':hover:not(:has(button:hover,a:hover))'),'child hover does not light surface');
