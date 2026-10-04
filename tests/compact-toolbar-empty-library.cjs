@@ -1,0 +1,15 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const source=fs.readFileSync('console.js','utf8'),css=fs.readFileSync('ui-refresh.css','utf8');
+const S={connected:true,libraries:[{id:'empty',name:'Empty',file:'libraries/empty.json',count:0,icons:[]}],selectedLibrary:'empty',iconQuery:'',selectedIcons:new Set()};
+const ctx=vm.createContext({S,sortedLibrariesC:x=>x,sortedIconsC:(l,x)=>x,escC:x=>String(x),rawLibrary:()=>'',emptyC:(icon,title,description,action='',label='')=>`<h3>${title}</h3><p>${description}</p>${action?`<button data-action="${action}">${label}</button>`:''}`,imageURLC:x=>x.url});
+vm.runInContext(source.slice(source.indexOf('function librariesView()'),source.indexOf('function groupView()')),ctx);
+let html=ctx.librariesView();assert(html.includes('此JSON库暂无图片引用'));assert(html.includes('前往「图片资源」，选择图片并加入此JSON库。'));assert(!html.includes('data-action="new-icon"'));assert(html.includes('data-action="new-library"'));assert(html.includes('data-action="edit-library"'));
+S.iconQuery='none';html=ctx.librariesView();assert(html.includes('没有匹配的图片引用'));assert(!html.includes('此JSON库暂无图片引用'));
+S.iconQuery='';S.libraries[0].icons=[{name:'Example',url:'https://example.com/image.svg'}];S.selectedIcons.add(0);html=ctx.librariesView();assert(html.includes('json-reference-row selected'));assert(html.includes('data-action="delete-icon"'));assert(html.includes('data-action="delete-selected-icons"'));
+assert(css.includes('padding:0;border:0;border-radius:0;background:transparent'));
+assert(css.includes('.assets-toolbar>[data-action="refresh"]{order:2}'));
+assert(css.includes('.asset-bulk-actions{order:3;flex:0 0 100%'));
+assert(css.includes('.asset-bulk-actions:empty{display:none}'));
+assert(css.includes('.select-counter{margin-right:auto;white-space:nowrap;font-size:12px}'));
+assert(css.includes('min-height:36px;font-size:12px'));
+console.log('PASS compact toolbars / JSON empty library: render-state and CSS regression; synthetic, not live repository mutation.');

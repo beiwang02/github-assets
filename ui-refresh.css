@@ -327,11 +327,14 @@ body .library-picker-option.selected{color:var(--ui-selection-ink);border-color:
 .library-row-icon>.library-initial-latin{transform:translateY(-1px)}
 body .library-logo,body .library-row-icon{background:linear-gradient(135deg,#7580ff,#8c64e9)}
 body.dark .library-card .library-row-icon{background:linear-gradient(135deg,#7580ff,#8c64e9);color:#fff}
-/* Search owns a full row; compact actions stay below, never stretch into half-width buttons. */
-.assets-toolbar,.json-reference-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.assets-toolbar>.inner-search,.json-reference-toolbar>.inner-search{flex:0 0 100%;width:100%;max-width:none;min-width:0}
-.assets-toolbar>.ui-button,.json-reference-toolbar>.ui-button{flex:0 0 auto;width:auto}
-.assets-toolbar>.toolbar-spacer,.json-reference-toolbar>.toolbar-spacer{flex:1 1 0;min-width:0}
-.assets-toolbar .asset-bulk-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+/* Search is a full row, with compact readable controls below (no enclosing white card). */
+body .assets-toolbar,body .json-reference-toolbar,body.dark .assets-toolbar,body.dark .json-reference-toolbar{display:flex;flex-wrap:wrap;gap:10px 8px;align-items:center;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;margin-bottom:18px}
+.assets-toolbar>.inner-search,.json-reference-toolbar>.inner-search{flex:0 0 100%;width:100%;max-width:none;min-width:0;height:38px}
+.assets-toolbar>.inner-search input,.json-reference-toolbar>.inner-search input{font-size:12px}
+.assets-toolbar>.ui-button,.json-reference-toolbar>.ui-button{flex:0 0 auto;width:auto;min-height:36px;font-size:12px}
+.assets-toolbar>.toolbar-spacer,.json-reference-toolbar>.toolbar-spacer{display:none}
+.assets-toolbar>[data-action="refresh"]{order:2}
+.assets-toolbar .asset-bulk-actions{order:3;flex:0 0 100%;min-width:0;display:flex;gap:8px;align-items:center;padding-top:10px;border-top:1px solid var(--line)}
 .assets-toolbar .asset-bulk-actions:empty{display:none}
-@media(max-width:700px){.assets-toolbar>.ui-button,.json-reference-toolbar>.ui-button{flex:0 0 auto;width:auto}.assets-toolbar .asset-bulk-actions:not(:empty){order:3;flex-basis:100%}}
+.assets-toolbar .asset-bulk-actions .select-counter{margin-right:auto;white-space:nowrap;font-size:12px}
+.assets-toolbar .asset-bulk-actions .ui-button{flex:0 0 auto;min-height:36px;font-size:12px;padding-inline:10px}
