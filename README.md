@@ -83,10 +83,7 @@ curl -fsSL https://get.docker.com | sh
 
 ```bash
 mkdir -p /opt/stacks
-git clone https://github.com/beiwang02/github-assets.git /opt/stacks/github-assets
-cd /opt/stacks/github-assets
-cp .env.example .env
-docker compose up -d --build
+git clone https://github.com/beiwang02/github-assets.git /opt/stacks/github-assets && cd /opt/stacks/github-assets && cp .env.example .env && docker compose up -d --build
 ```
 
 常用命令（先进入部署目录）：
@@ -147,7 +144,60 @@ volumes:
 - `access-policy`：仅保存管理员访问策略，不保存图片、JSON 或 Token。
 - `read_only` 与 `no-new-privileges`：限制容器运行权限。
 
-默认不需要修改 `.env`。域名反向代理、访问名单等高级配置见 [`deploy/README.md`](deploy/README.md)。
+默认不需要修改 `.env`。域名反向代理和排错见下方说明；访问名单见「管理员配置」。
+
+### 域名与 HTTPS 反向代理（可选）
+
+架构：浏览器 → Nginx / Caddy（HTTPS）→ 容器 `:8765`。服务不依赖 Node、数据库、Redis、OAuth App 或 systemd；以下 systemd 命令仅用于宿主机 Nginx。
+
+如需域名，在 `.env` 设置 `PUBLIC_BASE_URL=https://img.example.com`。`ENABLE_TOKEN_LOGIN=true` 默认启用经典 Token 登录。不要将用户登录 Token 写入 `.env`、Git 仓库或截图。
+
+Nginx 示例（需要先安装 Nginx 和 Certbot，并将域名解析到服务器）：
+
+```nginx
+server {
+    listen 80;
+    server_name img.example.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:8765;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+sudo certbot --nginx -d img.example.com
+# 应用 .env 修改（含 PUBLIC_BASE_URL）
+docker compose up -d --build --force-recreate
+```
+
+只通过本机反代访问时，可设置 `GITHUB_IMAGE_HOST_BIND=127.0.0.1`，避免公网直接访问容器端口。
+
+### 更新与排错
+
+已有安装更新时，不要再次执行 `cp .env.example .env`，以免覆盖配置：
+
+```bash
+cd /opt/stacks/github-assets
+git pull --ff-only origin main
+docker compose up -d --build --force-recreate
+# 容器状态与日志
+docker compose ps
+docker compose logs -f github-assets
+# 本机接口检查（未登录响应可用于确认服务可达）
+curl http://127.0.0.1:8765/api/auth/me
+# 端口占用检查
+ss -lntp 'sport = :8765'
+```
+
+仅更新文档或安装脚本、未修改镜像内运行文件时，无需重建或重启容器。
 
 ## 管理员配置（可选）
 
@@ -167,7 +217,6 @@ ALLOWED_GITHUB_LOGINS=
 - `github.js`：GitHub 仓库读取、图片/JSON/分组操作和原子提交
 - `console.js`：控制台页面交互
 - `compose.yaml`、`Dockerfile`、`install.sh`：Docker Compose 部署
-- `deploy/README.md`：域名反向代理和高级部署说明
 
 ## 许可证
 

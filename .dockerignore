@@ -7,5 +7,4 @@ tests/
 .DS_Store
 README*
 install.sh
-deploy/
 *.md
