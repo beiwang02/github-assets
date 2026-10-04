@@ -1,0 +1,15 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const js=fs.readFileSync('console.js','utf8'),css=fs.readFileSync('ui-refresh.css','utf8');
+const S={selectedIcons:new Set()},ctx=vm.createContext({S});
+vm.runInContext(js.slice(js.indexOf('function iconsSelectionMarkupC('),js.indexOf('function groupView()')),ctx);
+const icons=[{index:1},{index:3}];
+let html=ctx.iconsSelectionMarkupC(icons);assert(html.includes('data-action="select-all-icons">全选'));assert(html.includes('data-action="delete-selected-icons" disabled aria-hidden="true"'));
+S.selectedIcons.add(1);html=ctx.iconsSelectionMarkupC(icons);assert(html.includes('data-action="select-all-icons">全选'));assert(!html.includes('data-action="delete-selected-icons" disabled'));
+S.selectedIcons.add(3);html=ctx.iconsSelectionMarkupC(icons);assert(html.includes('data-action="select-all-icons">取消全选'));
+S.selectedIcons.add(8);html=ctx.iconsSelectionMarkupC(icons);assert(html.includes('取消全选'));assert.equal((html.match(/delete-selected-icons/g)||[]).length,1);
+html=ctx.iconsSelectionMarkupC([]);assert(html.includes('data-action="select-all-icons" disabled>全选'));
+assert(js.includes('area.innerHTML=iconsSelectionMarkupC(visibleIcons())'));assert(js.includes('${iconsSelectionMarkupC(icons)}'));
+assert(css.includes('height:47px;box-sizing:border-box'));assert(css.includes('.asset-bulk-actions:empty{visibility:hidden;pointer-events:none}'));
+assert(css.includes('grid-template-columns:minmax(100px,1fr) 88px 56px'));assert(css.includes('[aria-hidden="true"]{visibility:hidden;pointer-events:none}'));
+assert(js.includes('图片文件不会删除。'));assert(js.includes('removeIcons(lib.file,indexes,lib.sha)'));
+console.log('PASS selection stability: empty/partial/all/filter toolbar states, reserved tracks, independent guarded deletion, original reference confirmation retained (synthetic).');

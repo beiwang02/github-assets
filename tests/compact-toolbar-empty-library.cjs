@@ -9,7 +9,7 @@ S.iconQuery='';S.libraries[0].icons=[{name:'Example',url:'https://example.com/im
 assert(css.includes('padding:0;border:0;border-radius:0;background:transparent'));
 assert(css.includes('.assets-toolbar>[data-action="refresh"]{order:2}'));
 assert(css.includes('.asset-bulk-actions{order:3;flex:0 0 100%'));
-assert(css.includes('.asset-bulk-actions:empty{display:none}'));
+assert(css.includes('.asset-bulk-actions:empty{visibility:hidden;pointer-events:none}'));
 assert(css.includes('.select-counter{margin-right:auto;white-space:nowrap;font-size:12px}'));
 assert(css.includes('min-height:36px;font-size:12px'));
 console.log('PASS compact toolbars / JSON empty library: render-state and CSS regression; synthetic, not live repository mutation.');
