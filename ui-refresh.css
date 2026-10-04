@@ -210,10 +210,8 @@ body.dark .copy-control.ui-button.btn:not(.copy-control-icon){--copy-ink:var(--i
 /* Recent-image copy is a child action: pointer focus must never leave a card ring.
    Only direct keyboard focus owns the persistent accessible outline. */
 .quick-asset:focus-visible:not([data-pointer-focus]):not(:has(button:focus)){outline:2px solid var(--ui-line-focus);outline-offset:2px}
-/* The generic surface press ring is square around image+caption. Recent cards
-   keep their existing ink feedback, but never draw that pointer/long-press box. */
+/* Recent cards keep original caption ink and never draw a pointer/long-press box. */
 body .quick-asset[data-feedback="surface"]:active,body .quick-asset[data-pointer-focus]{outline:none!important}
-body .quick-asset[data-feedback="surface"]:active:not(:has(button:active,a:active))>.quick-asset-name-row b{color:var(--ui-feedback-ink)}
 :is(.asset-card,.quick-asset,.repo-switcher,.group-pill,.library-picker,.library-picker-option):not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]):active:not(:has(button:active,a:active,input:active,select:active,textarea:active,[role="button"]:active)){border-color:var(--ui-line-focus)!important}
 /* Unified neutral feedback: no default geometry changes, no persistent pointer focus.
    JS omits danger, GitHub login and checkmarks; blue CTAs use border-only feedback. */
@@ -323,7 +321,10 @@ body .library-picker-option.selected{color:var(--ui-selection-ink);border-color:
 /* Native/check-square selection fill remains the selection indicator. */
 /* Empty and populated libraries share one compact initial icon, with no preview column. */
 .library-card .library-list-row{min-height:72px;height:72px;gap:12px;padding:12px 16px}
-.library-card .library-row-icon{flex:0 0 36px;width:36px;height:36px;font-size:16px;color:#fff}
+.library-card .library-row-icon{flex:0 0 36px;width:36px;height:36px;font-size:16px;color:#fff;display:grid;place-items:center;padding:0;line-height:1}
+.library-row-icon>.library-initial{display:block;line-height:1}
+/* Lowercase Latin x-height sits below the line-box centre; optical correction only. */
+.library-row-icon>.library-initial-latin{transform:translateY(-1px)}
 body .library-logo,body .library-row-icon{background:linear-gradient(135deg,#7580ff,#8c64e9)}
 body.dark .library-card .library-row-icon{background:linear-gradient(135deg,#7580ff,#8c64e9);color:#fff}
 /* Search owns a full row; compact actions stay below, never stretch into half-width buttons. */

@@ -41,8 +41,9 @@ window.recentPointerAudit=async(dark=false)=>{
  const pointer=getComputedStyle(card).outlineStyle;
  if(pointer!=='none'||!card.hasAttribute('data-pointer-focus'))throw Error('touch-origin focus rectangle');
  // Synthetic held CSS state: exercise the actual generic surface :active rule.
+ const caption=card.querySelector('.quick-asset-name-row b'),ink=getComputedStyle(caption).color;
  const rules=[...document.styleSheets].flatMap(s=>{try{return [...s.cssRules].filter(r=>r.selectorText?.includes('.quick-asset')&&r.selectorText.includes(':active')).map(r=>r.cssText.replaceAll(':active','.audit-held'));}catch{return[];}});const style=document.createElement('style');style.textContent=rules.join('\n');document.head.append(style);card.classList.add('audit-held');
- if(getComputedStyle(card).outlineStyle!=='none')throw Error('held pointer rectangle');card.classList.remove('audit-held');style.remove();
+ if(getComputedStyle(card).outlineStyle!=='none')throw Error('held pointer rectangle');if(getComputedStyle(caption).color!==ink)throw Error('held caption changed ink');card.classList.remove('audit-held');style.remove();
  card.dispatchEvent(new KeyboardEvent('keydown',{key:'Tab',bubbles:true}));card.blur();card.focus();
  if(card.hasAttribute('data-pointer-focus'))throw Error('keyboard modality not restored');
  // Untrusted key events cannot change WebKit focus-visible modality. Exercise

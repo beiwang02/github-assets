@@ -1,0 +1,14 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const js=fs.readFileSync('console.js','utf8'),css=fs.readFileSync('ui-refresh.css','utf8');
+const c=vm.createContext({escC:v=>String(v).replaceAll('<','&lt;'),S:{repo:{},auth:null},compatibleRepos:()=>[]});
+vm.runInContext(js.slice(js.indexOf('function coverStack('),js.indexOf('function relativeTimeC(')),c);
+for(const [name,initial,latin] of [['emby','e',true],['E库','E',false],['透明','透',false],['','',false],['😀库','😀',false],['𠮷库','𠮷',false],['<库','&lt;',false]])assert.equal(c.coverStack({name}),`<span class="library-row-icon" aria-hidden="true"><span class="library-initial${latin?' library-initial-latin':''}">${initial}</span></span>`);
+assert(css.includes('display:grid;place-items:center;padding:0;line-height:1}'));
+assert(css.includes('.library-row-icon>.library-initial{display:block;line-height:1}'));
+assert(css.includes('.library-row-icon>.library-initial-latin{transform:translateY(-1px)}'));
+assert(!css.includes('quick-asset-name-row b{color:var(--ui-feedback-ink)}'));
+assert(css.includes('.quick-asset:focus-visible:not([data-pointer-focus])'));
+vm.runInContext(js.slice(js.indexOf('function settingsPage()'),js.indexOf('async function loadAdminPolicy()')),c);
+assert(c.settingsPage().includes('<div class="security-note">Token 只在服务器内存会话中使用；“记住此设备”仅保存在当前浏览器本地。</div>'));
+assert(!c.settingsPage().includes('正式使用请启用 HTTPS。'));
+console.log('PASS fixed security copy, Unicode/case-safe centred initials, caption ink and keyboard focus');

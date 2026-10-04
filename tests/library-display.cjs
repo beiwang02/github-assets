@@ -23,5 +23,5 @@ assert(!js.includes('i%3'));assert(!js.includes('#ffb26d'));assert(!js.includes(
 assert.equal((js.match(/lib\.gradient\|\|'linear-gradient\(135deg,#7580ff,#8c64e9\)'/g)||[]).length,2);
 assert(css.includes('body .library-logo,body .library-row-icon{background:'+purple+'}'));
 assert(css.includes('.library-card .library-row-icon{flex:0 0 36px;width:36px;height:36px'));
-for(const count of [0,1,4]){const html=ctx.coverStack({name:'真实库',icons:Array.from({length:count},()=>({url:'image'}))});assert.equal(html,'<span class="library-row-icon" aria-hidden="true">真</span>');}
+for(const count of [0,1,4]){const html=ctx.coverStack({name:'真实库',icons:Array.from({length:count},()=>({url:'image'}))});assert.equal(html,'<span class="library-row-icon" aria-hidden="true"><span class="library-initial">真</span></span>');}
 console.log('PASS library initials: uniform empty/populated; real descriptions only; no preview/file fallback; fixed purple; five limit');

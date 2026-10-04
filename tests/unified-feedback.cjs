@@ -23,6 +23,6 @@ assert(consoleCss.includes('Nested actions are excluded from ancestor hover/pres
 /* Static cache versions advance with the CSS/JS change. */
 assert(html.includes('styles.css?v=library-initial-latest-100'));
 assert(html.includes('console.css?v=library-initial-latest-100'));
-assert(html.includes('ui-refresh.css?v=library-initial-latest-100'));
-assert(html.includes('console.js?v=append-display-102'));
+assert(html.includes('ui-refresh.css?v=https-initial-caption-103'));
+assert(html.includes('console.js?v=https-initial-caption-103'));
 console.log('PASS unified feedback: auxiliary icons, copy, library switch share pale feedback; primary/danger stay semantic');
