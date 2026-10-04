@@ -23,6 +23,8 @@ function setMetaC() {
   const repoName=$c('#repoName');
   if(repoName){ const dot=$c('#storageDot'); repoName.querySelector('.repo-name-text').textContent=S.repo.repo||'未选择仓库'; if(dot) repoName.appendChild(dot); }
   $c('#repoOwner').textContent=S.repo.owner?`${S.repo.owner} / ${S.repo.branch}`:'请先配置仓库';
+  const repoAvatar=$c('#repoAvatar');
+  if(repoAvatar){ const initial=(S.repo.repo||'').trim().slice(0,1); repoAvatar.textContent=initial||'G'; repoAvatar.title=S.repo.repo?`仓库 ${S.repo.repo} 首字母`:'尚未选择仓库'; }
   $c('#libraryCount').textContent=S.connected?S.libraries.length:'0'; $c('#assetCount').textContent=S.connected?S.assets.length:'0';
   const storageState=S.loading?'正在读取':(S.connected?'已连接':'未连接');
   const storageDot=$c('#storageDot');
