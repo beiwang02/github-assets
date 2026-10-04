@@ -348,7 +348,7 @@ body .json-reference-copy b{font-size:12px;line-height:1.5}
 body .json-reference-actions{grid-column:1/-1;justify-content:space-between;gap:8px!important;padding-top:8px;border-top:1px solid var(--line)}
 body .json-reference-row::after{inset:-1px;border-radius:10px}
 body .json-reference-list>.empty-state{grid-column:1/-1}
-@media(max-width:700px){body .json-reference-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body .json-reference-row{grid-template-columns:40px minmax(0,1fr);gap:8px!important;padding:8px!important}body .json-reference-thumb{width:40px;height:40px}body .json-reference-copy b{font-size:11px}}
+@media(max-width:700px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body .json-reference-row{grid-template-columns:40px minmax(0,1fr);gap:8px!important;padding:8px!important}body .json-reference-thumb{width:40px;height:40px}body .json-reference-copy b{font-size:11px}}
 /* Fixed selection tracks: labels may change, but controls never trade positions. */
 .assets-toolbar>[data-action="select-all"]{width:88px;justify-content:center}
 body .json-references [data-role="icons-selection-toolbar"]{display:grid!important;grid-template-columns:minmax(100px,1fr) 88px 56px;gap:8px!important;align-items:center}
