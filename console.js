@@ -50,9 +50,11 @@ function loginView() {
 const collatorC=new Intl.Collator(undefined,{numeric:true,sensitivity:'base'});
 function timeC(value){const n=Date.parse(value||'');return Number.isFinite(n)?n:null;}
 function compareTimedC(a,b,field,direction){const read=o=>field==='assetLatest'?(timeC(o.updatedAt)??timeC(o.createdAt)):field==='latest'?(timeC(o.updatedAt)??timeC(o.addedAt)??timeC(o.createdAt)):timeC(o[field]);const x=read(a),y=read(b);if(x===null&&y===null)return 0;if(x===null)return 1;if(y===null)return -1;return x===y?0:direction*(x-y);}
-function sortedAssetsC(items,mode='updated-desc'){return [...items].sort((a,b)=>mode==='name-asc'?collatorC.compare(a.name,b.name):mode==='name-desc'?collatorC.compare(b.name,a.name):compareTimedC(a,b,mode==='updated-desc'?'assetLatest':'createdAt',mode==='oldest'?1:-1));}
-function sortedLibrariesC(items,mode=S.librarySort){return [...items].sort((a,b)=>mode==='name-asc'?collatorC.compare(a.name,b.name):mode==='name-desc'?collatorC.compare(b.name,a.name):compareTimedC(a,b,'latest',mode==='updated-asc'?1:-1)||collatorC.compare(a.file,b.file));}
-function sortedIconsC(lib,items,mode='updated-desc'){return [...items].sort((a,b)=>mode==='name-asc'?collatorC.compare(a.name,b.name):mode==='name-desc'?collatorC.compare(b.name,a.name):compareTimedC(a,b,mode==='updated-desc'?'latest':'addedAt',mode==='oldest'?1:-1));}
+function stableCreationC(a,b){return compareTimedC(a,b,'createdAt',-1)||collatorC.compare(a.orderKey||a.path||a.file||'',b.orderKey||b.path||b.file||'');}
+function sortedAssetsC(items){return [...items].sort(stableCreationC);}
+function sortedLibrariesC(items){return [...items].sort(stableCreationC);}
+// Reverse a copy only: source indexes remain bound to edits/deletes, even duplicates.
+function sortedIconsC(lib,items){return [...items].reverse();}
 function closeSortMenus(restoreFocus=false){window.AnchoredMenu.close(restoreFocus);}
 function sortSelectC(kind,value,options){const current=options.find(([v])=>v===value)?.[1]||options[0]?.[1]||'';return `<div class="sort-control" data-sort-menu="${kind}"><span>排序</span><button type="button" class="sort-trigger" data-action="toggle-sort" aria-haspopup="menu" aria-expanded="false">${escC(current)} <b aria-hidden="true">${uiIconC('chevron')}</b></button><div class="sort-menu" role="menu">${options.map(([v,l])=>`<button type="button" role="menuitemradio" aria-checked="${value===v}" class="sort-option ${value===v?'active':''}" data-action="choose-sort" data-sort-kind="${kind}" data-sort-value="${v}">${value===v?'<span aria-hidden="true">✓</span>':'<span aria-hidden="true"></span>'}${escC(l)}</button>`).join('')}</div></div>`;}
 /* Field picker: same sort-menu visuals, but a native select stays in the form,

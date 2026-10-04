@@ -17,6 +17,6 @@ for(const file of ['json/1.json','json/nested/1.json','1.json','json/中文/中�
  assert(modal.includes(`name="path" value="${ctx.escC(base.replace(/\.json$/i,''))}"`));
  assert.equal(JSON.stringify(lib),before);
 }
-assert(fs.readFileSync('index.html','utf8').includes('console.js?v=library-basename-101'));
+assert(fs.readFileSync('index.html','utf8').includes('console.js?v=append-display-102'));
 assert(js.includes('<small>${lib.count} 个图片引用 · ${escC(lib.file)}</small>'));
 console.log('PASS current-library basename: nested paths, .json retained, Chinese/HTML escaped, file immutable, full raw URL and existing edit/picker preserved');

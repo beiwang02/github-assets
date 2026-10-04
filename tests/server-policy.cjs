@@ -25,6 +25,8 @@ async function boot({stored,readError,fail=false}={}){
  for(const p of ['assets','a-b/c_d','A123','a.b','a%20b','%E5%9B%BE'])assert(b.allowedAPI(new URL('https://api.github.com/repos/o/r/contents/'+p+'/.gitkeep'),'PUT'));
  for(const p of ['a//b','a%2Fb','a%5Cb','%00','%7f','%C2%85','%252f','%25252f','%252e%252e','%ZZ'])assert(!b.allowedAPI(new URL('https://api.github.com/repos/o/r/contents/'+p+'/.gitkeep'),'PUT'),p);
  for(const p of ['.','..','%2e%2e'])assert(!b.allowedAPI({origin:'https://api.github.com',pathname:'/repos/o/r/contents/'+p+'/.gitkeep'},'PUT'),p);
+ assert(b.allowedAPI(new URL('https://api.github.com/repos/o/r/commits/'+'a'.repeat(40)),'GET'));
+ for(const suffix of ['main','a'.repeat(39),'a'.repeat(40)+'/files'])assert(!b.allowedAPI(new URL('https://api.github.com/repos/o/r/commits/'+suffix),'GET'));
  assert(b.allowedAPI(new URL('https://api.github.com/repos/o/r/compare/abc...def'),'GET'));
  for(const suffix of ['.gitkeep.bak','.gitkeep/file','file.json','%252egitkeep'])assert(!b.allowedAPI(new URL('https://api.github.com/repos/o/r/contents/assets/'+suffix),'PUT'));
  assert(!b.allowedAPI(new URL('https://api.github.com/repos/o/r/contents/assets/file.json'),'PUT'));assert.equal(b.upstream+failed.upstream,0);

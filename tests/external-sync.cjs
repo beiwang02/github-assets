@@ -14,18 +14,18 @@ c.request=async(path,method='GET')=>{
  if(path.includes('/git/commits/'))return {tree:{sha:'t'+head}};
  if(path.includes('/git/trees/'))return {tree:[{type:'tree',path:'assets/g'},{type:'blob',path:'assets/g/'+(head>=4?'renamed':'a')+'.png',sha:head>=2?'img2':'img1'},...(head<4?[{type:'blob',path:'assets/g/extra.png',sha:'extra'}]:[]),{type:'blob',path:'json/x.json',sha:'doc'+(head===3?2:head)},...(invalid?[{type:'blob',path:'.github-assets-meta.json',sha:'bad'}]:[])]};
  if(path.includes('/git/blobs/')){if(path.endsWith('bad'))return {content:btoa('{bad')};return {content:content(Number(path.match(/doc(\d+)/)[1]))};}
+ if(path.includes('/commits/h'))return {files:[{filename:'assets/g/a.png',status:'added'},{filename:'assets/g/extra.png',status:'added'},{filename:'json/x.json',status:'added'}],parents:[]};
  if(path.includes('/commits?')){const p=new URL('https://a'+path).searchParams.get('path');if(p==='json/x.json')return (head>=4?[4,2,1]:head>=2?[2,1]:[1]).map(row);return [row(head>=2?2:1)];}
  if(path.includes('/contents/'))return {content:content(Number(path.match(/ref=h(\d+)/)[1]))};
  throw new Error(path);
 };
 (async()=>{
- let first=await c.load();assert.equal(first.libraries[0].icons[0].addedAt,date(1));calls=[];
- assert.equal(await c.load(),first);assert.equal(calls.length,1);assert(calls[0].includes('/git/ref/'));
- head=2;let second=await c.load();assert.equal(second.libraries[0].name,'New');assert.equal(second.libraries[0].icons[0].addedAt,date(1));assert.equal(second.libraries[0].icons[0].updatedAt,date(2));assert.equal(second.libraries[0].icons[1].addedAt,date(1));assert.equal(second.libraries[0].icons[1].updatedAt,date(2));
- head=3;calls=[];let unrelated=await c.load();assert.equal(unrelated.assets[0].updatedAt,second.assets[0].updatedAt);assert.equal(unrelated.libraries[0].updatedAt,second.libraries[0].updatedAt);assert(!calls.some(x=>x.includes('/commits?')||x.includes('/git/blobs/')));
- head=4;let fourth=await c.load();assert.equal(fourth.assets.length,1);assert(fourth.assets[0].path.endsWith('renamed.png'));assert.equal(fourth.libraries[0].icons[1].addedAt,date(1));assert.equal(fourth.libraries[0].icons[1].updatedAt,date(4));assert.equal(fourth.libraries[0].icons[2].addedAt,date(4));
- head=5;invalid=true;docs[5]=docs[4];await assert.rejects(c.load(),/\.github-assets-meta\.json/);assert.equal(c.cached,fourth);
- const paging=new C(c.config);let count=0;paging.request=async()=>{count++;return Array.from({length:100},()=>row(1));};const limited=await paging.pathHistory('a');assert.equal(count,3);assert.equal(limited.createdAt,null);assert.equal(limited.source,'git-history-limited');paging.request=async()=>{throw new Error('429');};assert.equal((await paging.pathHistory('a')).updatedAt,null);
- const r=c.reconcileReferences([{...a,addedAt:date(1)},{...a,addedAt:date(2)}],[a,a],date(4));assert.equal(r[0].addedAt,date(1));assert.equal(r[1].addedAt,date(2));
- console.log('PASS external-sync: branch HEAD fast path; GET only; image edit/delete/rename; JSON metadata and references; unrelated commit; missed revisions replay; duplicate occurrence identity; malformed metadata retains cache; 300-row bound and API-error unknown.');
-})().catch(e=>{console.error(e);process.exitCode=1;});
+ const first=await c.load();assert.deepEqual(Array.from(first.libraries[0].icons,i=>i.name),['A','B']);calls=[];
+ assert.equal(await c.load(),first);assert.equal(calls.length,1);
+ head=2;const second=await c.load();assert.equal(second.libraries[0].name,'New');assert.equal(second.libraries[0].icons[1].name,'B2');
+ head=3;calls=[];await c.load();assert(!calls.some(x=>x.includes('/commits?')||x.includes('/git/blobs/')));
+ head=4;const fourth=await c.load();assert.equal(fourth.assets.length,1);assert(fourth.assets[0].path.endsWith('renamed.png'));assert.deepEqual(Array.from(fourth.libraries[0].icons,i=>i.name),['A','B3','C']);
+ head=5;invalid=true;docs[5]=docs[4];calls=[];await c.load();assert(!calls.some(x=>x.endsWith('/bad')),'metadata is not read, even malformed');assert(!calls.some(x=>x.includes('/contents/')),'no reference history replay');
+ const paging=new C(c.config);let count=0;paging.request=async()=>{count++;return Array.from({length:100},()=>row(1));};assert.equal((await paging.pathHistory('a')).createdAt,null);assert.equal(count,3);
+ console.log('PASS external-sync GET-only, branch fastpath, external edits preserve source order, unrelated HEAD skips blobs/history, obsolete malformed metadata ignored');
+})().catch(e=>{console.error(e);process.exitCode=1});

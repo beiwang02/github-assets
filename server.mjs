@@ -95,7 +95,7 @@ async function readBody(req) {
 function allowedAPI(url, method) {
   if (url.origin !== 'https://api.github.com' || url.username || url.password || url.hash) return false;
   const p = url.pathname;
-  if (method === 'GET') return p === '/user' || p === '/user/repos' || /^\/repos\/[^/]+\/[^/]+(?:\/commits|\/compare\/[^/]+|\/git\/(?:ref|refs|commits|trees|blobs)\/.*|\/contents(?:\/.*)?)?$/.test(p);
+  if (method === 'GET') return p === '/user' || p === '/user/repos' || /^\/repos\/[^/]+\/[^/]+(?:\/commits(?:\/[a-f0-9]{40})?|\/compare\/[^/]+|\/git\/(?:ref|refs|commits|trees|blobs)\/.*|\/contents(?:\/.*)?)?$/.test(p);
   if (method === 'PUT') {
     // Decode once per segment; residual escapes could acquire new meaning upstream.
     try {
