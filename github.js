@@ -26,7 +26,7 @@ class GitHubClient {
     if (tree.truncated) return { score:0, owner, repo:repo.name, branch, reason:'仓库目录过大，无法安全识别' };
     const entries = Array.isArray(tree.tree) ? tree.tree.filter(item => item.type === 'blob') : [];
     const dirs = new Set((Array.isArray(tree.tree) ? tree.tree : []).filter(item => item.type === 'tree').map(item => item.path));
-    const jsonEntries = entries.filter(item => /\.json$/i.test(item.path));
+    const jsonEntries = entries.filter(item => /\.json$/i.test(item.path) && item.path !== '.github-assets-meta.json');
     let libraryCount = 0, iconCount = 0, rawReferenceCount = 0;
     for (const entry of jsonEntries.slice(0, 20)) {
       try {
