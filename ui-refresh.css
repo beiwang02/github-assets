@@ -357,8 +357,8 @@ body .json-reference-row .reference-select::before{content:"";position:absolute;
 body .json-reference-row .reference-select[aria-pressed="true"]::after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;color:var(--multi-mark);font-size:13px}
 body .json-reference-actions .icon-btn,body.dark .json-reference-actions .icon-btn{grid-row:1;width:44px!important;height:44px!important;min-width:44px;min-height:44px;padding:0;border-color:transparent!important;background:transparent!important;color:var(--muted)!important}
 body .json-reference-actions .copy-control-icon.ui-button{grid-column:4;width:44px!important;height:44px!important;min-width:44px;min-height:44px;max-width:none;max-height:none}
-body .json-reference-actions [data-action="delete-icon"]{grid-column:5;color:#b23c55!important}
-body.dark .json-reference-actions [data-action="delete-icon"]{color:#efa5b3!important}
+body .json-reference-actions [data-action="delete-icon"]{grid-column:5;color:#d84f67!important}
+body.dark .json-reference-actions [data-action="delete-icon"]{color:#ff9cac!important}
 body .json-reference-row::after{inset:-1px;border-radius:8px}
 body .json-reference-list>.empty-state,body .json-empty-navigation{grid-column:1/-1}
 .json-empty-navigation{text-align:center;margin-top:-16px;padding-bottom:24px}
@@ -383,10 +383,11 @@ body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon):not
 body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon):not(:disabled):not([aria-busy="true"]):active::before{border-color:var(--ui-line-focus)}
 body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)[aria-busy="true"]>.ui-icon{visibility:hidden}
 body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)[aria-busy="true"]::after{position:absolute;inset:5px;display:grid;place-items:center;border:0;background:transparent;pointer-events:none;z-index:1}
-/* Restore the historical danger outline (#f3cbd3 / #654052), without its tinted fill.
-   One paint-only pseudo-frame overrides any legacy danger ::before; hit/grid stay 44px. */
-body .json-reference-actions [data-action="delete-icon"],body.dark .json-reference-actions [data-action="delete-icon"]{position:relative;isolation:isolate;border:0!important;border-radius:9px;background:transparent!important;box-shadow:none;--remove-line:#f3cbd3}
-body.dark .json-reference-actions [data-action="delete-icon"]{--remove-line:#654052}
+/* Match the current image-detail delete-asset button's computed icon/border colors:
+   light #d84f67 / #f0b5c0, dark #ff9cac / #70434d (console.css !important).
+   Reference colors only: retain transparent fill, 34px frame and 44px hit area. */
+body .json-reference-actions [data-action="delete-icon"],body.dark .json-reference-actions [data-action="delete-icon"]{position:relative;isolation:isolate;border:0!important;border-radius:9px;background:transparent!important;box-shadow:none;--remove-line:#f0b5c0}
+body.dark .json-reference-actions [data-action="delete-icon"]{--remove-line:#70434d}
 body .json-reference-actions [data-action="delete-icon"]::before{content:"";position:absolute;inset:5px;width:auto;height:auto;box-sizing:border-box;border:1px solid var(--remove-line);border-radius:9px;background:transparent;box-shadow:none;transform:none;pointer-events:none;z-index:0}
 body .json-reference-actions [data-action="delete-icon"]>.ui-icon{position:relative;z-index:1;width:18px;height:18px;flex:0 0 18px;pointer-events:none}
 body .asset-card .asset-meta{margin-inline:0}
@@ -398,6 +399,16 @@ body .json-reference-actions{margin-inline:-6px}
    Keep this scoped to image cards; no disabled/loading or keyboard state reset. */
 body .asset-card,body .asset-card :is(.asset-preview,.asset-preview img,.asset-details,.asset-name-row,b,.asset-meta,button){-webkit-tap-highlight-color:transparent}
 body .asset-card:not([aria-disabled="true"]):not([aria-busy="true"]):active{filter:none!important}
+/* The select target and its inset square must not acquire a WebKit tap layer,
+   inherited button press transition or filtered negative-z compositing layer.
+   Only paint/interaction properties change; keyboard outline and state opacity stay. */
+body .asset-card .asset-select,body .asset-card .asset-select::before,body .asset-card .asset-select::after{-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;transition:none!important;filter:none!important;transform:none!important;box-shadow:none!important}
+body .asset-card .asset-select{-webkit-appearance:none;appearance:none;background:transparent!important}
+body .asset-card .asset-select::before,body .asset-card .asset-select::after{pointer-events:none}
+body .asset-card .asset-select::before{z-index:0}
+body .asset-card .asset-select>.ui-icon{position:relative;z-index:1;pointer-events:none}
+body .asset-card .asset-select[aria-pressed="true"]{color:var(--ui-check-mark)}
+body .asset-card .asset-select[aria-pressed="true"]::before{border-color:var(--ui-check-bg);background:var(--ui-check-bg)}
 /* Selection belongs to the frame and inset square, never the row's text/background. */
 body .json-reference-row.selected,body.dark .json-reference-row.selected{border-color:var(--ui-line-focus)!important;color:var(--ink);background:var(--surface)}
 body .json-reference-row.selected::after{border-color:var(--ui-line-focus)}
