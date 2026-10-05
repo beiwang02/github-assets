@@ -8,7 +8,8 @@ assert(css.includes('[data-feedback="control"]'));
 for(const state of [':not(:disabled)',':not([aria-disabled="true"])',':not([aria-busy="true"])',':not(.active)',':not(.selected)',':not([aria-checked="true"])'])assert(css.includes('[data-feedback="control"]')&&css.includes(state),'ignore '+state);
 assert(js.includes("return el.matches('button,.project-link,[role=\"button\"]')?'control':'';"));
 assert(js.includes("if(el.dataset.action==='copy')return 'control';"));
-assert(js.includes("if(el.matches('.library-switch-trigger,.library-picker-create'))return 'control';"));
+assert(js.includes("if(el.matches('.library-switch-trigger,.library-switch-option,.library-picker-option,.repo-quick'))return 'surface';"));
+assert(js.includes("if(el.matches('.library-picker-create'))return 'control';"));
 /* Red actions and blue CTAs are explicitly excluded from the unified pale rule. */
 assert(js.includes("if(el.matches('.btn-danger,.library-picker-delete,.library-switch-delete,.group-delete-link"));
 assert(js.includes("if(el.matches('.btn-github,.asset-select,.reference-select,.sidebar-overlay'))return '';"));

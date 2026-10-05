@@ -12,8 +12,9 @@ for(const description of [undefined,'','   ','实际用途说明']){
  const chooser=h.slice(h.indexOf('<button type="button" class="library-name-trigger'),h.indexOf('</button>',h.indexOf('<button type="button" class="library-name-trigger')));
  assert(chooser.includes('class="library-current-copy"'));assert(chooser.includes('2 个图片引用 · 真实.json'));
  assert(h.includes('class="library-current-name"'));assert(h.includes('class="library-name-chevron" aria-hidden="true"'));
- assert(!h.includes('>切换库</button>'));assert(h.includes('2 个图片引用 · 真实.json'));
- assert.equal(h.includes('class="json-library-summary"'),Boolean(description?.trim()));
+ assert(!h.includes('>切换库</button>'));assert(h.includes('2 个图片引用'));
+ assert.equal(h.includes('class="library-description"'),Boolean(description?.trim()));
+ assert(!h.includes('class="json-library-summary"'));
  if(description?.trim())assert(h.includes('实际用途说明'));
  for(const action of ['new-library','edit-library','copy'])assert(h.includes(`data-action="${action}"`));
  assert(h.indexOf('library-outside-actions')<h.indexOf('json-reference-toolbar'));
