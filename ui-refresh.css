@@ -373,9 +373,17 @@ body .asset-card .asset-meta{gap:0;margin-inline:-3px}
 body .asset-card .asset-select{flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;font-size:13px}
 body .asset-card .asset-select::before{inset:12px;border-radius:5px}
 body .asset-card .asset-copy{flex:0 0 44px;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;padding:0}
-/* Equal 44px copy targets with the original shallow full-size outline. */
-body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon),body.dark :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon){position:relative;max-width:none;max-height:none;border:1px solid var(--line)!important;border-radius:8px;background:transparent!important;color:var(--muted)!important;box-shadow:none}
-body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)::before{content:none}
+/* Homepage-sized visible copy frame inside an independent transparent 44px target.
+   Pseudo-elements are paint only: they never expand or intercept neighbouring targets. */
+body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon),body.dark :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon){position:relative;isolation:isolate;max-width:none;max-height:none;border:0!important;border-radius:9px;background:transparent!important;color:var(--copy-ink)!important;box-shadow:none}
+body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)::before{content:"";position:absolute;inset:5px;box-sizing:border-box;border:1px solid var(--copy-line);border-radius:9px;background:var(--copy-bg);pointer-events:none;z-index:0;transition:background .12s,border-color .12s}
+body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)>.ui-icon{position:relative;z-index:1;width:18px;height:18px;flex:0 0 18px;pointer-events:none}
+@media(hover:hover){body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon):not(:disabled):not([aria-busy="true"]):hover{color:var(--ui-feedback-ink)!important}body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon):not(:disabled):not([aria-busy="true"]):hover::before{border-color:var(--ui-line-focus)}}
+body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon):not(:disabled):not([aria-busy="true"]):active{color:var(--ui-feedback-ink)!important}
+body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon):not(:disabled):not([aria-busy="true"]):active::before{border-color:var(--ui-line-focus)}
+body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)[aria-busy="true"]>.ui-icon{visibility:hidden}
+body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)[aria-busy="true"]::after{position:absolute;inset:5px;display:grid;place-items:center;border:0;background:transparent;pointer-events:none;z-index:1}
+body .json-reference-actions [data-action="delete-icon"]>.ui-icon{width:18px;height:18px;flex:0 0 18px;pointer-events:none}
 body .asset-card .asset-meta{margin-inline:0}
 /* A 320px three-column card is narrower than two 44px targets plus insets.
    Keep the left target fixed and the right outline inset; only hit boxes overlap. */

@@ -1,0 +1,18 @@
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const css=fs.readFileSync('ui-refresh.css','utf8'),js=fs.readFileSync('console.js','utf8');
+const scope='body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)';
+const rule=s=>{const i=css.indexOf(s+'{');assert(i>=0,s);return css.slice(i+s.length+1,css.indexOf('}',i));};
+const home=rule('.copy-control.copy-control-icon.ui-button');
+for(const t of ['width:34px!important','height:34px!important','border-radius:9px'])assert(home.includes(t));
+const frame=rule(scope+'::before');
+for(const t of ['inset:5px','box-sizing:border-box','border:1px solid var(--copy-line)','border-radius:9px','background:var(--copy-bg)','pointer-events:none','z-index:0'])assert(frame.includes(t));
+assert.equal(44-2*5,34,'44px target minus two 5px insets gives homepage 34px frame');
+const outer=rule(scope+',body.dark :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)');
+assert(outer.includes('border:0!important')&&outer.includes('background:transparent!important')&&outer.includes('color:var(--copy-ink)!important'));
+for(const selector of [scope+'>.ui-icon','body .json-reference-actions [data-action="delete-icon"]>.ui-icon'])for(const t of ['width:18px','height:18px','flex:0 0 18px'])assert(rule(selector).includes(t));
+assert(rule(scope+'[aria-busy="true"]>.ui-icon').includes('visibility:hidden'));
+const busy=rule(scope+'[aria-busy="true"]::after');
+for(const t of ['inset:5px','border:0','background:transparent','pointer-events:none','z-index:1'])assert(busy.includes(t));
+assert(js.includes("close:'m6 6 12 12M18 6 6 18'"));
+assert(!frame.includes('inset:-')&&!outer.includes('overflow:visible'));
+console.log('PASS copy visual geometry: home 34px/9px/18px, local 44px transparent targets with 34px paint-only frame, shared theme ink, isolated busy layer, unframed 18px removal');

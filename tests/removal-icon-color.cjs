@@ -6,7 +6,9 @@ assert.equal(rule('body.dark .json-reference-actions [data-action="delete-icon"]
 const icons=rule('body .json-reference-actions .icon-btn,body.dark .json-reference-actions .icon-btn');
 for(const declaration of ['width:44px!important','height:44px!important','min-width:44px','min-height:44px','border-color:transparent!important','background:transparent!important','color:var(--muted)!important'])assert(icons.includes(declaration),declaration);
 const copy=rule('body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon),body.dark :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)');
-for(const declaration of ['border:1px solid var(--line)!important','background:transparent!important','color:var(--muted)!important','border-radius:8px','box-shadow:none'])assert(copy.includes(declaration),declaration);
+for(const declaration of ['border:0!important','background:transparent!important','color:var(--copy-ink)!important','border-radius:9px','box-shadow:none'])assert(copy.includes(declaration),declaration);
+const frame=rule('body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)::before');
+for(const declaration of ['inset:5px','box-sizing:border-box','border:1px solid var(--copy-line)','border-radius:9px','background:var(--copy-bg)','pointer-events:none'])assert(frame.includes(declaration),declaration);
 assert(!copy.includes('#b23c55')&&!copy.includes('#efa5b3'));
 assert(css.indexOf('body.dark .json-reference-actions [data-action="delete-icon"]')>css.indexOf('body .json-reference-actions .icon-btn,body.dark .json-reference-actions .icon-btn'));
 console.log('PASS removal-icon-color: two theme colors, transparent border/background, 44px hit targets, copy gray outline preserved');
