@@ -15,9 +15,9 @@ assert(css.includes(':is(.asset-card.selected .asset-select,.json-reference-row.
 assert(css.includes('--multi-mark:#fff'));
 assert(css.includes('--multi-bg:var(--ui-check-bg)'));
 assert(css.includes(':focus-visible{outline:none!important;box-shadow:none!important}'));
-assert(css.includes('.json-workspace .library-switch-trigger.ui-button'));
+assert(css.includes('.json-workspace .library-name-trigger.ui-button'));
 assert(css.includes('color:var(--primary)'));
-assert(css.includes('#uploadForm .modal-inline-create'));
+assert(!css.includes('#uploadForm .modal-inline-create'));
 // Safari touch release still clears sticky native focus.
 assert(js.includes("document.addEventListener('pointerup',e=>{const button=e.target.closest('button');if(button&&e.pointerType==='touch')button.blur();});"));
 console.log('focus reset regression: ok');

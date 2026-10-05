@@ -1,7 +1,7 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const js=fs.readFileSync(path.join(__dirname,'..','console.js'),'utf8');
 /* Every repo-dependent entry point refuses with the same message. */
-for (const entry of ['upload','new-library','new-icon','new-group','new-group-from-upload','manage-group']) {
+for (const entry of ['upload','new-library','new-icon','new-group','manage-group']) {
   const re=new RegExp("action==='"+entry+"'\\)\\{if\\(!S\\.connected\\)return notify\\('请先连接你的仓库','error'\\)");
   assert(re.test(js), entry+' must refuse without a connected repository');
 }

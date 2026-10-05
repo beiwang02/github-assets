@@ -1,10 +1,12 @@
 const fs=require('node:fs'),assert=require('node:assert/strict'),path=require('node:path');
 const read=f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8');const css=read('ui-refresh.css'),js=read('console.js');
-assert(css.includes('#tokenLoginForm .token-guide-button.ui-button,\n.json-workspace .library-switch-trigger.ui-button{justify-content:flex-start;text-align:left;padding:0;min-height:44px;border:0;background:transparent;font-size:12px;color:var(--primary);text-decoration:none}'));
+assert(css.includes('#tokenLoginForm .token-guide-button.ui-button{justify-content:flex-start;text-align:left;padding:0;min-height:44px;border:0;background:transparent;font-size:12px;color:var(--primary);text-decoration:none}'));
+assert(css.includes('.json-workspace .library-name-trigger.ui-button{display:flex;align-items:center;justify-content:flex-start;gap:10px;width:100%;max-width:100%;min-width:0;min-height:64px'));
 assert(css.includes('.json-workspace .json-workspace-top{flex-direction:row;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}'));
-assert(css.includes('#uploadForm .modal-inline-create{justify-content:flex-start;align-items:flex-start;text-align:left;padding:0;min-height:40px;border:0;background:transparent;color:var(--primary);text-decoration:none;line-height:1;justify-self:start;width:max-content}'));
+assert(!css.includes('#uploadForm .modal-inline-create'),'removed duplicate has no stale style');
 assert(js.includes('data-action="token-guide">经典 Token 创建教程</button>'));
-assert(js.includes('data-action="open-library-picker" aria-haspopup="dialog" aria-expanded="false">切换库</button>'));
+assert(js.includes('class="library-name-trigger library-switch-trigger" data-action="open-library-picker" aria-haspopup="dialog" aria-expanded="false"'));
+assert(!js.includes('aria-expanded="false">切换库</button>'));
 assert(read('index.html').includes('ui-refresh.css?v=https-initial-caption-103'));
 console.log('PASS auxiliary-entry: scoped alignment, 44px touch targets, 8px gap, unchanged semantics and upload-only rule. Browser: tests/auxiliary-entry.js');
 

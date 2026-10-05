@@ -1,0 +1,33 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const js=fs.readFileSync('console.js','utf8'),css=fs.readFileSync('ui-refresh.css','utf8');
+const S={connected:true,libraries:[{id:'a',name:'很长的真实库名'.repeat(12),file:'nested/真实.json',count:2,icons:[]}],selectedLibrary:'a',iconQuery:'',selectedIcons:new Set()};
+const ctx=vm.createContext({S,escC:String,uiIconC:()=>'<svg class="ui-icon"></svg>',sortedLibrariesC:x=>x,sortedIconsC:(l,x)=>x,rawLibrary:()=>'/nested/真实.json',emptyC:()=>''});
+vm.runInContext(js.slice(js.indexOf('function librariesView()'),js.indexOf('function groupView()')),ctx);
+for(const description of [undefined,'','   ','实际用途说明']){
+ S.libraries[0].description=description;const h=ctx.librariesView();
+ assert.equal((h.match(/data-action="open-library-picker"/g)||[]).length,1);
+ assert(h.includes('<button type="button" class="library-name-trigger library-switch-trigger"'));
+ assert(h.includes('aria-haspopup="dialog" aria-expanded="false"'));
+ assert(h.includes('class="library-current-label" id="current-library-label">当前 JSON 库</span>'));
+ const chooser=h.slice(h.indexOf('<button type="button" class="library-name-trigger'),h.indexOf('</button>',h.indexOf('<button type="button" class="library-name-trigger')));
+ assert(chooser.includes('class="library-current-copy"'));assert(chooser.includes('2 个图片引用 · 真实.json'));
+ assert(h.includes('class="library-current-name"'));assert(h.includes('class="library-name-chevron" aria-hidden="true"'));
+ assert(!h.includes('>切换库</button>'));assert(h.includes('2 个图片引用 · 真实.json'));
+ assert.equal(h.includes('class="json-library-summary"'),Boolean(description?.trim()));
+ if(description?.trim())assert(h.includes('实际用途说明'));
+ for(const action of ['new-library','edit-library','copy'])assert(h.includes(`data-action="${action}"`));
+ assert(h.indexOf('library-outside-actions')<h.indexOf('json-reference-toolbar'));
+}
+assert(css.includes('.json-workspace.card{padding:0;margin-bottom:14px;border:0;border-radius:0;background:transparent;box-shadow:none}'));
+assert(css.includes('width:32px;height:32px;flex:0 0 32px'));
+assert(css.includes('.library-current-name{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap'));
+assert(css.includes('gap:10px;width:100%;max-width:100%'));
+assert(css.includes('border:1px solid var(--line);border-radius:10px;box-shadow:none'));
+assert(css.includes('height:44px;min-height:44px;padding:0 10px'));
+assert(css.includes('.library-name-chevron{display:flex;flex:0 0 14px'));
+assert(css.includes('display:flex;flex-wrap:wrap;width:auto;gap:6px'));
+assert(js.includes("trigger.setAttribute('aria-expanded','true')"));assert(js.includes("trigger.setAttribute('aria-expanded','false')"));
+assert(js.includes("modal.setAttribute('role','dialog')"));assert(js.includes("modal.setAttribute('aria-modal','true')"));
+assert(js.includes("if(e.key==='Escape'&&!pendingSubmission)closeC()"));
+assert(js.includes("S.selectedIcons.clear();S.iconQuery='';closeC();renderC();$c('.library-name-trigger')?.focus({preventScroll:true})"));
+console.log('PASS lightweight current library: single semantic name/caret chooser, real metadata, absent/blank description, natural actions, no frame/shadow, ellipsis and fixed caret, expanded/dialog/focus/Escape contracts. WebKit runtime: library-header-matrix.json.');

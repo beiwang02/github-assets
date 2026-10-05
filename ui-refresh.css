@@ -29,13 +29,6 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 .field-menu-native { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; border:0; margin:0; padding:0; }
 @media(max-width:700px){.field-menu .field-menu-trigger{min-height:38px;padding:0 11px;font-size:11px}.field-menu .field-menu-trigger b{margin-left:auto}}
 
-/* Upload-only text entry: preserve the 7px select-to-glyph gap and 40px hit target,
-   while overlapping only empty hit-box space into the following 15px form row gap. */
-#uploadForm .modal-inline-create{justify-content:flex-start;align-items:flex-start;text-align:left;padding:0;min-height:40px;border:0;background:transparent;color:var(--primary);text-decoration:none;line-height:1;justify-self:start;width:max-content}
-#uploadForm .modal-inline-create>span{display:block;line-height:13px}
-#uploadForm .modal-field:has(.modal-inline-create){margin-bottom:-26px;position:relative;z-index:0}
-#uploadForm .modal-field:has(.modal-inline-create)+.modal-field{position:relative;z-index:1}
-
 /* Group management only: the destructive glyph edge follows the input border edge. */
 #groupManageForm .group-name-label{display:flex;align-items:center;justify-content:space-between}
 #groupManageForm .group-delete-link{margin-right:0;padding-inline:0;justify-self:end}
@@ -174,17 +167,21 @@ body.dark .copy-control.ui-button{--copy-ink:var(--ink);color:var(--copy-ink);ba
 body.dark .asset-detail-preview,body.dark .json-icon-detail-preview{border-color:#3b4d69;background:#24334b}
 @media(max-width:700px){.asset-detail-preview,.json-icon-detail-preview{width:min(100%,160px);padding:0}}
 
-/* Current library is information, only the adjacent text control opens the chooser. */
-.library-current-info{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
-.library-current-info .library-logo{flex-shrink:0}
-.library-current-copy{min-width:0;overflow-wrap:anywhere}
-.library-current-copy b,.library-current-copy em{display:block;white-space:normal;overflow-wrap:anywhere}
-.library-current-copy em{font-size:12px;font-style:normal;color:var(--muted);margin-top:4px}
-/* Auxiliary entries align to their own field/content edge, not generic button insets. */
-#tokenLoginForm .token-guide-button.ui-button,
-.json-workspace .library-switch-trigger.ui-button{justify-content:flex-start;text-align:left;padding:0;min-height:44px;border:0;background:transparent;font-size:12px;color:var(--primary);text-decoration:none}
+/* One compact full-width chooser; only the chooser has a pale border, never an outer card. */
+body .json-workspace.card{padding:0;margin-bottom:14px;border:0;border-radius:0;background:transparent;box-shadow:none}
+.library-current-info{display:flex;flex-direction:column;align-items:stretch;gap:6px;min-width:0;flex:1}
+.library-current-label{font-size:12px;line-height:18px;font-weight:500;color:var(--muted)}
+.json-workspace .library-name-trigger.ui-button{display:flex;align-items:center;justify-content:flex-start;gap:10px;width:100%;max-width:100%;min-width:0;min-height:64px;margin:0;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:none;color:var(--ink);font-size:14px;text-align:left;white-space:nowrap}
+.library-current-info .library-logo{width:32px;height:32px;flex:0 0 32px;border-radius:9px;font-size:13px;box-shadow:none;color:#fff}
+.library-current-name{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:20px}
+.library-name-chevron{display:flex;flex:0 0 14px;margin-left:auto;color:var(--muted)}
+.library-name-chevron .ui-icon{width:14px;height:14px;flex:0 0 14px}
+.library-current-copy{flex:1;min-width:0;max-width:100%;overflow:hidden}
+.library-current-copy em{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:18px;font-style:normal;font-weight:400;color:var(--muted);margin-top:2px}
+.json-workspace .json-library-summary{margin:8px 0 0;color:var(--muted);font-size:12px;line-height:18px;overflow-wrap:anywhere}
+/* Auxiliary entries align to their own field/content edge. */
+#tokenLoginForm .token-guide-button.ui-button{justify-content:flex-start;text-align:left;padding:0;min-height:44px;border:0;background:transparent;font-size:12px;color:var(--primary);text-decoration:none}
 .json-workspace .json-workspace-top{flex-direction:row;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}
-.json-workspace .library-switch-trigger.ui-button{flex:0 0 auto;margin-left:auto;padding-right:2px;color:var(--primary);white-space:nowrap}
 .library-switch-copy small{display:block;font-size:11px;font-weight:400;color:var(--muted);white-space:normal;overflow-wrap:anywhere}
 .library-switch-copy b{white-space:normal;overflow-wrap:anywhere}
 
@@ -238,10 +235,11 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 .assets-toolbar button,.asset-card{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .assets-toolbar .ui-button:active:not(:disabled){filter:none!important;box-shadow:none!important;transform:none!important}
 .assets-toolbar [data-feedback="control"]:active:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]){color:var(--ui-feedback-ink)!important}
-/* Local equal-width actions; shrink tracks rather than overflowing small screens. */
-.json-workspace .library-outside-actions>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:8px}
-.json-workspace .library-outside-actions .btn{width:100%;min-width:0;height:40px;min-height:40px;padding:0 4px;font-size:12px;gap:4px;white-space:nowrap;justify-content:center}
-@media(max-width:360px){.json-workspace .library-outside-actions>div{gap:4px}.json-workspace .library-outside-actions .btn{gap:2px;padding-inline:2px}.json-workspace-create .ui-icon{width:14px;height:14px;flex-basis:14px}.json-workspace .library-outside-actions .json-workspace-create{padding-inline:0;gap:0;font-size:11px}.json-workspace .json-workspace-create .ui-icon{width:12px;height:12px;flex-basis:12px}}
+/* Natural-width local actions; wrap instead of stretching into equal columns. */
+.json-workspace .library-outside-actions{margin-top:8px}
+.json-workspace .library-outside-actions>div{display:flex;flex-wrap:wrap;width:auto;gap:6px}
+.json-workspace .library-outside-actions .btn{flex:0 0 auto;width:auto;min-width:0;height:44px;min-height:44px;padding:0 10px;font-size:12px;gap:4px;white-space:nowrap;justify-content:center}
+@media(max-width:360px){.json-workspace .library-outside-actions>div{gap:4px}.json-workspace .library-outside-actions .btn{padding-inline:8px;font-size:11px}.json-workspace-create .ui-icon{width:14px;height:14px;flex-basis:14px}}
 /* Pointer focus is not selection. Keyboard focus belongs to the card itself only. */
 .asset-card:not(.selected):not(:focus-visible){outline:none!important}
 .asset-card:focus-visible{outline:2px solid var(--ui-line-focus);outline-offset:2px}
@@ -333,30 +331,52 @@ body .assets-toolbar,body .json-reference-toolbar,body.dark .assets-toolbar,body
 .assets-toolbar>.inner-search input,.json-reference-toolbar>.inner-search input{font-size:12px}
 .assets-toolbar>.ui-button,.json-reference-toolbar>.ui-button{flex:0 0 auto;width:auto;min-height:36px;font-size:12px}
 .assets-toolbar>.toolbar-spacer,.json-reference-toolbar>.toolbar-spacer{display:none}
-.assets-toolbar>[data-action="refresh"]{order:2}
-.assets-toolbar .asset-bulk-actions{order:3;flex:0 0 100%;min-width:0;height:47px;box-sizing:border-box;display:flex;gap:8px;align-items:center;padding-top:10px;border-top:1px solid var(--line)}
-.assets-toolbar .asset-bulk-actions:empty{visibility:hidden;pointer-events:none}
-.assets-toolbar .asset-bulk-actions .select-counter{margin-right:auto;white-space:nowrap;font-size:12px}
-.assets-toolbar .asset-bulk-actions .ui-button{flex:0 0 auto;min-height:36px;font-size:12px;padding-inline:10px}
-/* JSON references are small, quiet reference tiles, not the image-resource cards. */
+/* One shared search row and fixed action row for both resource pages. */
+body :is(.assets-toolbar,.json-reference-toolbar),body.dark :is(.assets-toolbar,.json-reference-toolbar){display:grid;grid-template-columns:80px 44px minmax(0,1fr);gap:8px 4px}
+:is(.assets-toolbar,.json-reference-toolbar)>.inner-search{grid-column:1/-1;width:100%}
+.json-reference-toolbar>[data-role="icons-selection-toolbar"]{display:contents}
+:is(.assets-toolbar,.json-reference-toolbar) [data-action^="select-all"]{grid-column:1;grid-row:2;width:80px;min-height:44px;padding:0 4px;font-size:12px}
+:is(.assets-toolbar,.json-reference-toolbar) [data-action="refresh"]{grid-column:2;grid-row:2;width:44px;min-height:44px;padding:0;font-size:18px}
+:is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions){grid-column:3;grid-row:2;min-width:0;height:44px;display:flex;justify-content:flex-end;gap:2px;align-items:center}
+:is(.asset-bulk-actions,.page-bulk-actions):empty,:is(.asset-bulk-actions,.page-bulk-actions) [aria-hidden="true"]{visibility:hidden;pointer-events:none}
+:is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions) button{flex:0 1 auto;min-width:44px;min-height:44px;font-size:12px;padding-inline:4px;white-space:nowrap;background:transparent;border-color:transparent}
+body .json-reference-toolbar :is([data-action="select-all-icons"],[data-action="refresh"]){background:var(--surface);border-color:var(--line);color:var(--muted)}
+/* JSON references: two small tiles on mobile, denser than image resources. */
 body .json-reference-list,body.dark .json-reference-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;overflow:visible;border:0;border-radius:0;background:transparent}
-body .json-reference-row{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;min-width:0;padding:10px!important;border:1px solid var(--line);border-radius:10px;background:var(--surface);box-shadow:none}
+body .json-reference-row{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:8px!important;row-gap:2px!important;min-width:0;padding:10px 8px 2px!important;border:1px solid var(--line);border-radius:10px;background:var(--surface);box-shadow:none}
 body .json-reference-row:last-child{border-bottom:1px solid var(--line)}
-body .json-reference-thumb{width:48px;height:48px;padding:4px;border-radius:6px}
+body .json-reference-thumb{width:44px;height:44px;padding:2px;border-radius:6px}
 body .json-reference-copy{align-self:center;min-width:0}
-body .json-reference-copy b{font-size:12px;line-height:1.5}
-body .json-reference-actions{grid-column:1/-1;justify-content:space-between;gap:8px!important;padding-top:8px;border-top:1px solid var(--line)}
+body .json-reference-copy b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;line-height:1.5;font-weight:600}
+body .json-reference-actions{grid-column:1/-1;display:flex;align-items:center;justify-content:flex-end;gap:0!important;margin:0 -6px;padding:0;border:0}
+body .json-reference-row .reference-select{position:relative;inset:auto;flex:0 0 44px;margin-right:auto;width:44px;height:44px;min-width:44px;min-height:44px;border:0!important;border-radius:8px;background:transparent!important;color:transparent;box-shadow:none}
+body .json-reference-row .reference-select::before{content:"";position:absolute;left:12px;top:12px;width:18px;height:18px;border:1px solid var(--multi-border);border-radius:5px;background:var(--multi-bg)}
+body .json-reference-row .reference-select[aria-pressed="true"]::after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;color:var(--multi-mark);font-size:13px}
+body .json-reference-actions .icon-btn,body.dark .json-reference-actions .icon-btn{flex:0 0 44px;width:44px!important;height:44px!important;min-width:44px;min-height:44px;padding:0;border-color:transparent!important;background:transparent!important;color:var(--muted)!important}
 body .json-reference-row::after{inset:-1px;border-radius:10px}
-body .json-reference-list>.empty-state{grid-column:1/-1}
-@media(max-width:700px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body .json-reference-row{grid-template-columns:40px minmax(0,1fr);gap:8px!important;padding:8px!important}body .json-reference-thumb{width:40px;height:40px}body .json-reference-copy b{font-size:11px}}
-/* Fixed selection tracks: labels may change, but controls never trade positions. */
-.assets-toolbar>[data-action="select-all"]{width:88px;justify-content:center}
-body .json-references [data-role="icons-selection-toolbar"]{display:grid!important;grid-template-columns:minmax(100px,1fr) 88px 56px;gap:8px!important;align-items:center}
-.json-references [data-role="icons-selection-toolbar"] .select-counter{min-width:0;white-space:nowrap;font-size:12px}
-.json-references [data-role="icons-selection-toolbar"] .btn{width:100%;height:36px;min-height:36px;padding:0 6px;justify-content:center;font-size:12px}
-.json-references [data-role="icons-selection-toolbar"] [aria-hidden="true"]{visibility:hidden;pointer-events:none}
-@media(max-width:600px){
-  body .json-references>.section-row{display:grid;grid-template-columns:1fr;gap:10px}
-  body .json-references [data-role="icons-selection-toolbar"]{width:100%;margin-left:0}
-}
+body .json-reference-list>.empty-state,body .json-empty-navigation{grid-column:1/-1}
+.json-empty-navigation{text-align:center;margin-top:-16px;padding-bottom:24px}
+@media(max-width:700px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body .json-reference-row{grid-template-columns:40px minmax(0,1fr);column-gap:6px!important;row-gap:2px!important}body .json-reference-thumb{width:40px;height:40px}}
+/* Both card types use the same left-select / right-copy ordering and touch size. */
+body .asset-card .asset-meta{gap:0;margin-inline:-3px}
+body .asset-card .asset-select{flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;font-size:13px}
+body .asset-card .asset-select::before{inset:12px;border-radius:5px}
+body .asset-card .asset-copy{flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;padding:0}
+/* Equal card action targets and a shared light-outline copy appearance. */
+body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon),body.dark :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon){position:relative;border:0!important;border-radius:8px;background:transparent!important;color:var(--muted)!important;box-shadow:none}
+body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)::before{content:"";position:absolute;inset:6px;border:1px solid var(--line);border-radius:7px;pointer-events:none}
+body :is(.asset-card .asset-meta,.json-reference-actions){margin-inline:-6px}
+/* Clean-up pass: scoped settings/modal rhythm, keeping the existing brand and borders. */
+.settings-card{box-shadow:none}
+#adminPolicyForm>p:not(.field-help){margin:8px 0 16px;color:var(--muted);font-size:12px;line-height:1.6}
+.settings-card>.security-note{padding:12px 14px}
+.settings-card .info-row{gap:12px;padding-block:12px}
+.settings-card .info-row b{min-width:0;text-align:right;overflow-wrap:anywhere}
+.modal-head{margin-bottom:16px}
+.modal-body{gap:14px}
+.modal-actions{margin-top:18px;padding-top:16px}
+#uploadForm .drop-zone{padding:18px}
+.modal :is(.btn,.modal-close,.field-menu-trigger),.settings-card .btn{min-height:44px}
+.modal .modal-close{min-width:44px;width:44px;flex-shrink:0}
+@media(max-width:700px){.modal{padding:20px}.modal-actions{gap:8px}.settings-card .btn{font-size:12px}.modal-head p{font-size:11px}.field-menu .field-menu-trigger{min-height:44px;font-size:12px}}
 
