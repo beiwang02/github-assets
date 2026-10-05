@@ -383,7 +383,12 @@ body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon):not
 body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon):not(:disabled):not([aria-busy="true"]):active::before{border-color:var(--ui-line-focus)}
 body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)[aria-busy="true"]>.ui-icon{visibility:hidden}
 body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)[aria-busy="true"]::after{position:absolute;inset:5px;display:grid;place-items:center;border:0;background:transparent;pointer-events:none;z-index:1}
-body .json-reference-actions [data-action="delete-icon"]>.ui-icon{width:18px;height:18px;flex:0 0 18px;pointer-events:none}
+/* Restore the historical danger outline (#f3cbd3 / #654052), without its tinted fill.
+   One paint-only pseudo-frame overrides any legacy danger ::before; hit/grid stay 44px. */
+body .json-reference-actions [data-action="delete-icon"],body.dark .json-reference-actions [data-action="delete-icon"]{position:relative;isolation:isolate;border:0!important;border-radius:9px;background:transparent!important;box-shadow:none;--remove-line:#f3cbd3}
+body.dark .json-reference-actions [data-action="delete-icon"]{--remove-line:#654052}
+body .json-reference-actions [data-action="delete-icon"]::before{content:"";position:absolute;inset:5px;width:auto;height:auto;box-sizing:border-box;border:1px solid var(--remove-line);border-radius:9px;background:transparent;box-shadow:none;transform:none;pointer-events:none;z-index:0}
+body .json-reference-actions [data-action="delete-icon"]>.ui-icon{position:relative;z-index:1;width:18px;height:18px;flex:0 0 18px;pointer-events:none}
 body .asset-card .asset-meta{margin-inline:0}
 /* A 320px three-column card is narrower than two 44px targets plus insets.
    Keep the left target fixed and the right outline inset; only hit boxes overlap. */

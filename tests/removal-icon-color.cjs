@@ -11,4 +11,12 @@ const frame=rule('body :is(.asset-card .asset-copy,.json-reference-actions .copy
 for(const declaration of ['inset:5px','box-sizing:border-box','border:1px solid var(--copy-line)','border-radius:9px','background:var(--copy-bg)','pointer-events:none'])assert(frame.includes(declaration),declaration);
 assert(!copy.includes('#b23c55')&&!copy.includes('#efa5b3'));
 assert(css.indexOf('body.dark .json-reference-actions [data-action="delete-icon"]')>css.indexOf('body .json-reference-actions .icon-btn,body.dark .json-reference-actions .icon-btn'));
-console.log('PASS removal-icon-color: two theme colors, transparent border/background, 44px hit targets, copy gray outline preserved');
+const removal='body .json-reference-actions [data-action="delete-icon"]';
+const removeOuter=rule(removal+',body.dark .json-reference-actions [data-action="delete-icon"]');
+for(const t of ['border:0!important','background:transparent!important','box-shadow:none','--remove-line:#f3cbd3'])assert(removeOuter.includes(t),t);
+assert(css.includes('body.dark .json-reference-actions [data-action="delete-icon"]{--remove-line:#654052}'));
+const removeFrame=rule(removal+'::before');
+for(const t of ['inset:5px','box-sizing:border-box','border:1px solid var(--remove-line)','border-radius:9px','background:transparent','pointer-events:none'])assert(removeFrame.includes(t),t);
+const icon=rule(removal+'>.ui-icon');
+for(const t of ['width:18px','height:18px','z-index:1'])assert(icon.includes(t),t);
+console.log('PASS removal-icon-color: historical light/dark red outline, two red icon colors, transparent fill, 34px framed 18px X / 44px hit, copy gray outline preserved');
