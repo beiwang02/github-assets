@@ -1,0 +1,12 @@
+const fs=require('node:fs'),assert=require('node:assert/strict');
+const css=fs.readFileSync('ui-refresh.css','utf8');
+assert(css.includes('body .asset-card .asset-meta{margin-inline:0}'));
+assert(!css.includes('body :is(.asset-card .asset-meta,.json-reference-actions){margin-inline:-6px}'));
+assert(css.includes('body .asset-card,body .asset-card :is(.asset-preview,.asset-preview img,.asset-details,.asset-name-row,b,.asset-meta,button){-webkit-tap-highlight-color:transparent}'));
+assert(css.includes('body .asset-card:not([aria-disabled="true"]):not([aria-busy="true"]):active{filter:none!important}'));
+assert(css.includes('body .json-reference-row.selected,body.dark .json-reference-row.selected{border-color:var(--ui-line-focus)!important;color:var(--ink);background:var(--surface)}'));
+assert(css.includes('body .json-reference-row.selected::after{border-color:var(--ui-line-focus)}'));
+assert(css.includes('body.dark .json-reference-row .reference-select[aria-pressed="true"]::before{border-color:var(--ui-check-bg);background:var(--ui-check-bg)}'));
+assert(css.includes('body.dark .json-reference-row .reference-select[aria-pressed="true"]::after{color:var(--ui-check-mark)}'));
+assert(css.includes('body .asset-card .asset-copy{flex:0 0 44px;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;padding:0}'));
+console.log('PASS interaction fixes: scoped Safari tap suppression, inset 44px copy, theme selection frame and filled checkbox');
