@@ -341,30 +341,40 @@ body :is(.assets-toolbar,.json-reference-toolbar),body.dark :is(.assets-toolbar,
 :is(.asset-bulk-actions,.page-bulk-actions):empty,:is(.asset-bulk-actions,.page-bulk-actions) [aria-hidden="true"]{visibility:hidden;pointer-events:none}
 :is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions) button{flex:0 1 auto;min-width:44px;min-height:44px;font-size:12px;padding-inline:4px;white-space:nowrap;background:transparent;border-color:transparent}
 body .json-reference-toolbar :is([data-action="select-all-icons"],[data-action="refresh"]){background:var(--surface);border-color:var(--line);color:var(--muted)}
-/* JSON references: two small tiles on mobile, denser than image resources. */
-body .json-reference-list,body.dark .json-reference-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;overflow:visible;border:0;border-radius:0;background:transparent}
-body .json-reference-row{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:8px!important;row-gap:2px!important;min-width:0;padding:10px 8px 2px!important;border:1px solid var(--line);border-radius:10px;background:var(--surface);box-shadow:none}
+/* JSON references: horizontal list rows; columns follow real content width. */
+.json-references{container-type:inline-size;container-name:references}
+body .json-reference-list,body.dark .json-reference-list{display:grid;grid-template-columns:minmax(0,1fr);gap:8px 12px;overflow:visible;border:0;border-radius:0;background:transparent}
+body .json-reference-row{position:relative;display:grid;grid-template-columns:44px 48px minmax(0,1fr) 44px 44px;gap:6px!important;align-items:center;min-width:0;padding:6px!important;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:none}
 body .json-reference-row:last-child{border-bottom:1px solid var(--line)}
-body .json-reference-thumb{width:44px;height:44px;padding:2px;border-radius:6px}
-body .json-reference-copy{align-self:center;min-width:0}
+body .json-reference-thumb{grid-column:2;grid-row:1;width:48px;height:48px;padding:4px;border-radius:6px;background:#f4f6ff;display:grid;place-items:center;overflow:hidden}
+body.dark .json-reference-thumb{background:#e8ecf5}
+body .json-reference-thumb img{display:block;min-width:0;min-height:0;max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain}
+body .json-reference-copy{grid-column:3;grid-row:1;align-self:center;min-width:0}
 body .json-reference-copy b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;line-height:1.5;font-weight:600}
-body .json-reference-actions{grid-column:1/-1;display:flex;align-items:center;justify-content:flex-end;gap:0!important;margin:0 -6px;padding:0;border:0}
-body .json-reference-row .reference-select{position:relative;inset:auto;flex:0 0 44px;margin-right:auto;width:44px;height:44px;min-width:44px;min-height:44px;border:0!important;border-radius:8px;background:transparent!important;color:transparent;box-shadow:none}
+body .json-reference-actions{display:contents!important}
+body .json-reference-row .reference-select{grid-column:1;grid-row:1;position:relative;inset:auto;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;margin:0;border:0!important;border-radius:8px;background:transparent!important;color:transparent;box-shadow:none}
 body .json-reference-row .reference-select::before{content:"";position:absolute;left:12px;top:12px;width:18px;height:18px;border:1px solid var(--multi-border);border-radius:5px;background:var(--multi-bg)}
 body .json-reference-row .reference-select[aria-pressed="true"]::after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;color:var(--multi-mark);font-size:13px}
-body .json-reference-actions .icon-btn,body.dark .json-reference-actions .icon-btn{flex:0 0 44px;width:44px!important;height:44px!important;min-width:44px;min-height:44px;padding:0;border-color:transparent!important;background:transparent!important;color:var(--muted)!important}
-body .json-reference-row::after{inset:-1px;border-radius:10px}
+body .json-reference-actions .icon-btn,body.dark .json-reference-actions .icon-btn{grid-row:1;width:44px!important;height:44px!important;min-width:44px;min-height:44px;padding:0;border-color:transparent!important;background:transparent!important;color:var(--muted)!important}
+body .json-reference-actions .copy-control-icon.ui-button{grid-column:4;width:44px!important;height:44px!important;min-width:44px;min-height:44px;max-width:none;max-height:none}
+body .json-reference-actions [data-action="delete-icon"]{grid-column:5}
+body .json-reference-row::after{inset:-1px;border-radius:8px}
 body .json-reference-list>.empty-state,body .json-empty-navigation{grid-column:1/-1}
 .json-empty-navigation{text-align:center;margin-top:-16px;padding-bottom:24px}
-@media(max-width:700px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body .json-reference-row{grid-template-columns:40px minmax(0,1fr);column-gap:6px!important;row-gap:2px!important}body .json-reference-thumb{width:40px;height:40px}}
+/* At least 324px per desktop entry; account for the real sidebar width. */
+@media(min-width:701px){
+ @container references (min-width:660px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+ @container references (min-width:1020px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
+}
+@media(max-width:700px){body .json-reference-row{grid-template-columns:44px 40px minmax(0,1fr) 44px 44px;gap:4px!important;padding:4px!important}body .json-reference-thumb{width:40px;height:40px}}
 /* Both card types use the same left-select / right-copy ordering and touch size. */
 body .asset-card .asset-meta{gap:0;margin-inline:-3px}
 body .asset-card .asset-select{flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;font-size:13px}
 body .asset-card .asset-select::before{inset:12px;border-radius:5px}
 body .asset-card .asset-copy{flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;padding:0}
-/* Equal card action targets and a shared light-outline copy appearance. */
-body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon),body.dark :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon){position:relative;border:0!important;border-radius:8px;background:transparent!important;color:var(--muted)!important;box-shadow:none}
-body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)::before{content:"";position:absolute;inset:6px;border:1px solid var(--line);border-radius:7px;pointer-events:none}
+/* Equal 44px copy targets with the original shallow full-size outline. */
+body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon),body.dark :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon){position:relative;max-width:none;max-height:none;border:1px solid var(--line)!important;border-radius:8px;background:transparent!important;color:var(--muted)!important;box-shadow:none}
+body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)::before{content:none}
 body :is(.asset-card .asset-meta,.json-reference-actions){margin-inline:-6px}
 /* Clean-up pass: scoped settings/modal rhythm, keeping the existing brand and borders. */
 .settings-card{box-shadow:none}
@@ -381,40 +391,18 @@ body :is(.asset-card .asset-meta,.json-reference-actions){margin-inline:-6px}
 @media(max-width:700px){.modal{padding:20px}.modal-actions{gap:8px}.settings-card .btn{font-size:12px}.modal-head p{font-size:11px}.field-menu .field-menu-trigger{min-height:44px;font-size:12px}}
 
 
-/* Horizontal reference strips: two on phones, extra columns as desktop space permits.
-   Phone targets deliberately trade width (22–24px) for visible names; height stays 44px.
-   Do not overlap hit boxes or conceal copy/remove behind an unapproved menu. */
+/* Library metadata: retain readable description and basename. */
 .library-current-copy .library-description,.library-switch-copy .library-description{display:block;margin:3px 0;color:var(--muted);font-size:12px;font-weight:400;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
 .library-switch-copy .library-switch-meta{display:block;color:var(--muted);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 body .library-name-trigger{height:auto;min-height:64px;padding-block:8px;align-items:center}
-body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
-body .json-reference-row{display:grid;grid-template-columns:32px 28px minmax(0,1fr) 36px 36px;column-gap:4px!important;row-gap:0!important;align-items:center;min-height:48px;padding:2px 4px!important;border-radius:8px}
-body .json-reference-thumb{grid-column:2;grid-row:1;width:28px;height:28px;padding:0;background:transparent}
-body .json-reference-thumb img{width:100%;height:100%;object-fit:contain}
-body .json-reference-copy{grid-column:3;grid-row:1}
-body .json-reference-copy b{font-size:12px;line-height:1.5}
-body .json-reference-actions{display:contents!important}
-body .json-reference-row .reference-select{grid-column:1;grid-row:1;flex:none;margin:0;width:32px;min-width:0;height:44px;min-height:44px}
-body .json-reference-row .reference-select::before{left:50%;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:4px}
-body .json-reference-row .reference-select::after{font-size:11px}
-body .json-reference-actions .icon-btn,body.dark .json-reference-actions .icon-btn{grid-row:1;flex:none;width:36px!important;min-width:0;height:44px!important;min-height:44px}
-body .json-reference-actions .copy-control-icon{grid-column:4}
-body .json-reference-actions [data-action="delete-icon"]{grid-column:5}
-body .json-reference-actions .copy-control-icon::before{display:none}
-body .json-reference-row::after{border-radius:8px}
-@media(max-width:700px){
- body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
- body .json-reference-row{grid-template-columns:22px 22px minmax(0,1fr) 24px 24px;column-gap:2px!important}
- body .json-reference-thumb{width:22px;height:22px}
- body .json-reference-row .reference-select{width:22px}
- body .json-reference-actions .icon-btn,body.dark .json-reference-actions .icon-btn{width:24px!important}
-}
 
 /* Information is not an action label: explicit theme tokens survive inherited
    hover/press/selected ink. Keep checkmarks, initials and navigation branded. */
 body :is(.library-current-name,.library-switch-copy b,.library-picker-copy b,.library-card .list-info b,.asset-name-row b,.quick-asset-name-row b,.json-reference-copy b,.repo-meta b){color:var(--ink)}
 body :is(.library-current-copy .library-description,.library-current-copy em,.library-switch-copy small,.library-picker-copy small,.library-picker-copy em,.library-card .list-info small,.library-card .list-meta,.library-card .list-meta strong,.library-card .list-meta span,.quick-asset>small,.repo-meta small){color:var(--muted)}
-body .repo-quick,body .repo-quick.active,body.dark .repo-quick.active{color:var(--ink)!important}
+body .repo-quick{color:var(--ink)!important}
+body .repo-quick.active{color:var(--primary)!important}
+body.dark .repo-quick.active{color:var(--ui-selection-ink)!important}
 body .library-name-trigger[aria-expanded="true"]{border-color:var(--ui-line-focus)!important}
 body .library-name-trigger:is(:active,:focus-visible,[aria-expanded="true"]) .library-name-chevron{color:var(--ui-feedback-ink)}
 @media(hover:hover){body .library-name-trigger:not(:disabled):hover .library-name-chevron{color:var(--ui-feedback-ink)}}
