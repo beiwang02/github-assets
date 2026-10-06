@@ -385,10 +385,10 @@ body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)[ari
 body :is(.asset-card .asset-copy,.json-reference-actions .copy-control-icon)[aria-busy="true"]::after{position:absolute;inset:5px;display:grid;place-items:center;border:0;background:transparent;pointer-events:none;z-index:1}
 /* Match the current image-detail delete-asset button's computed icon/border colors:
    light var(--ui-danger-ink) / var(--ui-danger-line), dark var(--ui-danger-ink) / var(--ui-danger-line) (console.css !important).
-   Reference colors only: retain transparent fill, 34px frame and 44px hit area. */
+   Theme danger fill paints only the 34px frame; retain the transparent 44px hit area. */
 body .json-reference-actions [data-action="delete-icon"],body.dark .json-reference-actions [data-action="delete-icon"]{position:relative;isolation:isolate;border:0!important;border-radius:9px;background:transparent!important;box-shadow:none;--remove-line:var(--ui-danger-line)}
 body.dark .json-reference-actions [data-action="delete-icon"]{--remove-line:var(--ui-danger-line)}
-body .json-reference-actions [data-action="delete-icon"]::before{content:"";position:absolute;inset:5px;width:auto;height:auto;box-sizing:border-box;border:1px solid var(--remove-line);border-radius:9px;background:transparent;box-shadow:none;transform:none;pointer-events:none;z-index:0}
+body .json-reference-actions [data-action="delete-icon"]::before{content:"";position:absolute;inset:5px;width:auto;height:auto;box-sizing:border-box;border:1px solid var(--remove-line);border-radius:9px;background:var(--ui-danger-bg);box-shadow:none;transform:none;pointer-events:none;z-index:0}
 body .json-reference-actions [data-action="delete-icon"]>.ui-icon{position:relative;z-index:1;width:18px;height:18px;flex:0 0 18px;pointer-events:none}
 body .asset-card .asset-meta{margin-inline:0}
 /* A 320px three-column card is narrower than two 44px targets plus insets.

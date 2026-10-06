@@ -19,14 +19,23 @@ const ratio=(a,b)=>(Math.max(lum(a),lum(b))+.05)/(Math.min(lum(a),lum(b))+.05);
 const approvedLightRatio=ratio('#d84f67','#fff7f8');
 assert.equal(approvedLightRatio.toFixed(2),'3.80','Actual light danger contrast');
 assert(approvedLightRatio<4.5,'Known approved light normal-text AA exception');
-for(const bg of ['#ffffff','#f7f8fc'])assert(ratio('#d84f67',bg)>=3,'Transparent light X non-text contrast / '+bg);
+for(const bg of ['#ffffff','#f7f8fc'])assert(ratio('#d84f67',bg)>=3,'Light X non-text contrast / '+bg);
 for(const [ink,bg] of [['#ff9cac','#17243a'],['#ff9cac','#30212b'],['#273172','#d6ddea'],['#273172','#c0ccdf']])assert(ratio(ink,bg)>=4.5,ink+' / '+bg);
 for(const [ink,bg] of [['#b2bbef','#293451'],['#dfb695','#3a3040'],['#91c5c8','#203b45'],['#a0c6ae','#293c3c']])assert(ratio(ink,bg)>=3);
-console.log('PASS soft colors: closed authorization allowlist, frozen console geometry, restored early soft red; light danger contrast '+approvedLightRatio.toFixed(2)+':1 (does NOT meet normal-text AA; approved exception); transparent X non-text >=3:1; dark danger/upload AA and dark stat icons >=3:1');
+console.log('PASS soft colors: closed authorization allowlist, frozen console geometry, restored early soft red; light danger contrast '+approvedLightRatio.toFixed(2)+':1 (does NOT meet normal-text AA; approved exception); theme-filled X non-text >=3:1; dark danger/upload AA and dark stat icons >=3:1');
 
 // Final finite colour refinement: selection-only override, no global focus/geometry change.
 assert(css.includes('body.dark .json-reference-row.selected:not(:focus-visible){border-color:#626fa8!important}'));
 assert(css.includes('body.dark .json-reference-row.selected:not(:focus-visible)::after{border-color:#626fa8}'));
 assert(css.includes('body.dark{--ui-line-focus:#7785c8;'));
 const html=fs.readFileSync('index.html','utf8');
-assert(html.includes('console.css?v=library-initial-latest-100&amp;revision=clean-ui-release-114'));
+assert(html.includes('console.css?v=library-initial-latest-100&amp;revision=clean-ui-release-115'));
+
+// Restore only the 34px JSON removal paint, never fill the 44px touch target.
+const removal='body .json-reference-actions [data-action="delete-icon"]';
+const rule=s=>{const i=css.indexOf(s+'{');assert(i>=0,s);return css.slice(i+s.length+1,css.indexOf('}',i));};
+assert(rule(removal+'::before').includes('background:var(--ui-danger-bg)'));
+assert(rule(removal+',body.dark .json-reference-actions [data-action="delete-icon"]').includes('background:transparent!important'));
+assert(ratio('#d84f67','#fff7f8')>=3,'Filled light X non-text contrast');
+for(const [file,version] of [['console.css','library-initial-latest-100'],['ui-refresh.css','https-initial-caption-103'],['console.js','https-initial-caption-103']])assert(html.includes(file+'?v='+version+'&amp;revision=clean-ui-release-115'));
+assert(!html.includes('clean-ui-release-114'));

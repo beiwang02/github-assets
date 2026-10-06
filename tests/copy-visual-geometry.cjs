@@ -17,7 +17,7 @@ assert(js.includes("close:'m6 6 12 12M18 6 6 18'"));
 assert(!frame.includes('inset:-')&&!outer.includes('overflow:visible'));
 const removal='body .json-reference-actions [data-action="delete-icon"]';
 const removeFrame=rule(removal+'::before');
-for(const t of ['inset:5px','width:auto','height:auto','box-sizing:border-box','border:1px solid var(--remove-line)','border-radius:9px','background:transparent','box-shadow:none','transform:none','pointer-events:none','z-index:0'])assert(removeFrame.includes(t),t);
+for(const t of ['inset:5px','width:auto','height:auto','box-sizing:border-box','border:1px solid var(--remove-line)','border-radius:9px','background:var(--ui-danger-bg)','box-shadow:none','transform:none','pointer-events:none','z-index:0'])assert(removeFrame.includes(t),t);
 const removeOuter=rule(removal+',body.dark .json-reference-actions [data-action="delete-icon"]');
 for(const t of ['position:relative','isolation:isolate','border:0!important','background:transparent!important','box-shadow:none'])assert(removeOuter.includes(t),t);
 const hit=rule('body .json-reference-actions .icon-btn,body.dark .json-reference-actions .icon-btn');

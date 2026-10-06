@@ -4,7 +4,10 @@ const hero=/<section class="hero overview-hero"[^]*?<\/section>(?=<div class="st
 assert(hero.test(js));assert.equal(js.replace(hero,''),base,'Only the authorized overview hero is added; all existing behavior retained');
 const css=fs.readFileSync('ui-refresh.css','utf8'),baseCss=cp.execFileSync('git',['show','6b29a313c3672faa963b8c3b62d8d859a4db1246:ui-refresh.css'],{encoding:'utf8'});
 const {normalizeAuthorizedColors}=require('./soft-color-contract.cjs');
-assert(normalizeAuthorizedColors(css).startsWith(normalizeAuthorizedColors(baseCss)),'Previous CSS remains frozen except fixed authorized danger literal substitutions');
+const restoredFill='body .json-reference-actions [data-action="delete-icon"]::before{content:"";position:absolute;inset:5px;width:auto;height:auto;box-sizing:border-box;border:1px solid var(--remove-line);border-radius:9px;background:var(--ui-danger-bg);box-shadow:none;transform:none;pointer-events:none;z-index:0}';
+assert(css.includes(restoredFill),'Exact authorized 34px removal theme paint');
+const frozenCss=css.replace(restoredFill,restoredFill.replace('background:var(--ui-danger-bg)','background:transparent')).replace('Theme danger fill paints only the 34px frame; retain the transparent 44px hit area.','Reference colors only: retain transparent fill, 34px frame and 44px hit area.');
+assert(normalizeAuthorizedColors(frozenCss).startsWith(normalizeAuthorizedColors(baseCss)),'Previous CSS remains frozen except fixed authorized danger literals and exact removal paint');
 const added=css.slice(baseCss.length);assert(added.includes('linear-gradient(122deg,#202b63,#363f99 62%,#4b75c7)'));assert(added.includes('min-height:206px'));assert(added.includes('margin-top:22px'));assert(added.includes('flex:0 0 auto'));assert(added.includes('height:44px'));assert(!added.includes('quickbar'));
 const markup=hero.exec(js)[0];assert(!markup.includes('activity'));assert(markup.includes('<span class="mini-label">GITHUB RESOURCE HUB</span>'));
 assert(markup.includes('把每一张图片，变成可复用的资源。'));assert(markup.includes('集中管理 GitHub 图床、图片分组与 JSON 库，复制一条直链，就能在任何项目里使用。'));

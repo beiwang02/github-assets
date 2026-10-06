@@ -16,10 +16,10 @@ const removeOuter=rule(removal+',body.dark .json-reference-actions [data-action=
 for(const t of ['border:0!important','background:transparent!important','box-shadow:none','--remove-line:var(--ui-danger-line)'])assert(removeOuter.includes(t),t);
 assert(css.includes('body.dark .json-reference-actions [data-action="delete-icon"]{--remove-line:var(--ui-danger-line)}'));
 const removeFrame=rule(removal+'::before');
-for(const t of ['inset:5px','box-sizing:border-box','border:1px solid var(--remove-line)','border-radius:9px','background:transparent','pointer-events:none'])assert(removeFrame.includes(t),t);
+for(const t of ['inset:5px','box-sizing:border-box','border:1px solid var(--remove-line)','border-radius:9px','background:var(--ui-danger-bg)','pointer-events:none'])assert(removeFrame.includes(t),t);
 const icon=rule(removal+'>.ui-icon');
 for(const t of ['width:18px','height:18px','z-index:1'])assert(icon.includes(t),t);
 const consoleCss=fs.readFileSync('console.css','utf8');
 assert(consoleCss.includes('.btn.btn-danger { color:var(--ui-danger-ink) !important; border-color:var(--ui-danger-line) !important; background:var(--ui-danger-bg) !important; }'));
 assert(consoleCss.includes('body.dark .btn.btn-danger, body.dark .section-actions .btn.btn-danger { color:var(--ui-danger-ink) !important; border-color:var(--ui-danger-line) !important; background:var(--ui-danger-bg) !important; }'));
-console.log('PASS removal-icon-color: current image-detail danger colors/borders in light/dark, transparent fill, 34px framed 18px X / 44px hit, copy gray outline preserved');
+console.log('PASS removal-icon-color: current image-detail danger colors/borders in light/dark, theme soft fill, 34px framed 18px X / 44px hit, copy gray outline preserved');
