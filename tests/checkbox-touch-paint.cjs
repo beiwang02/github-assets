@@ -12,10 +12,10 @@ assert.equal(rule(select+'[aria-pressed="true"]::before'),'border-color:var(--ui
 assert(css.includes(':is(.asset-select,.reference-select):focus-visible{outline:2px solid var(--ui-line-focus)!important'));
 assert(css.includes(':is(.asset-select,.reference-select):is(:disabled,[aria-busy=true]){opacity:.5'));
 const consoleCss=fs.readFileSync('console.css','utf8');
-assert(consoleCss.includes('.btn.btn-danger { color:#d84f67 !important; border-color:#f0b5c0 !important;'));
-assert(consoleCss.includes('body.dark .btn.btn-danger, body.dark .section-actions .btn.btn-danger { color:#ff9cac !important; border-color:#70434d !important;'));
-assert(css.includes('grid-column:5;color:#d84f67!important'));
-assert(css.includes('body.dark .json-reference-actions [data-action="delete-icon"]{color:#ff9cac!important}'));
-assert(css.includes('--remove-line:#f0b5c0'));
-assert(css.includes('body.dark .json-reference-actions [data-action="delete-icon"]{--remove-line:#70434d}'));
+assert(consoleCss.includes('.btn.btn-danger { color:var(--ui-danger-ink) !important; border-color:var(--ui-danger-line) !important;'));
+assert(consoleCss.includes('body.dark .btn.btn-danger, body.dark .section-actions .btn.btn-danger { color:var(--ui-danger-ink) !important; border-color:var(--ui-danger-line) !important;'));
+assert(css.includes('grid-column:5;color:var(--ui-danger-ink)!important'));
+assert(css.includes('body.dark .json-reference-actions [data-action="delete-icon"]{color:var(--ui-danger-ink)!important}'));
+assert(css.includes('--remove-line:var(--ui-danger-line)'));
+assert(css.includes('body.dark .json-reference-actions [data-action="delete-icon"]{--remove-line:var(--ui-danger-line)}'));
 console.log('PASS checkbox paint contract: no tap/filter/transition/negative-z layer; purple aria state, keyboard and disabled preserved; JSON removal matches current image-detail danger colors');
