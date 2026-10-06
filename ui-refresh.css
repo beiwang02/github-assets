@@ -462,8 +462,8 @@ body.dark .overview-hero::before{opacity:.45}
 @media(max-width:700px){body .overview-hero{padding:25px 22px}body .overview-hero h2{font-size:21px}body .overview-hero .hero-actions{flex-wrap:wrap}body .overview-hero .btn{flex:0 0 auto;min-width:0;padding-inline:16px;font-size:12px;gap:6px}}
 
 /* Authorized soft-colour palette: surfaces stay theme-local, never global opacity. */
-:root{--ui-danger-ink:#dc2626;--ui-danger-line:#fecaca;--ui-danger-bg:#fff5f5;--ui-hero-upload-bg:#f7f8fc;--ui-hero-upload-hover:#eef1f7;--ui-hero-upload-active:#e6ebf4}
-body.dark{--ui-danger-ink:#f87171;--ui-danger-line:#99454b;--ui-danger-bg:#302126;--ui-hero-upload-bg:#d6ddea;--ui-hero-upload-hover:#cbd5e5;--ui-hero-upload-active:#c0ccdf}
+:root{--ui-danger-ink:#d84f67;--ui-danger-line:#f0b5c0;--ui-danger-bg:#fff7f8;--ui-hero-upload-bg:#f7f8fc;--ui-hero-upload-hover:#eef1f7;--ui-hero-upload-active:#e6ebf4}
+body.dark{--ui-danger-ink:#ff9cac;--ui-danger-line:#70434d;--ui-danger-bg:#30212b;--ui-hero-upload-bg:#d6ddea;--ui-hero-upload-hover:#cbd5e5;--ui-hero-upload-active:#c0ccdf}
 body.dark .overview-hero,body.dark .overview-hero h2{color:#e4e8f0}
 body.dark .overview-hero .btn{--ui-line-focus:#cbd5e5}
 /* The four legacy pale chips are the only bright surface outliers in dark stats. */
