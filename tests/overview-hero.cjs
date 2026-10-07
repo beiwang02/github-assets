@@ -1,7 +1,7 @@
 const fs=require('node:fs'),cp=require('node:child_process'),assert=require('node:assert/strict');
 const js=fs.readFileSync('console.js','utf8'),base=cp.execFileSync('git',['show','6b29a313c3672faa963b8c3b62d8d859a4db1246:console.js'],{encoding:'utf8'});
 const hero=/<section class="hero overview-hero"[^]*?<\/section>(?=<div class="stat-grid">)/;
-assert(hero.test(js));assert.equal(js.replace(hero,''),base,'Only the authorized overview hero is added; all existing behavior retained');
+assert(hero.test(js));const uploadGuard="if(action==='upload'){if(!S.connected)return notify('请先连接仓库','error');uploadModal();return;}";assert(js.includes(uploadGuard));assert.equal(js.replace(hero,'').replace(uploadGuard,uploadGuard.replace('请先连接仓库','请先连接你的仓库')),base,'Only authorized overview hero and exact upload notification text changed; all existing behavior retained');
 const css=fs.readFileSync('ui-refresh.css','utf8'),baseCss=cp.execFileSync('git',['show','6b29a313c3672faa963b8c3b62d8d859a4db1246:ui-refresh.css'],{encoding:'utf8'});
 const {normalizeAuthorizedColors}=require('./soft-color-contract.cjs');
 const restoredFill='body .json-reference-actions [data-action="delete-icon"]::before{content:"";position:absolute;inset:5px;width:auto;height:auto;box-sizing:border-box;border:1px solid var(--remove-line);border-radius:9px;background:var(--ui-danger-bg);box-shadow:none;transform:none;pointer-events:none;z-index:0}';
@@ -11,7 +11,7 @@ assert(normalizeAuthorizedColors(frozenCss).startsWith(normalizeAuthorizedColors
 const added=css.slice(baseCss.length);assert(added.includes('linear-gradient(122deg,#202b63,#363f99 62%,#4b75c7)'));assert(added.includes('min-height:206px'));assert(added.includes('margin-top:22px'));assert(added.includes('flex:0 0 auto'));assert(added.includes('height:44px'));assert(!added.includes('quickbar'));
 const markup=hero.exec(js)[0];assert(!markup.includes('activity'));assert(markup.includes('<span class="mini-label">GITHUB RESOURCE HUB</span>'));
 assert(markup.includes('把每一张图片，变成可复用的资源。'));assert(markup.includes('集中管理 GitHub 图床、图片分组与 JSON 库，复制一条直链，就能在任何项目里使用。'));
-assert(markup.includes('data-action="upload"'));assert(!markup.includes('data-action="new-library"'));assert.equal((markup.match(/<button /g)||[]).length,1);assert(markup.includes('＋ 上传图片'));assert(markup.includes(' disabled title="请先在仓库设置中连接 GitHub"'));
+assert(markup.includes('data-action="upload"'));assert(!markup.includes('data-action="new-library"'));assert.equal((markup.match(/<button /g)||[]).length,1);assert(markup.includes('＋ 上传图片'));assert(!/\bdisabled\b|aria-disabled/.test(markup));assert(markup.includes(' title="请先连接仓库"'));
 assert(markup.includes('<div class="hero-actions">'));assert(markup.endsWith('</button></div></div></section>'),'Actions inside historic hero-content');
 const historic=cp.execFileSync('git',['show','0395c4b:console.js'],{encoding:'utf8'});for(const text of ['GITHUB RESOURCE HUB','把每一张图片，变成可复用的资源。','集中管理 GitHub 图床、图片分组与 JSON 库，复制一条直链，就能在任何项目里使用。'])assert(historic.includes(text)&&markup.includes(text));
 const originalStyles=cp.execFileSync('git',['show','0395c4b:styles.css'],{encoding:'utf8'}),styles=fs.readFileSync('styles.css','utf8');assert.equal(styles.match(/\.hero::before \{[^]*?\}/)[0],originalStyles.match(/\.hero::before \{[^]*?\}/)[0],'Original circular rings unchanged');
@@ -20,5 +20,5 @@ const upload='body .overview-hero .hero-actions .btn.btn-primary[data-action="up
 assert(added.includes(upload+'{color:#273172!important;background:var(--ui-hero-upload-bg)!important;border-color:var(--ui-hero-upload-bg)!important;--ui-feedback-ink:#273172}'));
 assert(added.includes(upload+':active:not(:disabled){color:#273172!important;border-color:var(--ui-hero-upload-active)!important;background:var(--ui-hero-upload-active)!important}'));
 assert(added.includes(upload+':not(:disabled):hover{color:#273172!important;border-color:var(--ui-hero-upload-hover)!important;background:var(--ui-hero-upload-hover)!important}'));
-assert(added.includes('.btn:disabled{opacity:.65}'));assert(added.includes('margin-bottom:24px'));
+assert(!added.includes('.btn:disabled{'));assert(!added.includes('[data-action="upload"]:disabled{'));assert(added.includes('margin-bottom:24px'));
 console.log('PASS overview hero: historic gradient, scoped styles, real original actions, no logs, all other JS unchanged');
