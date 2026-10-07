@@ -8,7 +8,16 @@ const restoredFill='body .json-reference-actions [data-action="delete-icon"]::be
 assert(css.includes(restoredFill),'Exact authorized 34px removal theme paint');
 const frozenCss=css.replace(restoredFill,restoredFill.replace('background:var(--ui-danger-bg)','background:transparent')).replace('Theme danger fill paints only the 34px frame; retain the transparent 44px hit area.','Reference colors only: retain transparent fill, 34px frame and 44px hit area.');
 assert(normalizeAuthorizedColors(frozenCss).startsWith(normalizeAuthorizedColors(baseCss)),'Previous CSS remains frozen except fixed authorized danger literals and exact removal paint');
-const added=css.slice(baseCss.length);assert(added.includes('linear-gradient(160deg,#202b63,#363f99 62%,#4b75c7)'),'Light hero gradient spread widened keeping historic blue/purple stops');assert(added.includes('linear-gradient(160deg,#182044,#262f68 62%,#34528b)'),'Dark hero keeps approved dim stops, only spread widened');assert(added.includes('border-radius:22px'));assert(added.includes('min-height:206px'));assert(added.includes('margin-top:22px'));assert(added.includes('flex:0 0 auto'));assert(added.includes('height:44px'));assert(!added.includes('quickbar'));
+const added=css.slice(baseCss.length);
+// A. Micro-polish A: right bright end pulled in by softening only the tail stop.
+// Same blue/purple family, same angle, no new radial layer, dim dark variant stays approved.
+assert(added.includes('linear-gradient(160deg,#202b63,#363f99 62%,#4870bd)'),'Light hero keeps historic blue/purple stops with the bright end pulled in (tail #4b75c7->#4870bd)');
+assert(added.includes('linear-gradient(160deg,#182044,#262f68 62%,#324e83)'),'Dark hero keeps approved dim stops with the bright end pulled in (tail #34528b->#324e83)');
+assert(!added.includes('#4b75c7')&&!added.includes('#34528b'),'Previous brighter tails fully retired');
+// B. Micro-polish B: whitespace comfort only. Frozen geometry below stays byte-identical.
+assert(added.includes('body .overview-hero h2{margin:11px 0 12px;'),'Title-to-description gap widened 9px->12px');
+assert(added.includes('body .overview-hero .hero-actions{margin-top:25px;'),'Description-to-button gap widened 22px->25px');
+assert(added.includes('border-radius:22px'));assert(added.includes('min-height:206px'));assert(added.includes('margin-bottom:24px'));assert(added.includes('padding:30px 33px'));assert(added.includes('flex:0 0 auto'));assert(added.includes('height:44px'));assert(!added.includes('quickbar'));
 const markup=hero.exec(js)[0];assert(!markup.includes('activity'));assert(markup.includes('<span class="mini-label">GITHUB RESOURCE HUB</span>'));
 assert(markup.includes('把每一张图片，变成可复用的资源。'));assert(markup.includes('集中管理 GitHub 图床、图片分组与 JSON 库，复制一条直链，就能在任何项目里使用。'));
 assert(markup.includes('data-action="upload"'));assert(!markup.includes('data-action="new-library"'));assert.equal((markup.match(/<button /g)||[]).length,1);assert(markup.includes('＋ 上传图片'));assert(!/\bdisabled\b|aria-disabled/.test(markup));assert(markup.includes(' title="请先连接仓库"'));
