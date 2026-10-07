@@ -5,7 +5,10 @@ const changed=cp.execFileSync('git',['diff','--name-only','a329ce8','--'],{encod
 const untracked=cp.execFileSync('git',['ls-files','--others','--exclude-standard'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
 assert.deepEqual([...new Set([...changed,...untracked])].sort(),allowed,'Fixed release baseline and closed ten-file authorization remain valid after commit');
 const before=cp.execFileSync('git',['show','a329ce8:ui-refresh.css'],{encoding:'utf8'});
-assert.equal(css,before.replace('body .overview-hero .btn:disabled{opacity:.65}\n',''),'Only obsolete hero disabled opacity removed; all normal palettes frozen');
+const starDecoration=/\/\* Decorative sparkles:[^]*?body\.dark \.overview-hero::after\{opacity:\.22\}\n/;
+assert(starDecoration.test(css),'Authorized decorative star exists');
+const normalizeAuthorized=s=>s.replace('linear-gradient(160deg,#202b63,#363f99 62%,#4b75c7)','linear-gradient(122deg,#202b63,#363f99 62%,#4b75c7)').replace('linear-gradient(160deg,#182044,#262f68 62%,#34528b)','linear-gradient(122deg,#182044,#262f68 62%,#34528b)').replace('border-radius:22px;color:#fff;background:radial-gradient(circle at 84% 8%,rgba(117,139,255,.65)','border-radius:16px;color:#fff;background:radial-gradient(circle at 84% 8%,rgba(117,139,255,.65)');
+assert.equal(normalizeAuthorized(css.replace(starDecoration,'')),before.replace('body .overview-hero .btn:disabled{opacity:.65}\n',''),'Only obsolete hero disabled opacity removed, scoped decorative star added and authorized gradient-spread/radius polish; normal palettes frozen');
 const beforeJs=cp.execFileSync('git',['show','a329ce8:console.js'],{encoding:'utf8'});
 assert.equal(js,beforeJs.replace(' disabled title="请先在仓库设置中连接 GitHub"',' title="请先连接仓库"').replace("notify('请先连接你的仓库','error');uploadModal();return;}","notify('请先连接仓库','error');uploadModal();return;}"),'Only hero attribute and upload guard message authorized');
 const overview=js.slice(js.indexOf('function overviewView()'),js.indexOf('function librariesView()'));
