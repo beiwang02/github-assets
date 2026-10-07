@@ -5,7 +5,7 @@ const el=(name,extra={})=>({dataset:{},matches:s=>s.split(',').some(x=>[name,'bu
 for(const name of ['.library-switch-trigger','.library-switch-option','.library-picker-option','.repo-quick','.repo-switcher','.asset-card','.quick-asset','.json-reference-row'])assert.equal(ctx.feedbackKindC(el(name)),'surface',name);
 for(const name of ['.library-picker-create','.btn','.nav-item'])assert.equal(ctx.feedbackKindC(el(name)),'control',name);
 assert.equal(ctx.feedbackKindC(el('.btn-primary')),'primary');assert.equal(ctx.feedbackKindC(el('.reference-select')),'');assert.equal(ctx.feedbackKindC(el('.btn-danger')),'');
-const stable=css.slice(css.indexOf('/* Information is not an action label:'));
+const stable=css.slice(css.indexOf('/* Information is not an action label:'),css.indexOf('/* Round 2 ('));
 for(const s of ['.library-current-name','.library-switch-copy b','.library-picker-copy b','.library-card .list-info b','.asset-name-row b','.quick-asset-name-row b','.json-reference-copy b','.repo-meta b'])assert(stable.includes(s),s);
 assert(stable.includes('{color:var(--ink)}'));assert(stable.includes('{color:var(--muted)}'));
 assert(stable.includes('.library-name-trigger[aria-expanded="true"]{border-color:var(--ui-line-focus)!important}'));

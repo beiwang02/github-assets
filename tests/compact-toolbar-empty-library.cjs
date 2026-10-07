@@ -10,6 +10,6 @@ assert(css.includes('padding:0;border:0;border-radius:0;background:transparent')
 assert(css.includes('grid-column:2;grid-row:2;width:44px'));
 assert(css.includes(':is(.asset-bulk-actions,.page-bulk-actions){grid-column:3;grid-row:2'));
 assert(css.includes(':is(.asset-bulk-actions,.page-bulk-actions):empty'));
-assert(source.includes('加入JSON库'));assert(source.includes('删除原图'));assert(html.includes('移除引用'));assert(html.includes('aria-label="刷新图片引用"'));assert(html.indexOf('data-role="icons-selection-toolbar"')<html.indexOf('<section class="json-references"'));assert(!html.includes('<h3>图片引用</h3>'));
+assert(source.includes('加入JSON库'));assert(source.includes('删除原图'));assert(source.includes('移除引用'));assert(html.includes('aria-label="移除已选择的 1 个引用（不会删除原图）"'));assert(html.includes('aria-label="刷新图片引用"'));assert(html.indexOf('data-role="icons-selection-toolbar"')<html.indexOf('<section class="json-references"'));assert(!html.includes('<h3>图片引用</h3>'));
 assert(css.includes('min-height:44px'));
 console.log('PASS compact toolbars / JSON empty library: render-state and CSS regression; synthetic, not live repository mutation.');

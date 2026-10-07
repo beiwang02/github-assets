@@ -107,7 +107,7 @@ body.dark :is(.asset-select,.reference-select){--multi-border:var(--ui-small-act
 body.dark .ui-button.top-icon,body.dark .ui-button.project-link{background:#1b293f;color:#e4eaf5;border-color:#34435b}
 @media(max-width:700px){.library-outside-actions{gap:4px}.library-outside-actions>div{gap:4px}.library-outside-actions .ui-button{font-size:11px;padding-inline:8px}.library-picker-copy em{font-size:10px}}
 
-.modal:has(.library-switch-modal-body){width:min(560px,calc(100vw - 28px))}.library-switch-modal-body{display:flex;flex-direction:column;gap:10px;min-height:0}.library-switch-list{display:grid;gap:8px;max-height:min(58vh,520px);overflow:auto;padding-right:2px}.library-switch-row{display:flex;align-items:center;gap:4px;padding-right:2px}.library-switch-option{flex:1;min-width:0;min-height:54px;padding:9px 12px;gap:8px;justify-content:flex-start;border:0;background:transparent;color:inherit;text-align:left}.library-switch-option[aria-checked=true]{color:var(--ui-selection-ink);border-radius:10px}.library-switch-copy{flex:1;min-width:0}.library-switch-copy b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-switch-check{display:inline-flex;align-items:center;justify-content:center;width:14px;flex:0 0 14px;font-size:12px}.library-switch-delete.ui-button{width:auto;height:44px;min-width:44px;min-height:44px;padding:0 12px;background:transparent;border:0;color:var(--ui-danger-ink);flex:0 0 auto;font-size:12px}body.dark .library-switch-delete.ui-button{color:var(--ui-danger-ink)}.library-picker-create{width:100%;margin-top:2px}
+.modal:has(.library-switch-modal-body){width:min(560px,calc(100vw - 28px))}.library-switch-modal-body{display:flex;flex-direction:column;gap:10px;min-height:0}.library-switch-list{display:grid;gap:8px;max-height:min(58vh,520px);overflow:auto;padding-right:2px}.library-switch-row{display:flex;align-items:center;gap:4px;padding-right:2px}.library-switch-option{flex:1;min-width:0;min-height:54px;padding:9px 12px;gap:8px;justify-content:flex-start;border:0;background:transparent;color:inherit;text-align:left}.library-switch-option[aria-checked=true]{color:var(--ui-selection-ink);border-radius:10px}.library-switch-copy{flex:1;min-width:0}.library-switch-copy b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-switch-check{display:inline-flex;align-items:center;justify-content:center;width:14px;flex:0 0 14px;font-size:12px}.library-switch-delete.ui-button{width:auto;height:44px;min-width:44px;min-height:44px;padding:0 10px;background:transparent;border:0;color:var(--ui-danger-ink);flex:0 0 auto;font-size:12px;font-weight:600;border-radius:8px;transition:background .12s,color .12s}body.dark .library-switch-delete.ui-button{color:var(--ui-danger-ink)}@media(hover:hover){.library-switch-delete.ui-button:not(:disabled):hover{background:var(--ui-danger-bg)}}body .library-switch-delete.ui-button:not(:disabled):active{background:var(--ui-danger-bg)}.library-picker-create{width:100%;margin-top:2px}
 @media(max-width:700px){.modal:has(.library-switch-modal-body){width:min(560px,calc(100vw - 20px));padding:18px}.modal:has(.library-switch-modal-body) .modal-head{margin-bottom:14px}}
 
 /* Only the repository name truncates; reserve room for the status halo. */
@@ -337,9 +337,11 @@ body :is(.assets-toolbar,.json-reference-toolbar),body.dark :is(.assets-toolbar,
 .json-reference-toolbar>[data-role="icons-selection-toolbar"]{display:contents}
 :is(.assets-toolbar,.json-reference-toolbar) [data-action^="select-all"]{grid-column:1;grid-row:2;width:80px;min-height:44px;padding:0 4px;font-size:12px}
 :is(.assets-toolbar,.json-reference-toolbar) [data-action="refresh"]{grid-column:2;grid-row:2;width:44px;min-height:44px;padding:0;font-size:18px}
-:is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions){grid-column:3;grid-row:2;min-width:0;height:44px;display:flex;justify-content:flex-end;gap:2px;align-items:center}
+:is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions){grid-column:3;grid-row:2;min-width:0;height:44px;display:flex;justify-content:flex-end;gap:10px;align-items:center}
 :is(.asset-bulk-actions,.page-bulk-actions):empty,:is(.asset-bulk-actions,.page-bulk-actions) [aria-hidden="true"]{visibility:hidden;pointer-events:none}
-:is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions) button{flex:0 1 auto;min-width:44px;min-height:44px;font-size:12px;padding-inline:4px;white-space:nowrap;background:transparent;border-color:transparent}
+:is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions) button{flex:0 1 auto;min-width:44px;min-height:44px;font-size:12px;padding-inline:14px;white-space:nowrap}
+:is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions) [data-action="bulk-library"]{background:var(--surface);border:1px solid var(--line);border-radius:var(--ui-radius);color:var(--muted)}
+:is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions) [data-action="bulk-library"]:active:not(:disabled){border-color:var(--ui-line-focus)}
 body .json-reference-toolbar :is([data-action="select-all-icons"],[data-action="refresh"]){background:var(--surface);border-color:var(--line);color:var(--muted)}
 /* JSON references: horizontal list rows; columns follow real content width. */
 .json-references{container-type:inline-size;container-name:references}
@@ -448,8 +450,9 @@ body :is(.library-switch-trigger,.library-switch-option,.library-picker-option,.
 
 /* Hero restoration: historical blue/purple canvas, scoped to overview only. */
 body .overview-hero{display:block;min-height:206px;padding:30px 33px;margin-bottom:24px;border-radius:22px;color:#fff;background:radial-gradient(140% 110% at 6% 0%,rgba(129,140,248,.38),transparent 52%),radial-gradient(120% 120% at 96% 100%,rgba(96,165,250,.26),transparent 48%),linear-gradient(155deg,#1e2a5e 0%,#2f3c86 46%,#4a63ad 78%,#5b76c4 100%);box-shadow:0 14px 30px rgba(50,64,173,.21)}
-body .overview-hero::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;border-radius:inherit;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:34px 34px;mask-image:radial-gradient(120% 90% at 84% 12%,#000 8%,transparent 62%);-webkit-mask-image:radial-gradient(120% 90% at 84% 12%,#000 8%,transparent 62%)}
-body.dark .overview-hero::before{background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px)}
+body .overview-hero::before{content:"";position:absolute;top:0;right:0;bottom:0;width:min(340px,calc(100% - 620px));pointer-events:none;z-index:0;border:0;box-shadow:none;border-radius:0;background-image:linear-gradient(rgba(255,255,255,.042) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.042) 1px,transparent 1px);background-size:34px 34px}
+@media(max-width:700px){body .overview-hero::before{width:min(160px,44%);height:40px;bottom:auto;background-image:linear-gradient(rgba(255,255,255,.042) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.042) 1px,transparent 1px);background-size:34px 34px}body .overview-hero .hero-content::after{content:"";position:absolute;right:0;bottom:0;width:min(170px,47%);height:44px;pointer-events:none;z-index:0;border:0;box-shadow:none;border-radius:0;background-image:linear-gradient(rgba(255,255,255,.042) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.042) 1px,transparent 1px);background-size:34px 34px}}
+body.dark .overview-hero::before,body.dark .overview-hero .hero-content::after{background-image:linear-gradient(rgba(255,255,255,.036) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.036) 1px,transparent 1px)}
 body .overview-hero .hero-content{min-width:0;max-width:570px;position:relative;z-index:1}
 body .overview-hero h2{margin:11px 0 12px;max-width:490px;font-size:25px;line-height:1.25;letter-spacing:-.04em;color:#fff}
 body .overview-hero p{margin:0;color:#c5d0f5;font-size:12px;line-height:1.7}
@@ -476,3 +479,42 @@ body.dark .stat-card:nth-child(4) .stat-icon{color:#a0c6ae;background:#293c3c}
 /* Dark JSON selection alone: soften the stacked frame, retain keyboard focus. */
 body.dark .json-reference-row.selected:not(:focus-visible){border-color:#626fa8!important}
 body.dark .json-reference-row.selected:not(:focus-visible)::after{border-color:#626fa8}
+
+/* Round 2 (release 120 preview): touch flash hardening, switch-option selection frame, stale-frame guards.
+   All additions are hover-gated or hover-free; no new :hover selector escapes a hover-capable media query. */
+@media(hover:none){
+body .asset-card{transform:none!important;box-shadow:none!important;transition:none!important}
+body .asset-card.selected{box-shadow:0 0 0 2px var(--ui-selection-shadow)!important}
+body .asset-card:active,body .asset-card.selected:active{filter:none!important;outline:none!important}
+body :is(.asset-select,.reference-select){transition:none!important;transform:none!important;filter:none!important}
+body .library-switch-option[data-feedback="surface"]:active,body .library-switch-option:focus-visible{outline:none!important}
+body .library-switch-option{border-color:transparent!important}
+}
+/* Library switch selection: the active option carries the same theme frame and tint as image cards;
+   the check slot is part of the frame, unselected options stay borderless, hit area stays 54px/44px. */
+body .library-switch-option{border:1px solid transparent!important}
+body .library-switch-option[aria-checked=true]{color:var(--ui-selection-ink);border-color:var(--ui-line-focus)!important;background:var(--ui-selection-bg);box-shadow:0 0 0 2px var(--ui-selection-shadow)}
+body .library-switch-option[aria-checked=true]:focus-visible{outline:none!important}
+
+/* Centered library dialog: only internal list rhythm and hit targets change. */
+body .library-switch-modal-body{gap:10px;min-height:0;overflow:visible}
+body .library-switch-modal-body .library-switch-list{gap:10px;max-height:min(52vh,440px);overflow:auto;overscroll-behavior:contain;padding:3px}
+body .library-switch-modal-body .library-switch-row{gap:8px;padding:0;min-width:0;align-items:center}
+body .library-switch-modal-body .library-switch-option{height:84px;min-height:84px;max-height:84px;padding:6px 12px;gap:10px;border-radius:10px;box-sizing:border-box}
+body .library-switch-modal-body .library-switch-option[aria-checked=true]{box-shadow:none;background:var(--ui-library-selected-bg,#fafaff)}
+body.dark .library-switch-modal-body .library-switch-option[aria-checked=true]{--ui-library-selected-bg:#222d43;background:#222d43}
+body .library-switch-modal-body .library-switch-check{flex:0 0 16px;width:16px;color:var(--ui-selection-ink)}
+body .library-switch-modal-body .library-switch-copy{min-width:0;overflow:hidden}
+body .library-switch-modal-body .library-switch-copy b{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
+body .library-switch-modal-body .library-description{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;margin:1px 0;color:var(--muted);font-size:11px;line-height:1.4;overflow-wrap:anywhere}
+body .library-switch-modal-body .library-switch-meta{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px;color:var(--muted);line-height:1.4}
+body .library-switch-modal-body .library-switch-delete.ui-button{flex:0 0 44px;width:44px;min-width:44px;height:44px;min-height:44px;padding:0}
+body .library-switch-modal-body .library-picker-create{margin-top:0;min-height:44px;flex-shrink:0}
+/* Small screens keep the fixed action row: no wrapped bulk action below the toolbar.
+   390px keeps the accepted 80px select column and 14px bulk padding unchanged. */
+@media(max-width:360px){
+ body :is(.assets-toolbar,.json-reference-toolbar),body.dark :is(.assets-toolbar,.json-reference-toolbar){grid-template-columns:64px 44px minmax(0,1fr)}
+ :is(.assets-toolbar,.json-reference-toolbar) [data-action^="select-all"]{width:64px}
+ :is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions){flex-wrap:nowrap}
+ :is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions) button{padding-inline:6px;flex-shrink:0}
+}

@@ -63,7 +63,7 @@ window.runPopupChecks = async function(theme) {
   S.view='libraries';renderC();libraryPickerModal();await wait();const del=document.querySelector('.library-switch-delete');
   assert(!document.querySelector('.library-switch-title button'),'no header delete');
   assert(document.querySelectorAll('.library-switch-delete').length===S.libraries.length,'one delete per row');
-  for(const row of document.querySelectorAll('.library-switch-row')){const d=row.querySelector('.library-switch-delete'),o=row.querySelector('.library-switch-option');assert(d.parentElement===o.parentElement&&d.dataset.id===o.dataset.id&&d.getAttribute('aria-label')==='删除JSON库'+S.libraries.find(l=>l.id===d.dataset.id).name,'sibling target');}
+  for(const row of document.querySelectorAll('.library-switch-row')){const d=row.querySelector('.library-switch-delete'),o=row.querySelector('.library-switch-option');assert(d.parentElement===o.parentElement&&d.dataset.id===o.dataset.id&&d.getAttribute('aria-label')==='删除库'+S.libraries.find(l=>l.id===d.dataset.id).name,'sibling target');}
   assert(document.documentElement.scrollWidth===innerWidth,'picker overflow');
   results.push({theme,viewport:innerWidth,rowDelete:'PASS',pickerWidth:document.documentElement.scrollWidth});
   del.click();assert(document.querySelector('[data-action="confirm-exec"]')&&S.modalConfirm&&deletes===0,'must only confirm');closeC();
