@@ -5,18 +5,23 @@ const changed=cp.execFileSync('git',['diff','--name-only','a329ce8','--'],{encod
 const untracked=cp.execFileSync('git',['ls-files','--others','--exclude-standard'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
 assert.deepEqual([...new Set([...changed,...untracked])].sort(),allowed,'Fixed release baseline and closed ten-file authorization remain valid after commit');
 const before=cp.execFileSync('git',['show','a329ce8:ui-refresh.css'],{encoding:'utf8'});
-const starDecoration=/\/\* Decorative sparkles:[^]*?body\.dark \.overview-hero::after\{opacity:\.22\}\n/;
-assert(starDecoration.test(css),'Authorized decorative star exists');
+// Sparkle decoration retired by user request; no ::after sparkle rule may remain.
+assert(!css.includes('Decorative sparkles'),'Sparkle decoration removed');
+assert(!/overview-hero::after/.test(css),'No hero sparkle layer remains');
 // Exact-literal authorization whitelist for the final micro-polish (release 118).
 // Each entry maps ONE approved current literal back to its a329ce8 baseline literal;
 // everything else in the stylesheet stays byte-frozen. No blanket regex exemption.
 const authorizedMicroPolish=[
- // A. Right bright end pulled in slightly: tail hue softened, same blue/purple family, no new radial layer.
- ['linear-gradient(160deg,#202b63,#363f99 62%,#4870bd)','linear-gradient(122deg,#202b63,#363f99 62%,#4b75c7)','Light hero tail softened from #4b75c7 to #4870bd'],
- ['linear-gradient(160deg,#182044,#262f68 62%,#324e83)','linear-gradient(122deg,#182044,#262f68 62%,#34528b)','Dark hero tail softened from #34528b to #324e83, stays dim not black'],
+ // A. Background canvas replaced by the approved four-stop blue ramp in both themes.
+ ['linear-gradient(155deg,#1e2a5e 0%,#2f3c86 46%,#4a63ad 78%,#5b76c4 100%)','linear-gradient(122deg,#202b63,#363f99 62%,#4b75c7)','Light hero replaced with the approved four-stop blue canvas'],
+ ['linear-gradient(155deg,#171f42 0%,#232c5e 46%,#2f3c74 78%,#3a4d88 100%)','linear-gradient(122deg,#182044,#262f68 62%,#34528b)','Dark hero replaced with the approved dim four-stop canvas, stays dim not black'],
  // B. Whitespace comfort only: +3px title->description and +3px description->button. Geometry untouched.
  ['body .overview-hero h2{margin:11px 0 12px;','body .overview-hero h2{margin:11px 0 9px;','Title-to-description gap 9px->12px'],
- ['body .overview-hero .hero-actions{margin-top:25px;','body .overview-hero .hero-actions{margin-top:22px;','Description-to-button gap 22px->25px']];
+ ['body .overview-hero .hero-actions{margin-top:25px;','body .overview-hero .hero-actions{margin-top:22px;','Description-to-button gap 22px->25px'],
+ // C. Whole background canvas replaced (user request): diagonal light band instead of circular blobs.
+ ['radial-gradient(140% 110% at 6% 0%,rgba(129,140,248,.38),transparent 52%),radial-gradient(120% 120% at 96% 100%,rgba(96,165,250,.26),transparent 48%)','radial-gradient(circle at 84% 8%,rgba(117,139,255,.65),transparent 31%),radial-gradient(circle at 72% 120%,rgba(58,196,198,.34),transparent 35%)','Light hero glow replaced with one unified blue-purple light band'],
+ ['radial-gradient(140% 110% at 6% 0%,rgba(114,128,226,.18),transparent 52%),radial-gradient(120% 120% at 96% 100%,rgba(78,140,220,.14),transparent 48%)','radial-gradient(circle at 84% 8%,rgba(100,119,219,.25),transparent 31%),radial-gradient(circle at 72% 120%,rgba(44,142,156,.12),transparent 35%)','Dark hero glow matched to the new light band'],
+ ['body .overview-hero .hero-content{min-width:0;max-width:570px;position:relative;z-index:1}','body .overview-hero .hero-content{min-width:0;max-width:570px}','Hero content raised above the grid texture layer']];
 const normalizeAuthorized=s=>authorizedMicroPolish.reduce((v,[from,to])=>{
  assert(v.includes(from),'Authorized micro-polish literal must be present: '+from);
  return v.replace(from,to);},s)
@@ -25,7 +30,11 @@ const normalizeAuthorized=s=>authorizedMicroPolish.reduce((v,[from,to])=>{
 for(const [from,,why] of authorizedMicroPolish)assert.equal(css.split(from).length-1,1,'Authorized literal must occur exactly once: '+why);
 // Geometry the user froze against further change stays pinned here.
 for(const pinned of ['min-height:206px','border-radius:22px','height:44px','min-height:44px','margin-bottom:24px','padding:30px 33px'])assert(css.includes(pinned),'Pinned hero geometry: '+pinned);
-assert.equal(normalizeAuthorized(css.replace(starDecoration,'')),before.replace('body .overview-hero .btn:disabled{opacity:.65}\n',''),'Only obsolete hero disabled opacity removed, scoped decorative star added and authorized gradient-tail/whitespace micro-polish; normal palettes frozen');
+const gridTexture=/body \.overview-hero::before\{content:""[^\n]*\}\nbody\.dark \.overview-hero::before\{background-image:linear-gradient\(rgba\(255,255,255,\.045\)[^\n]*\}\n/;
+assert(gridTexture.test(css),'Authorized faint grid texture exists');
+const retireCircle=/\/\* Sparkle decoration retired by user request; the circle motif carries the depth\. \*\/\n/;
+assert(retireCircle.test(css),'Sparkle comment present in place of the retired circle rule');
+assert.equal(normalizeAuthorized(css.replace(retireCircle,'body.dark .overview-hero::before{opacity:.45}\n').replace(gridTexture,'')),before.replace('body .overview-hero .btn:disabled{opacity:.65}\n',''),'Only obsolete hero disabled opacity removed, sparkle layer dropped, approved grid texture and gradient/whitespace polish applied; normal palettes frozen');
 const beforeJs=cp.execFileSync('git',['show','a329ce8:console.js'],{encoding:'utf8'});
 assert.equal(js,beforeJs.replace(' disabled title="请先在仓库设置中连接 GitHub"',' title="请先连接仓库"').replace("notify('请先连接你的仓库','error');uploadModal();return;}","notify('请先连接仓库','error');uploadModal();return;}"),'Only hero attribute and upload guard message authorized');
 const overview=js.slice(js.indexOf('function overviewView()'),js.indexOf('function librariesView()'));

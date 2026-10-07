@@ -11,9 +11,10 @@ assert(normalizeAuthorizedColors(frozenCss).startsWith(normalizeAuthorizedColors
 const added=css.slice(baseCss.length);
 // A. Micro-polish A: right bright end pulled in by softening only the tail stop.
 // Same blue/purple family, same angle, no new radial layer, dim dark variant stays approved.
-assert(added.includes('linear-gradient(160deg,#202b63,#363f99 62%,#4870bd)'),'Light hero keeps historic blue/purple stops with the bright end pulled in (tail #4b75c7->#4870bd)');
-assert(added.includes('linear-gradient(160deg,#182044,#262f68 62%,#324e83)'),'Dark hero keeps approved dim stops with the bright end pulled in (tail #34528b->#324e83)');
-assert(!added.includes('#4b75c7')&&!added.includes('#34528b'),'Previous brighter tails fully retired');
+assert(added.includes('linear-gradient(155deg,#1e2a5e 0%,#2f3c86 46%,#4a63ad 78%,#5b76c4 100%)'),'Light hero uses the approved four-stop blue canvas');
+assert(added.includes('linear-gradient(155deg,#171f42 0%,#232c5e 46%,#2f3c74 78%,#3a4d88 100%)'),'Dark hero uses the approved dim four-stop canvas');
+assert(!added.includes('#4b75c7')&&!added.includes('#34528b')&&!added.includes('#4870bd'),'Earlier tails fully retired');
+assert(added.includes('linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px)')&&added.includes('background-size:34px 34px'),'Faint grid texture present');
 // B. Micro-polish B: whitespace comfort only. Frozen geometry below stays byte-identical.
 assert(added.includes('body .overview-hero h2{margin:11px 0 12px;'),'Title-to-description gap widened 9px->12px');
 assert(added.includes('body .overview-hero .hero-actions{margin-top:25px;'),'Description-to-button gap widened 22px->25px');

@@ -447,19 +447,18 @@ body .library-name-trigger:is(:active,:focus-visible,[aria-expanded="true"]) .li
 body :is(.library-switch-trigger,.library-switch-option,.library-picker-option,.repo-quick)[data-feedback="surface"]:focus-visible{outline:2px solid var(--ui-line-focus)!important;outline-offset:2px}
 
 /* Hero restoration: historical blue/purple canvas, scoped to overview only. */
-body .overview-hero{display:block;min-height:206px;padding:30px 33px;margin-bottom:24px;border-radius:22px;color:#fff;background:radial-gradient(circle at 84% 8%,rgba(117,139,255,.65),transparent 31%),radial-gradient(circle at 72% 120%,rgba(58,196,198,.34),transparent 35%),linear-gradient(160deg,#202b63,#363f99 62%,#4870bd);box-shadow:0 14px 30px rgba(50,64,173,.21)}
-body .overview-hero .hero-content{min-width:0;max-width:570px}
+body .overview-hero{display:block;min-height:206px;padding:30px 33px;margin-bottom:24px;border-radius:22px;color:#fff;background:radial-gradient(140% 110% at 6% 0%,rgba(129,140,248,.38),transparent 52%),radial-gradient(120% 120% at 96% 100%,rgba(96,165,250,.26),transparent 48%),linear-gradient(155deg,#1e2a5e 0%,#2f3c86 46%,#4a63ad 78%,#5b76c4 100%);box-shadow:0 14px 30px rgba(50,64,173,.21)}
+body .overview-hero::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;border-radius:inherit;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:34px 34px;mask-image:radial-gradient(120% 90% at 84% 12%,#000 8%,transparent 62%);-webkit-mask-image:radial-gradient(120% 90% at 84% 12%,#000 8%,transparent 62%)}
+body.dark .overview-hero::before{background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px)}
+body .overview-hero .hero-content{min-width:0;max-width:570px;position:relative;z-index:1}
 body .overview-hero h2{margin:11px 0 12px;max-width:490px;font-size:25px;line-height:1.25;letter-spacing:-.04em;color:#fff}
 body .overview-hero p{margin:0;color:#c5d0f5;font-size:12px;line-height:1.7}
 body .overview-hero .hero-actions{margin-top:25px;gap:9px;flex-wrap:wrap}
 body .overview-hero .btn{height:44px;min-height:44px;padding-inline:16px;font-size:13px;gap:7px;color:#f4f6ff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);box-shadow:none;--ui-feedback-ink:#fff;--ui-line-focus:#dbe3ff}
 body .overview-hero .hero-actions .btn.btn-primary[data-action="upload"]{color:#273172!important;background:var(--ui-hero-upload-bg)!important;border-color:var(--ui-hero-upload-bg)!important;--ui-feedback-ink:#273172}
 body .overview-hero .hero-actions .btn.btn-primary[data-action="upload"]:active:not(:disabled){color:#273172!important;border-color:var(--ui-hero-upload-active)!important;background:var(--ui-hero-upload-active)!important}
-body.dark .overview-hero{background:radial-gradient(circle at 84% 8%,rgba(100,119,219,.25),transparent 31%),radial-gradient(circle at 72% 120%,rgba(44,142,156,.12),transparent 35%),linear-gradient(160deg,#182044,#262f68 62%,#324e83);box-shadow:none}
-body.dark .overview-hero::before{opacity:.45}
-/* Decorative sparkles: behind content, no interaction, no animation. */
-body .overview-hero::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.3;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23fff' d='M16 0c.9 9.6 5.5 14.2 16 16-10.5 1.8-15.1 6.4-16 16-.9-9.6-5.5-14.2-16-16C10.5 14.2 15.1 9.6 16 0Z'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23fff' d='M16 0c.9 9.6 5.5 14.2 16 16-10.5 1.8-15.1 6.4-16 16-.9-9.6-5.5-14.2-16-16C10.5 14.2 15.1 9.6 16 0Z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-size:20px 20px,11px 11px;background-position:right 30px top 24px,right 54px bottom 30px}
-body.dark .overview-hero::after{opacity:.22}
+body.dark .overview-hero{background:radial-gradient(140% 110% at 6% 0%,rgba(114,128,226,.18),transparent 52%),radial-gradient(120% 120% at 96% 100%,rgba(78,140,220,.14),transparent 48%),linear-gradient(155deg,#171f42 0%,#232c5e 46%,#2f3c74 78%,#3a4d88 100%);box-shadow:none}
+/* Sparkle decoration retired by user request; the circle motif carries the depth. */
 @media(hover:hover){body .overview-hero .btn:not(:disabled):hover{color:#fff!important;border-color:#dbe3ff!important;background:rgba(255,255,255,.2)}body .overview-hero .hero-actions .btn.btn-primary[data-action="upload"]:not(:disabled):hover{color:#273172!important;border-color:var(--ui-hero-upload-hover)!important;background:var(--ui-hero-upload-hover)!important}}
 @media(max-width:700px){body .overview-hero{padding:25px 22px}body .overview-hero h2{font-size:21px}body .overview-hero .hero-actions{flex-wrap:wrap}body .overview-hero .btn{flex:0 0 auto;min-width:0;padding-inline:16px;font-size:12px;gap:6px}}
 
