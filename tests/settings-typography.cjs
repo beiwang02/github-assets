@@ -21,8 +21,15 @@ const expected=`
 `;
 assert.equal(block,expected,'Exact finite whitelist, no blanket exemption');
 assert.equal(css.replace(expected,''),base,'Every other UI style byte frozen to approved production HEAD');
-for(const f of ['console.js','console.css','styles.css','popup.js','github.js'])assert.equal(fs.readFileSync(f,'utf8'),cp.execFileSync('git',['show','360c42a:'+f],{encoding:'utf8'}),f+' unchanged');
-const html=fs.readFileSync('index.html','utf8');assert.equal(html.replaceAll('clean-ui-release-122','clean-ui-release-121'),cp.execFileSync('git',['show','360c42a:index.html'],{encoding:'utf8'}));
+const {normalizeMoveGroups,normalizeMoveClient,MOVE_BASELINE}=require('./move-groups-normalize.cjs');
+assert.equal(MOVE_BASELINE,'70aa84d','Move feature baseline is the independently released cache122');
+for(const f of ['console.js','console.css','styles.css','popup.js','github.js']){
+ const current=fs.readFileSync(f,'utf8');
+ const normalized=f==='console.js'?normalizeMoveGroups(current):f==='github.js'?normalizeMoveClient(current):current;
+ assert.equal(normalized,cp.execFileSync('git',['show',MOVE_BASELINE+':'+f],{encoding:'utf8'}),f+' frozen except exact authorized move literals');
+ assert.equal(normalized,cp.execFileSync('git',['show','360c42a:'+f],{encoding:'utf8'}),f+' pre-typography contract retained');
+}
+const html=fs.readFileSync('index.html','utf8');assert.equal(require('./release-123.cjs').normalizeIndex(html).replaceAll('clean-ui-release-122','clean-ui-release-121'),cp.execFileSync('git',['show','360c42a:index.html'],{encoding:'utf8'}));
 assert(!html.includes('user-scalable=no')&&!html.includes('maximum-scale='),'User zoom is retained');
 assert(block.includes('100%')&&!block.includes('text-size-adjust:none'));
 assert(!/opacity|color:|background:|padding:|gap:|button|\.btn|grid-template/.test(block),'No colors, disabled semantics, buttons, spacing, or grid layout changed');

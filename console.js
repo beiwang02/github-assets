@@ -45,7 +45,7 @@ window.recoverSession=recoverSession;
 window.liveCsrf=()=>S.csrf;
 function loginView() {
   const problem=new URLSearchParams(location.search).get('auth_error');
-  const message=problem==='logged_out'?'已退出登录。':(problem==='forbidden'?'这个 GitHub 账号目前没有被允许使用此网站。':(problem?'登录失败，请重试。':'使用 GitHub Personal Access Token 登录'));
+  const message=problem==='logged_out'?'已退出登录。':(problem==='forbidden'?'当前 GitHub 账号暂无访问权限，请联系管理员添加到允许名单。':(problem?'登录失败，请重试。':'使用 GitHub Personal Access Token 登录'));
   return `<div class="auth-page"><div class="auth-card"><div class="auth-brand"><div><strong>GitHub Assets</strong></div><div class="auth-head-actions"><button class="top-icon appearance-button auth-theme-button" data-action="toggle-theme" title="跟随系统（点击切换）" aria-label="跟随系统（点击切换）">◐</button><a class="project-link" href="https://github.com/beiwang02/github-assets" title="查看项目源码" aria-label="查看项目源码"><svg class="project-github-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.3a9.7 9.7 0 0 0-3.07 18.9c.49.09.67-.21.67-.47v-1.66c-2.73.59-3.31-1.16-3.31-1.16-.44-1.13-1.08-1.43-1.08-1.43-.89-.61.07-.6.07-.6.98.07 1.5 1.01 1.5 1.01.87 1.5 2.28 1.07 2.84.82.09-.63.34-1.07.62-1.32-2.18-.25-4.47-1.09-4.47-4.85 0-1.07.38-1.94 1.01-2.62-.1-.25-.44-1.25.1-2.59 0 0 .82-.26 2.67 1a9.3 9.3 0 0 1 4.86 0c1.85-1.26 2.67-1 2.67-1 .54 1.34.2 2.34.1 2.59.63.68 1.01 1.55 1.01 2.62 0 3.77-2.3 4.59-4.48 4.84.35.3.66.9.66 1.81v2.68c0 .26.18.57.68.47A9.7 9.7 0 0 0 12 2.3Z"/></svg></a></div></div><p>${escC(message)}</p><form id="tokenLoginForm"><div class="modal-field"><label>GitHub Token</label><div class="token-input-wrap"><input name="token" id="mainTokenInput" type="password" autocomplete="off" placeholder="ghp_... 或 github_pat_..." value="${escC(rememberedToken())}" required><button type="button" class="token-eye" data-action="toggle-token" aria-label="显示 Token" aria-pressed="false">${tokenEyeC(false)}</button></div></div><div class="remember-token"><input type="checkbox" name="rememberToken" ${rememberedToken()?'checked':''}><span>记住此设备</span></div><small class="auth-note">Token 仅临时保存在服务器内存中；勾选“记住此设备”后会存在当前浏览器本地，会话过期或服务重启时自动重新登录，不会写入数据库或 GitHub。</small><button type="button" class="token-guide-button" data-action="token-guide">经典 Token 创建教程</button><button type="submit" class="btn btn-github"><span class="github-logo">●</span> 验证并登录</button></form></div></div>`;
 }
 
@@ -131,7 +131,7 @@ function renderAssetsToolbar() {
   toolbar.querySelector('[data-action="select-all"]')?.replaceChildren(document.createTextNode(allSelected?'取消全选':'全选'));
   const area=toolbar.querySelector('[data-role="asset-bulk-actions"]'); if(!area)return;
   area.replaceChildren();
-  if(selected){ area.insertAdjacentHTML('beforeend',`<button class="btn btn-sm" data-action="bulk-library" aria-label="将已选择的 ${selected} 张图片加入 JSON 库">加入JSON库</button><button type="button" class="btn btn-sm btn-danger" data-action="bulk-delete">删除原图</button>`); }
+  if(selected){ area.insertAdjacentHTML('beforeend',`<button type="button" class="btn btn-sm" data-action="bulk-move" title="移动分组" aria-label="移动已选择的 ${selected} 张图片到其他分组">移动分组</button><button class="btn btn-sm" data-action="bulk-library" aria-label="将已选择的 ${selected} 张图片加入 JSON 库">加入JSON库</button><button type="button" class="btn btn-sm btn-danger" data-action="bulk-delete">删除原图</button>`); }
 }
 function syncAssetSelectionUI(ids) {
   const scope=ids?new Set(ids):null;
@@ -159,7 +159,9 @@ function syncIconSelectionUI(indexes) {
 }
 function assetsView() {
   const list=filteredAssets(), selected=S.selected.size;
-  return `<div class="page-heading"><div><p>按图片分组管理 GitHub 资源；点击图片可查看直链、改名或删除。</p></div>${S.connected?`<div class="heading-actions"><button class="btn" data-action="new-group">＋ 新建分组</button>${S.group?'<button class="btn" data-action="manage-group"><span class="action-icon">▣</span> 管理分组</button>':''}<button class="btn btn-primary" data-action="upload">↑ 上传图片</button></div>`:''}</div><div class="asset-groups">${groupView()}</div><div class="toolbar assets-toolbar"><label class="inner-search"><span>⌕</span><input data-bind="asset-search" value="${escC(S.assetQuery)}" placeholder="搜索图片名称或直链…"></label><button class="btn btn-sm" data-action="select-all">${list.length&&list.every(x=>S.selected.has(x.id))?'取消全选':'全选'}</button><span class="toolbar-spacer"></span><span class="asset-bulk-actions" data-role="asset-bulk-actions">${selected?`<button class="btn btn-sm" data-action="bulk-library" aria-label="将已选择的 ${selected} 张图片加入 JSON 库">加入JSON库</button><button type="button" class="btn btn-sm btn-danger" data-action="bulk-delete">删除原图</button>`:''}</span><button class="btn btn-sm" data-action="refresh" aria-label="刷新图片资源" title="刷新图片资源">↻</button></div>${list.length?`<div class="asset-grid">${list.map(assetView).join('')}</div>`:emptyC('▧',S.assetQuery.trim()?'没有匹配的图片':S.connected?'这个分组还没有图片':'尚未连接 GitHub',S.assetQuery.trim()?'请修改或清空搜索条件。':S.connected?'仓库中没有符合条件的图片。':'进入仓库设置后读取你的真实图片资源。',S.assetQuery.trim()?'':S.connected?'upload':'settings',S.connected?'上传第一张图片':'连接我的仓库')}`;
+  // Move-only mobile layout: full labels, existing 12px type / 14px padding / 44px hits.
+  // Reserve a single mobile action row: toggling selection never shifts the image grid.
+  return `<style data-role="move-toolbar-layout">@media(max-width:700px){body .assets-toolbar .asset-bulk-actions{grid-column:1/-1;grid-row:3;margin-left:0;justify-content:flex-start;gap:4px;height:44px;min-height:44px}body .assets-toolbar .asset-bulk-actions button{padding-inline:14px!important;flex:0 0 auto!important;min-height:44px}}</style><div class="page-heading"><div><p>按图片分组管理 GitHub 资源；点击图片可查看直链、改名或删除。</p></div>${S.connected?`<div class="heading-actions"><button class="btn" data-action="new-group">＋ 新建分组</button>${S.group?'<button class="btn" data-action="manage-group"><span class="action-icon">▣</span> 管理分组</button>':''}<button class="btn btn-primary" data-action="upload">↑ 上传图片</button></div>`:''}</div><div class="asset-groups">${groupView()}</div><div class="toolbar assets-toolbar"><label class="inner-search"><span>⌕</span><input data-bind="asset-search" value="${escC(S.assetQuery)}" placeholder="搜索图片名称或直链…"></label><button class="btn btn-sm" data-action="select-all">${list.length&&list.every(x=>S.selected.has(x.id))?'取消全选':'全选'}</button><span class="toolbar-spacer"></span><span class="asset-bulk-actions" data-role="asset-bulk-actions">${selected?`<button type="button" class="btn btn-sm" data-action="bulk-move" title="移动分组" aria-label="移动已选择的 ${selected} 张图片到其他分组">移动分组</button><button class="btn btn-sm" data-action="bulk-library" aria-label="将已选择的 ${selected} 张图片加入 JSON 库">加入JSON库</button><button type="button" class="btn btn-sm btn-danger" data-action="bulk-delete">删除原图</button>`:''}</span><button class="btn btn-sm" data-action="refresh" aria-label="刷新图片资源" title="刷新图片资源">↻</button></div>${list.length?`<div class="asset-grid">${list.map(assetView).join('')}</div>`:emptyC('▧',S.assetQuery.trim()?'没有匹配的图片':S.connected?'这个分组还没有图片':'尚未连接 GitHub',S.assetQuery.trim()?'请修改或清空搜索条件。':S.connected?'仓库中没有符合条件的图片。':'进入仓库设置后读取你的真实图片资源。',S.assetQuery.trim()?'':S.connected?'upload':'settings',S.connected?'上传第一张图片':'连接我的仓库')}`;
 }
 function detailView() {
   const lib=S.libraries.find(x=>x.id===S.selectedLibrary); if(!lib) return emptyC('▦','找不到 JSON 库','请刷新仓库数据。','refresh','刷新');
@@ -366,8 +368,42 @@ async function saveOriginalC(button) {
   finally {state.busy=false;button.disabled=false;delete button.dataset.busy;button.removeAttribute('aria-busy');}
 }
 // End detail-only saving helpers.
-function assetModal(item) { openC(`<div class="modal-head"><div><h2>${escC(item.name)}</h2><p>${escC(item.group||'根目录')} 分组 · ${escC(item.ext)} 图片资源</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><div class="asset-detail-preview"><img src="${escC(imageURLC(item))}" alt="${escC(item.name)}"></div><div class="detail-readonly"><b>GitHub Raw 直链</b><p class="detail-url">${detailLinkC(item.url)}</p></div>${detailRepositoryC(item)}${imageSaveMarkupC(item)}</div><div class="modal-actions asset-detail-actions"><button class="btn" data-action="copy" data-copy="${escC(item.url)}">⧉ 复制直链</button><button type="button" class="btn" data-action="save-original">保存图片</button><button class="btn btn-primary" data-action="asset-library" data-id="${escC(item.id)}">加入 JSON 库</button><button class="btn" data-action="rename-asset" data-id="${escC(item.id)}">改名并同步引用</button><button class="btn btn-danger" data-action="delete-asset" data-id="${escC(item.id)}">删除图片</button></div>`); prepareImageSaveC(item); }
+function assetModal(item) { openC(`<div class="modal-head"><div><h2>${escC(item.name)}</h2><p>${escC(item.group||'根目录')} 分组 · ${escC(item.ext)} 图片资源</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><div class="asset-detail-preview"><img src="${escC(imageURLC(item))}" alt="${escC(item.name)}"></div><div class="detail-readonly"><b>GitHub Raw 直链</b><p class="detail-url">${detailLinkC(item.url)}</p></div>${detailRepositoryC(item)}${imageSaveMarkupC(item)}</div><div class="modal-actions asset-detail-actions"><button class="btn" data-action="copy" data-copy="${escC(item.url)}">⧉ 复制直链</button><button type="button" class="btn" data-action="save-original">保存图片</button><button class="btn btn-primary" data-action="asset-library" data-id="${escC(item.id)}">加入 JSON 库</button><button class="btn" data-action="move-asset" data-id="${escC(item.id)}">移动分组</button><button class="btn" data-action="rename-asset" data-id="${escC(item.id)}">改名并同步引用</button><button class="btn btn-danger" data-action="delete-asset" data-id="${escC(item.id)}">删除图片</button></div>`); prepareImageSaveC(item); }
 function iconModal(icon) { openC(`<div class="modal-head"><div><h2>${escC(icon.name)}</h2><p>JSON 图片引用详情</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><div class="json-icon-detail-preview"><img src="${escC(imageURLC(icon))}" alt="${escC(icon.name)}"></div><div class="detail-readonly"><b>GitHub Raw 直链</b><p class="detail-url">${detailLinkC(icon.url)}</p></div>${detailRepositoryC(icon)}${imageSaveMarkupC(icon)}</div><div class="modal-actions icon-detail-actions"><button class="btn" data-action="copy" data-copy="${escC(icon.url)}">⧉ 复制直链</button><button type="button" class="btn" data-action="save-original">保存图片</button><button class="btn btn-danger" data-action="delete-icon" data-index="${icon.index}">删除引用</button></div>`); prepareImageSaveC(icon); }
+// Begin image-group move UI (no JSON-page entry).
+function moveModal(item=null) {
+  if(!S.auth||!S.connected)return notify('请先登录并连接仓库','error');
+  const items=item?[item]:S.assets.filter(x=>S.selected.has(x.id));
+  if(!items.length)return notify('请先选择图片','error');
+  const groups=S.groups.filter(g=>g.name);
+  const initial=groups.find(g=>items.some(i=>i.group!==g.name))?.name||groups[0]?.name||'';
+  openC(`<div class="modal-head"><div><h2>移动分组</h2><p>已选择 ${items.length} 张图片</p></div><button class="modal-close" data-action="close-modal" aria-label="关闭移动分组">×</button></div><form id="moveForm"><div class="modal-body">${groups.length?`<div class="modal-field"><label id="moveGroupLabel">目标分组</label>${fieldMenuC({name:'moveGroup',value:initial,options:groups.map(g=>({value:g.name,label:g.name})),required:true})}</div>`:'<p class="field-help">暂无可用分组，请先在图片资源页面新建分组。</p>'}<p class="field-help" data-role="move-confirmation"></p><p class="field-help">图片直链会改变，本站 JSON 库引用将同步更新。外部使用旧直链的地方需手动更新。</p><p class="field-help">已在目标分组的图片会跳过；同名文件不会覆盖。</p></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button type="submit" class="btn btn-primary" ${groups.length?'':'disabled'}>移动分组</button></div></form>`);
+  const form=$c('#moveForm');form.moveItems=items.map(i=>({...i}));
+  form.singleAsset=!!item;form.moveClient=currentClient();
+  const trigger=form.querySelector('.field-menu-trigger');if(trigger)trigger.setAttribute('aria-labelledby','moveGroupLabel');
+  const update=()=>{const target=form.elements.moveGroup?.value||'';form.querySelector('[data-role="move-confirmation"]').textContent=target?`移动 ${items.length} 张图片到 ${target} 分组？`:'请选择已有图片分组。';};
+  form.elements.moveGroup?.addEventListener('change',update);update();
+}
+async function submitMoveC(form) {
+  if(!S.auth||!S.connected||form.moveClient!==currentClient())throw new Error('仓库连接已变化，请重新打开移动分组。');
+  if(form.moveOutcomeUnknown)throw new Error('提交结果待确认，请先关闭弹窗并刷新仓库核查，不要直接重试。');
+  const group=String(new FormData(form).get('moveGroup')||'');
+  if(!group||!S.groups.some(g=>g.name===group))throw new Error('请选择已有图片分组。');
+  const items=form.moveItems||[];if(!items.length)throw new Error('请先选择图片。');
+  let result;
+  try { result=await form.moveClient.moveSelected(items,group); }
+  catch(error){if(error.requiresRefresh||error.code==='COMMIT_OUTCOME_UNKNOWN')form.moveOutcomeUnknown=true;throw error;}
+  const previous=form.singleAsset?new Set(S.selected):null;
+  closeC();
+  if(!previous)S.selected.clear();
+  try { if(result.changed)await refreshCommittedC(); }
+  finally {
+    if(previous)S.selected=new Set([...previous].filter(id=>S.assets.some(i=>i.id===id)));
+    renderC();
+  }
+  notify(result.moved?`已移动 ${result.moved} 张图片，JSON 引用已同步${result.skipped?`，跳过同组 ${result.skipped} 张`:''}`:`没有需要移动的图片，已跳过同组 ${result.skipped} 张`);
+}
+// End image-group move UI.
 function bulkModal(item=null) {
   const items=item?[item]:S.assets.filter(x=>S.selected.has(x.id));
   if(!items.length)return notify('请先选择图片','error');
@@ -479,6 +515,7 @@ async function formSubmit(e) {
     if(form.id==='assetRenameForm') { const item=S.assets.find(x=>x.id===form.dataset.id), name=String(new FormData(form).get('name')||'').trim(); if(!item||!name||name===item.name){closeC();return;} await currentClient().renameAsset(item,name); closeC(); await refreshCommittedC(); notify('图片已改名，JSON 引用已同步'); return; }
     if(form.id==='libraryForm') { const data=new FormData(form), name=String(data.get('name')).trim(), description=String(data.get('description')).trim(), inputPath=String(data.get('path')).trim(), path=inputPath.replace(/\.json$/i,'')+'.json'; if(!name)return notify('请填写 JSON 库名称','error'); if(!inputPath)return notify('请填写 JSON 文件名','error'); const old=S.libraries.find(x=>x.id===S.editingLibrary); if(old) await currentClient().saveLibrary(old.file,path,name,description); else await currentClient().createLibrary(path,name,description); closeC(); await refreshCommittedC(); notify('JSON 库已提交'); return; }
     if(form.id==='iconForm') { const data=new FormData(form), lib=S.libraries.find(x=>x.id===S.selectedLibrary); await currentClient().saveIcon(lib.file,Number(data.get('index')),String(data.get('name')),String(data.get('url')),lib.sha); closeC(); await refreshCommittedC(); S.view='libraries'; renderC(); notify('图片引用已更新'); return; }
+    if(form.id==='moveForm') return await submitMoveC(form);
     if(form.id==='bulkForm') {
       const path=String(new FormData(form).get('library')||'');
       if(!path||!S.libraries.some(l=>l.file===path))throw new Error('请先选择目标 JSON 库。');
@@ -559,6 +596,8 @@ document.addEventListener('click', async e => {
   if(action==='edit-library'){e.stopPropagation();S.selectedLibrary=target.dataset.id||S.selectedLibrary;libraryModal(true);return;}
   if(action==='edit-icon'){editIconModal(Number(target.dataset.index));return;}
   if(action==='asset-library'){const item=S.assets.find(x=>x.id===target.dataset.id);if(item)bulkModal(item);return;}
+  if(action==='bulk-move'){moveModal();return;}
+  if(action==='move-asset'){const item=S.assets.find(x=>x.id===target.dataset.id);if(item)moveModal(item);return;}
   if(action==='bulk-library'){if(!S.selected.size)return;bulkModal();return;}
   if(action==='confirm-exec'){const run=S.modalConfirm;if(run)await runSubmission(target,'正在删除…',async()=>{await run();if(S.modalConfirm===run)S.modalConfirm=null;});return;}
   if(action==='rename-repo'){if(S.repo.repo)nameModal('repoRename','重命名 GitHub 仓库',S.repo.repo,'仓库名称会同步更新到 GitHub。');return;}

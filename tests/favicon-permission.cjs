@@ -1,0 +1,17 @@
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..');
+const source=fs.readFileSync(path.join(root,'server.mjs'),'utf8').replace(/^import .*;\n/gm,'').replace('import.meta.url',JSON.stringify('file://'+root+'/server.mjs'));
+const message='当前 GitHub 账号暂无访问权限，请联系管理员添加到允许名单。';
+(async()=>{
+ let handler;const ctx={URL,URLSearchParams,Buffer,AbortSignal,console:{log(){}},process:{env:{ADMIN_GITHUB_LOGIN:'admin',ALLOWED_GITHUB_LOGINS:'member',POLICY_FILE:'/fixture/missing'}},dirname:path.dirname,readFile:async p=>{if(String(p)==='/fixture/missing')throw Object.assign(Error(),{code:'ENOENT'});return fs.promises.readFile(p)},mkdir:async()=>{},writeFile:async()=>{throw Error('No writes permitted')},rename:async()=>{},unlink:async()=>{},randomBytes:require('node:crypto').randomBytes,timingSafeEqual:require('node:crypto').timingSafeEqual,setInterval:()=>({unref(){}}),http:{createServer:fn=>{handler=fn;return{listen(){}}}},fetch:async()=>({ok:true,json:async()=>({login:'outsider'})})};
+ vm.createContext(ctx);const api=await vm.runInContext('(async()=>{'+source+';return {accessFor,sessions,assets};})()',ctx);
+ async function request(url,method='GET',body={}){let status,headers={},data;const req={url,method,headers:{host:'127.0.0.1:8765'},async *[Symbol.asyncIterator](){yield Buffer.from(JSON.stringify(body))}};const res={headersSent:false,setHeader(k,v){headers[k]=v},writeHead(s,h){status=s;Object.assign(headers,h);this.headersSent=true},end(v){data=v}};await handler(req,res);return {status,headers,data};}
+ const resources=['favicon.svg','favicon-16.png','favicon-32.png','favicon-48.png','favicon-64.png','favicon.ico','apple-touch-icon.png','icon-192.png','icon-512.png'];
+ for(const f of resources){const r=await request('/icons/'+f+'?v=brand-1');assert.equal(r.status,200);assert.equal(r.headers['Content-Type'],f.endsWith('.svg')?'image/svg+xml':f.endsWith('.ico')?'image/x-icon':'image/png');assert.equal(r.headers['X-Content-Type-Options'],'nosniff');assert.deepEqual(r.data,fs.readFileSync(path.join(root,'icons',f)));}
+ for(const [url,file] of [['/favicon.ico','favicon.ico'],['/apple-touch-icon.png','apple-touch-icon.png'],['/apple-touch-icon-precomposed.png','apple-touch-icon.png']])assert.deepEqual((await request(url)).data,fs.readFileSync(path.join(root,'icons',file)));
+ for(const url of ['/icons/build_icons.py','/source/icons/build_icons.py','/.env','/icons/unknown.png','/icons/','/icons/../build_icons.py'])assert.equal((await request(url)).status,404);
+ const denied=await request('/api/auth/token','POST',{token:'x'.repeat(24)});assert.equal(denied.status,403);assert.equal(JSON.parse(denied.data).message,message);assert.equal(api.sessions.size,0);assert.equal(api.accessFor('outsider').allowed,false);assert.equal(api.accessFor('member').allowed,true);assert.equal(api.accessFor('admin').isAdmin,true);
+ const js=fs.readFileSync(path.join(root,'console.js'),'utf8');assert(js.includes("problem==='forbidden'?'"+message+"'"));assert(!js.includes('这个 GitHub 账号目前没有被允许使用此网站。'));
+ const docker=fs.readFileSync(path.join(root,'Dockerfile'),'utf8');assert(docker.includes('COPY icons/favicon.svg'));assert(!docker.includes('build_icons.py'));
+ console.log('PASS favicon-permission: 9 assets, 3 aliases, exact MIME/nosniff and bytes; no directory/script/secret exposure; exact client+403 message; ADMIN/allowlist unchanged (mock only)');
+})().catch(e=>{console.error(e);process.exitCode=1});

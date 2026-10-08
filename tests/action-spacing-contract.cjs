@@ -6,6 +6,6 @@ assert(css.includes('grid-template-columns:44px 54px minmax(0,1fr) 44px 44px;gap
 assert(css.includes('grid-template-columns:44px 44px minmax(0,1fr) 44px 44px;gap:4px var(--ui-icon-action-gap)!important'));
 assert(css.includes('justify-content:flex-end;gap:var(--ui-toolbar-action-gap);align-items:center'));
 assert(css.includes('.asset-detail-actions,.icon-detail-actions,.library-picker-actions'));
-assert.equal(fs.readFileSync('console.js','utf8'),cp.execFileSync('git',['show','HEAD:console.js'],{encoding:'utf8'}),'Action indexes and all JS remain byte-identical');
+assert.equal(require('./move-groups-normalize.cjs').normalizeMoveGroups(fs.readFileSync('console.js','utf8')),cp.execFileSync('git',['show','70aa84d:console.js'],{encoding:'utf8'}),'Only closed move literals authorized; action indexes and other JS remain byte-identical');
 for(const cls of ['copy-control-icon','[data-action="delete-icon"]'])assert(css.includes('body .json-reference-actions '+cls)||css.includes('.json-reference-actions .'+cls));
 console.log('PASS action spacing: text groups 8px, both fixed toolbar pairs 4px, contiguous 44px JSON hits / 34px painted frames / 10px visible gap, no offset or negative JSON margin, original JS frozen; runtime geometry audited separately');

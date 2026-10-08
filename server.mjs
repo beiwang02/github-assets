@@ -40,6 +40,8 @@ function clearOAuthCookie() { return cookie('gh_oauth_state', '', 0); }
 const equal = (a, b) => typeof a === 'string' && typeof b === 'string' && Buffer.byteLength(a) === Buffer.byteLength(b) && timingSafeEqual(Buffer.from(a), Buffer.from(b));
 const ROOT = new URL('./', import.meta.url);
 const assets = new Map([
+  ...['favicon.svg','favicon-16.png','favicon-32.png','favicon-48.png','favicon-64.png','favicon.ico','apple-touch-icon.png','icon-192.png','icon-512.png'].map(name => [`/icons/${name}`,`icons/${name}`]),
+  ['/favicon.ico','icons/favicon.ico'], ['/apple-touch-icon.png','icons/apple-touch-icon.png'], ['/apple-touch-icon-precomposed.png','icons/apple-touch-icon.png'],
   ['/popup.js','popup.js'], ['/source/popup.js','popup.js'],
   ...['core-1.8.0.umd.min.js','dom-1.8.0.umd.min.js','LICENSE','README.md'].flatMap(name => [[`/vendor/floating-ui/${name}`,`vendor/floating-ui/${name}`],[`/source/vendor/floating-ui/${name}`,`vendor/floating-ui/${name}`]]),
   ['/fonts/inter-latin-600-normal.woff2','fonts/inter-latin-600-normal.woff2'],
@@ -52,7 +54,7 @@ const assets = new Map([
   ['/source/Dockerfile','Dockerfile'], ['/source/compose.yaml','compose.yaml'], ['/source/.env.example','.env.example'],
   ['/source/install.sh','install.sh']
 ]);
-const mime = { woff2:'font/woff2', html:'text/html; charset=utf-8', css:'text/css; charset=utf-8', js:'text/javascript; charset=utf-8' };
+const mime = { svg:'image/svg+xml', png:'image/png', ico:'image/x-icon', woff2:'font/woff2', html:'text/html; charset=utf-8', css:'text/css; charset=utf-8', js:'text/javascript; charset=utf-8' };
 function cookies(req) {
   return Object.fromEntries((req.headers.cookie || '').split(';').map(s => s.trim().split('=')).filter(p => p.length === 2));
 }
@@ -194,7 +196,7 @@ const server = http.createServer(async (req, res) => {
       if (!userResponse.ok) return json(res, 401, { message:'GitHub Token 无效，或 Token 没有访问权限。' });
       const user = await userResponse.json();
       const permission = accessFor(user.login);
-      if (!permission.allowed) return json(res, 403, { message:'这个 GitHub 账号目前没有被允许使用此网站。' });
+      if (!permission.allowed) return json(res, 403, { message:'当前 GitHub 账号暂无访问权限，请联系管理员添加到允许名单。' });
       const sid = createSession(token, user);
       res.setHeader('Set-Cookie', cookie('gh_session', sid, 8 * 60 * 60, isSecureRequest(req)));
       return json(res, 200, { ok:true, user:{ login:user.login, name:user.name, avatar_url:user.avatar_url } });

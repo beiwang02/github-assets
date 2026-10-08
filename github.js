@@ -190,17 +190,18 @@ class GitHubClient {
     return this.cached={repo,snapshot:snap,imageTimes,historyWarnings,root,assets,groups:[...names].sort().map(name=>({name,count:assets.filter(a=>a.group===name).length})),libraries};
   }
   jsonChange(doc, value) { return { path:doc.path, mode:'100644', type:'blob', content:JSON.stringify(value, null, 2) + '\n' }; }
-  async atomic(message, build) {
+  async atomic(message, build, options = {}) {
     if (GitHubClient.writing) throw new Error('上一项操作尚未完成，请稍候。');
     GitHubClient.writing = true;
-    try { if(this.loading)await this.loading.catch(()=>{}); return await this.commitAtomic(message, build); }
+    try { if(this.loading)await this.loading.catch(()=>{}); return await this.commitAtomic(message, build, options); }
     finally { GitHubClient.writing = false; }
   }
-  async commitAtomic(message, build) {
+  async commitAtomic(message, build, options = {}) {
     for (let attempt = 0; attempt < 3; attempt++) {
       let snap;
       try { snap=await this.snapshot(); }
       catch(error) {
+        if(options.initialize===false)throw error;
         if(![404,409].includes(error.status) || (await this.request(this.base)).size!==0)throw error;
         // Only an explicit mutation initializes a truly blank repository.
         try { await this.request(`${this.base}/contents/${(this.config.assetsPath||'assets').split('/').map(encodeURIComponent).join('/')}/.gitkeep`, 'PUT', {message:'初始化资源仓库',content:btoa('\n'),branch:this.config.branch}); }
@@ -281,6 +282,48 @@ class GitHubClient {
       for (const doc of snap.docs) if (doc.value.icons.some(i => paths.has(this.ownedPath(i.url)))) { const value = structuredClone(doc.value); value.icons = value.icons.filter(i => !paths.has(this.ownedPath(i.url))); changes.push(this.jsonChange(doc, value)); }
       if(!changes.length)return [];return changes;
     });
+  }
+  // A move only accepts existing image blobs inside the configured resource root.
+  static movePath(value) {
+    if(typeof value!=='string'||value.split('/').some(p=>!p||p==='.'||p==='..'||/[\\\x00-\x1f\x7f-\x9f]/.test(p)))throw new Error('图片目录路径无效，请刷新仓库。');
+    return value;
+  }
+  async moveSelected(items, targetGroup) {
+    if(!Array.isArray(items)||!items.length)throw new Error('请先选择图片。');
+    const root=GitHubClient.movePath(this.config.assetsPath||'assets');
+    const group=GitHubClient.movePath(targetGroup);
+    if(group.includes('/'))throw new Error('请选择已有图片分组。');
+    const targetRoot=`${root}/${group}`;
+    // Capture immutable expected SHAs before any await; retries cannot silently adopt edited blobs.
+    const selected=items.map(item=>({path:GitHubClient.movePath(item.path),sha:item.sha}));
+    if(new Set(selected.map(i=>i.path)).size!==selected.length)throw new Error('选择中包含重复图片，请重新选择。');
+    for(const item of selected)if(!item.path.startsWith(root+'/')||! /\.(png|jpe?g|webp|gif|svg)$/i.test(item.path)||typeof item.sha!=='string'||!item.sha)throw new Error('只能移动当前图片资源目录内的图片，请刷新后重新选择。');
+    let moved=0, skipped=0;
+    const result=await this.atomic(`移动图片分组：${selected.length} 张 → ${group}`,async snap=>{
+      if(!(snap.directories||[]).includes(targetRoot)&&!snap.entries.some(e=>e.path.startsWith(targetRoot+'/')))throw new Error('目标分组已经不存在，请刷新后选择已有分组。');
+      const entries=new Map(snap.entries.map(e=>[e.path,e]));
+      const destinations=new Set(), moves=[]; skipped=0;
+      for(const item of selected){
+        const source=entries.get(item.path);
+        if(!source||source.sha!==item.sha||!['100644','100755'].includes(source.mode||'100644'))throw new Error(`图片已经变化或不存在，请刷新后重新选择：${item.path}`);
+        const relative=item.path.slice(root.length+1), parts=relative.split('/');
+        if(parts.length>1&&parts[0]===group){skipped++;continue;}
+        const nextPath=`${targetRoot}/${parts.at(-1)}`;
+        if(entries.has(nextPath)||(snap.directories||[]).includes(nextPath)||destinations.has(nextPath))throw new Error(`目标分组存在同名文件：${parts.at(-1)}，未移动任何图片。`);
+        destinations.add(nextPath);moves.push({source,nextPath});
+      }
+      moved=moves.length;
+      const paths=new Map(moves.map(m=>[m.source.path,m.nextPath]));
+      const changes=moves.flatMap(({source,nextPath})=>[{path:source.path,mode:source.mode||'100644',type:'blob',sha:null},{path:nextPath,mode:source.mode||'100644',type:'blob',sha:source.sha}]);
+      // Preserve icon names, extra fields, duplicate occurrences, and original array indexes.
+      for(const doc of snap.docs){
+        let touched=false;const value=structuredClone(doc.value);
+        value.icons=value.icons.map(icon=>{const path=paths.get(this.ownedPath(icon.url));if(!path)return icon;touched=true;return {...icon,url:this.raw(path)};});
+        if(touched)changes.push(this.jsonChange(doc,value));
+      }
+      return changes;
+    },{initialize:false});
+    return {...result,moved,skipped};
   }
   async renameGroup(group, nextGroup) {
     const oldName=GitHubClient.group(group),nextName=GitHubClient.group(nextGroup);if(oldName===nextName)return;

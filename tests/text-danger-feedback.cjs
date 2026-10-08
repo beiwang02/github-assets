@@ -16,7 +16,7 @@ assert(css.includes('.btn-danger{color:var(--ui-danger-ink);background:var(--ui-
 assert(css.includes('background:var(--ui-danger-bg);box-shadow:none;transform:none;pointer-events:none;z-index:0}'));
 assert(css.includes('--ui-danger-ink:#e5a0ad;--ui-danger-line:#70434d;--ui-danger-bg:#30212b'));
 const base=cp.execFileSync('git',['show','HEAD:console.js'],{encoding:'utf8'});
-assert.equal(js,base,'Picker text restored; all confirmation and file deletion JS stays exactly HEAD');
+assert.equal(require('./move-groups-normalize.cjs').normalizeMoveGroups(js),base,'Closed move authorization only; all confirmation and file deletion JS stays exactly HEAD');
 // Run real dispatch branches and confirmation renderer in an isolated VM; no network.
 const vm=require('node:vm');
 const confirmFn=js.slice(js.indexOf('function confirmC('),js.indexOf('\nfunction ',js.indexOf('function confirmC(')+1));

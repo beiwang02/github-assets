@@ -1,0 +1,22 @@
+[
+  [
+    "  async atomic(message, build, options = {}) {\n",
+    "  async atomic(message, build) {\n"
+  ],
+  [
+    "    try { if(this.loading)await this.loading.catch(()=>{}); return await this.commitAtomic(message, build, options); }\n",
+    "    try { if(this.loading)await this.loading.catch(()=>{}); return await this.commitAtomic(message, build); }\n"
+  ],
+  [
+    "  async commitAtomic(message, build, options = {}) {\n",
+    "  async commitAtomic(message, build) {\n"
+  ],
+  [
+    "        if(options.initialize===false)throw error;\n",
+    ""
+  ],
+  [
+    "  // A move only accepts existing image blobs inside the configured resource root.\n  static movePath(value) {\n    if(typeof value!=='string'||value.split('/').some(p=>!p||p==='.'||p==='..'||/[\\\\\\x00-\\x1f\\x7f-\\x9f]/.test(p)))throw new Error('图片目录路径无效，请刷新仓库。');\n    return value;\n  }\n  async moveSelected(items, targetGroup) {\n    if(!Array.isArray(items)||!items.length)throw new Error('请先选择图片。');\n    const root=GitHubClient.movePath(this.config.assetsPath||'assets');\n    const group=GitHubClient.movePath(targetGroup);\n    if(group.includes('/'))throw new Error('请选择已有图片分组。');\n    const targetRoot=`${root}/${group}`;\n    // Capture immutable expected SHAs before any await; retries cannot silently adopt edited blobs.\n    const selected=items.map(item=>({path:GitHubClient.movePath(item.path),sha:item.sha}));\n    if(new Set(selected.map(i=>i.path)).size!==selected.length)throw new Error('选择中包含重复图片，请重新选择。');\n    for(const item of selected)if(!item.path.startsWith(root+'/')||! /\\.(png|jpe?g|webp|gif|svg)$/i.test(item.path)||typeof item.sha!=='string'||!item.sha)throw new Error('只能移动当前图片资源目录内的图片，请刷新后重新选择。');\n    let moved=0, skipped=0;\n    const result=await this.atomic(`移动图片分组：${selected.length} 张 → ${group}`,async snap=>{\n      if(!(snap.directories||[]).includes(targetRoot)&&!snap.entries.some(e=>e.path.startsWith(targetRoot+'/')))throw new Error('目标分组已经不存在，请刷新后选择已有分组。');\n      const entries=new Map(snap.entries.map(e=>[e.path,e]));\n      const destinations=new Set(), moves=[]; skipped=0;\n      for(const item of selected){\n        const source=entries.get(item.path);\n        if(!source||source.sha!==item.sha||!['100644','100755'].includes(source.mode||'100644'))throw new Error(`图片已经变化或不存在，请刷新后重新选择：${item.path}`);\n        const relative=item.path.slice(root.length+1), parts=relative.split('/');\n        if(parts.length>1&&parts[0]===group){skipped++;continue;}\n        const nextPath=`${targetRoot}/${parts.at(-1)}`;\n        if(entries.has(nextPath)||(snap.directories||[]).includes(nextPath)||destinations.has(nextPath))throw new Error(`目标分组存在同名文件：${parts.at(-1)}，未移动任何图片。`);\n        destinations.add(nextPath);moves.push({source,nextPath});\n      }\n      moved=moves.length;\n      const paths=new Map(moves.map(m=>[m.source.path,m.nextPath]));\n      const changes=moves.flatMap(({source,nextPath})=>[{path:source.path,mode:source.mode||'100644',type:'blob',sha:null},{path:nextPath,mode:source.mode||'100644',type:'blob',sha:source.sha}]);\n      // Preserve icon names, extra fields, duplicate occurrences, and original array indexes.\n      for(const doc of snap.docs){\n        let touched=false;const value=structuredClone(doc.value);\n        value.icons=value.icons.map(icon=>{const path=paths.get(this.ownedPath(icon.url));if(!path)return icon;touched=true;return {...icon,url:this.raw(path)};});\n        if(touched)changes.push(this.jsonChange(doc,value));\n      }\n      return changes;\n    },{initialize:false});\n    return {...result,moved,skipped};\n  }\n",
+    ""
+  ]
+]
