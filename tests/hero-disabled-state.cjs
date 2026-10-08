@@ -1,11 +1,19 @@
 const fs=require('node:fs'),cp=require('node:child_process'),vm=require('node:vm'),assert=require('node:assert/strict');
 const css=require('./action-spacing-normalize.cjs').normalizeActionSpacing(fs.readFileSync('ui-refresh.css','utf8')),js=fs.readFileSync('console.js','utf8');
-const allowed=['console.js','console.css','index.html','ui-refresh.css','tests/button-state-audit.cjs','tests/hero-disabled-state.cjs','tests/overview-hero.cjs','tests/overview-no-hero.cjs','tests/repo-gate.cjs','tests/clean-site.cjs','tests/soft-color-contract.cjs','tests/compact-toolbar-empty-library.cjs','tests/json-reference-grid.cjs','tests/information-feedback.cjs','tests/round2-regressions.cjs','tests/library-row-audit.js','tests/popup-webkit.js','tests/soft-blue-feedback.js','tests/outline-text-feedback.js','tests/text-danger-feedback.cjs','tests/action-spacing-normalize.cjs','tests/action-spacing-contract.cjs','tests/horizontal-reference-strips.cjs','tests/library-create-secondary.cjs','tests/library-name-trigger.cjs','tests/settings-typography.cjs'].sort();
+const allowed=['.env.example','console.js','console.css','index.html','ui-refresh.css','tests/button-state-audit.cjs','tests/hero-disabled-state.cjs','tests/overview-hero.cjs','tests/overview-no-hero.cjs','tests/repo-gate.cjs','tests/clean-site.cjs','tests/soft-color-contract.cjs','tests/compact-toolbar-empty-library.cjs','tests/json-reference-grid.cjs','tests/information-feedback.cjs','tests/round2-regressions.cjs','tests/library-row-audit.js','tests/popup-webkit.js','tests/soft-blue-feedback.js','tests/outline-text-feedback.js','tests/text-danger-feedback.cjs','tests/action-spacing-normalize.cjs','tests/action-spacing-contract.cjs','tests/horizontal-reference-strips.cjs','tests/library-create-secondary.cjs','tests/library-name-trigger.cjs','tests/settings-typography.cjs'].sort();
 const changed=cp.execFileSync('git',['diff','--name-only','a329ce8','--'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
 const untracked=cp.execFileSync('git',['ls-files','--others','--exclude-standard'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
 const moveFiles=['github.js','tests/image-save.cjs','tests/move-groups-authorized.json','tests/move-groups-client-authorized.json','tests/move-groups-normalize.cjs','tests/move-groups.cjs'];
 const releaseFiles=['Dockerfile','server.mjs','tests/favicon-permission.cjs','tests/release-123.cjs','tests/release-123-index-authorized.json',...['favicon.svg','favicon-16.png','favicon-32.png','favicon-48.png','favicon-64.png','favicon.ico','apple-touch-icon.png','icon-192.png','icon-512.png','build_icons.py'].map(f=>'icons/'+f)];
 assert.deepEqual([...new Set([...changed,...untracked])].sort(),[...allowed,...moveFiles,...releaseFiles].sort(),'Historic approved files plus exact cache123 move/favicon/access-message authorization only');
+// Only this documentation path is authorized; configuration remains byte-frozen.
+const envExample=fs.readFileSync('.env.example','utf8');
+const envBaseline=cp.execFileSync('git',['show','cdf7269:.env.example'],{encoding:'utf8'});
+const envConfig=s=>s.split(/(?<=\n)/).filter(line=>line.trim()&&!line.trimStart().startsWith('#'));
+assert.deepEqual(envConfig(envExample),envConfig(envBaseline),'Every non-comment environment line stays byte-identical to cdf7269');
+const envComments=envExample.split('\n').filter(line=>line.trimStart().startsWith('#'));
+assert(envComments.length>0&&envComments.every(line=>/[\u4e00-\u9fff]/.test(line)),'Every template comment contains Chinese explanation');
+assert(!envConfig(envExample).some(line=>/^(?:export\s+)?(?:GITHUB_CLIENT_ID|GITHUB_CLIENT_SECRET|GITHUB_OAUTH_SCOPE|GITHUB_OAUTH_REDIRECT_URI|\w*OAUTH\w*)\s*=/.test(line)),'No OAuth configuration keys added to the Token template');
 const {unifyDangerEntries}=require('./soft-color-contract.cjs');
 const before=cp.execFileSync('git',['show','a329ce8:ui-refresh.css'],{encoding:'utf8'});
 // Sparkle decoration retired by user request; no ::after sparkle rule may remain.
