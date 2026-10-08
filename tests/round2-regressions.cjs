@@ -45,7 +45,7 @@ assert(js.includes("confirmC('永久删除图片',`永久删除 ${item.name}？�
 assert(js.includes("confirmC('永久删除选中图片',`永久删除选中的 ${items.length} 张图片？`"),'bulk asset confirm states permanent');
 assert(js.includes("confirmC('永久删除 JSON 文件',`永久删除 ${lib.name}？"),'library confirm states permanent');
 assert(js.includes("confirmC('永久删除分组',`永久删除分组 ${group} 及其中图片？`"),'group confirm states permanent');
-assert(js.includes('aria-label="删除JSON库${escC(lib.name)}">删除'),'switch row delete label restored');
+assert(js.includes('aria-label="删除JSON库${escC(lib.name)}">删除</button>'),'switch row explicit delete text restored');
 assert(js.includes('class="btn btn-danger" data-action="delete-library" data-id="${escC(lib.id)}">删除'),'detail page delete label restored');
 console.log('PASS round-2 regressions: mask-free right/corner grid patches, image-card-framed switch selection, unified danger copy with permanent/impact clarity');
 /* ---- 4. Real centered dialog, keyboard loop and unchanged dispatch ---- */
@@ -57,7 +57,8 @@ const attrs={},triggerAttrs={};const first={focus(){active=first}},last={focus()
 const modal={setAttribute(k,v){attrs[k]=v},querySelector(s){return s.includes('aria-checked')?current:first},querySelectorAll(){return [first,current,last]},addEventListener(k,fn){if(k==='keydown')keyHandler=fn}};
 const trigger={setAttribute(k,v){triggerAttrs[k]=v}};
 const ctx={S:{libraries:[{id:'a',name:'真实库',file:'json/a.json',count:0},{id:'b',name:'说明库',description:'真实说明',file:'json/b.json',count:2}],selectedLibrary:'a'},sortedLibrariesC:x=>x,escC:String,openC(h){markup=h},$c:s=>s==='.library-name-trigger'?trigger:modal,document:{get activeElement(){return active}}};
-vm.runInNewContext(picker+';libraryPickerModal()',ctx);
+const iconFunction=js.slice(js.indexOf('function uiIconC(name)'),js.indexOf('\nfunction feedbackKindC'));
+vm.runInNewContext(iconFunction+'\n'+picker+';libraryPickerModal()',ctx);
 assert.equal(attrs.role,'dialog');assert.equal(attrs['aria-modal'],'true');assert.equal(triggerAttrs['aria-expanded'],'true');assert.equal(modal.id,'library-picker-dialog');assert.equal(active,current);
 active=first;let prevented=false;keyHandler({key:'Tab',shiftKey:true,preventDefault(){prevented=true}});assert(prevented);assert.equal(active,last);
 active=last;prevented=false;keyHandler({key:'Tab',shiftKey:false,preventDefault(){prevented=true}});assert(prevented);assert.equal(active,first);

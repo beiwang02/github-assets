@@ -1,5 +1,5 @@
 /* GitHub Assets UI Refresh — production presentation layer */
-:root{--ui-control-h:40px;--ui-radius:11px;--ui-gap:12px;--ui-focus:#8b70ee;--ui-canvas:#f4f6fb;--ui-line-focus:#cfd5fd;--ui-selection-bg:#f4f5ff;--ui-selection-ink:var(--primary);--ui-check-bg:var(--primary);--ui-check-mark:#fff;--ui-selection-shadow:rgba(89,101,242,.1)}
+:root{--ui-control-h:40px;--ui-radius:11px;--ui-gap:12px;--ui-action-gap:8px;--ui-toolbar-action-gap:4px;--ui-icon-action-gap:0px;--ui-focus:#8b70ee;--ui-canvas:#f4f6fb;--ui-line-focus:#cfd5fd;--ui-selection-bg:#f4f5ff;--ui-selection-ink:var(--primary);--ui-check-bg:var(--primary);--ui-check-mark:#fff;--ui-selection-shadow:rgba(89,101,242,.1)}
 *,*:before,*:after{box-sizing:border-box}
 body{background:var(--ui-canvas);overflow-x:hidden}
 /* The head restores html.dark before body exists; match that first painted canvas. */
@@ -10,8 +10,8 @@ button,.btn{min-height:var(--ui-control-h);padding:0 15px;border-radius:var(--ui
 button:active,.btn:active{transform:translateY(1px);filter:none}
 button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid color-mix(in srgb,var(--ui-focus) 35%,transparent);outline-offset:2px;box-shadow:none}
 .btn-danger{color:var(--ui-danger-ink);background:var(--ui-danger-bg);border:1px solid var(--ui-danger-line)}
-.topbar{height:72px;padding-inline:clamp(18px,3vw,40px);align-items:center}.top-actions{gap:9px}.top-icon{width:40px;min-width:40px;padding:0}
-.content{max-width:1440px;padding:28px clamp(18px,3vw,40px) 48px;margin:auto}.page-heading{margin-bottom:22px;align-items:end}.heading-actions,.hero-actions,.modal-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.topbar{height:72px;padding-inline:clamp(18px,3vw,40px);align-items:center}.top-actions{gap:var(--ui-action-gap)}.top-icon{width:40px;min-width:40px;padding:0}
+.content{max-width:1440px;padding:28px clamp(18px,3vw,40px) 48px;margin:auto}.page-heading{margin-bottom:22px;align-items:end}.heading-actions,.hero-actions,.modal-actions{display:flex;gap:var(--ui-action-gap);flex-wrap:wrap;align-items:center}
 .card,.stat-card,.hero{border-radius:16px;box-shadow:0 8px 24px rgba(31,47,82,.055)}
 .repo-switcher{width:max-content;max-width:calc(100% - 26px);margin:14px 13px;padding:10px 11px;gap:9px;border-radius:13px}.repo-meta{min-width:0}.repo-meta b,.repo-meta small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.repo-open-icon{width:16px;height:16px;flex:0 0 16px;margin-left:2px}
 .library-picker button{min-height:44px}.library-picker-list button{width:100%;justify-content:flex-start;text-align:left}.library-picker-list button>span:last-child{margin-left:0}.library-picker-list button>i{margin-left:4px}
@@ -53,7 +53,7 @@ body .auth-head-actions>.ui-button{box-shadow:none!important}
 .ui-button[data-ui=danger]{color:var(--ui-danger-ink);background:var(--ui-danger-bg);border:1px solid var(--ui-danger-line)}body.dark .ui-button[data-ui=danger]{color:var(--ui-danger-ink);background:var(--ui-danger-bg);border-color:var(--ui-danger-line)}
 .library-picker-copy{min-width:0}.library-picker-copy b,.library-picker-copy em{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.json-workspace-top{padding:12px!important}.json-library-summary{margin-top:0}.library-picker-list .library-picker-row{flex-wrap:wrap;min-width:0;padding:8px 0;border-bottom:1px solid var(--border)}
 .library-picker-list .library-picker-option{width:auto;min-width:0;flex:1 1 220px;justify-content:flex-start}.library-picker-option>span:nth-child(2){min-width:0;overflow:hidden}.library-picker-option b,.library-picker-option small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-picker-actions{margin-left:auto}.library-picker-actions .ui-button{width:auto;padding-inline:12px;min-height:36px;font-size:12px}.library-picker-option em{flex-shrink:0}
-.library-list-row:focus{outline:none}.library-list-row:focus-visible{outline:2px solid var(--ui-line-focus);outline-offset:-2px}.modal,.modal-body,.settings-card,.form-field,.main-shell,.json-workspace,.toolbar,.auth-card{min-width:0}.modal-body{overflow-wrap:anywhere}.detail-url{overflow-wrap:anywhere;word-break:break-word}.settings-actions,.section-actions{flex-wrap:wrap;gap:8px}.repo-quick{overflow:hidden;text-overflow:ellipsis}
+.library-list-row:focus{outline:none}.library-list-row:focus-visible{outline:2px solid var(--ui-line-focus);outline-offset:-2px}.modal,.modal-body,.settings-card,.form-field,.main-shell,.json-workspace,.toolbar,.auth-card{min-width:0}.modal-body{overflow-wrap:anywhere}.detail-url{overflow-wrap:anywhere;word-break:break-word}.settings-actions,.section-actions{flex-wrap:wrap;gap:var(--ui-action-gap)}.repo-quick{overflow:hidden;text-overflow:ellipsis}
 @media(max-width:700px){.ui-button{font-size:12px}.toolbar{flex-wrap:wrap}.inner-search{min-width:0;max-width:100%}.settings-card{padding:18px}.settings-card>.btn{margin-bottom:8px}.settings-actions .btn{flex:1 1 auto}.library-picker-list .library-picker-option{flex-basis:100%}.library-picker-actions{padding-left:54px;margin-left:0}.modal-actions .btn{min-width:0}.asset-detail-actions .btn{flex:1 1 140px}.auth-brand{gap:8px}.auth-head-actions{flex-shrink:0}.auth-card{max-width:100%}.ui-button.repo-quick{font-size:11px}.json-reference-actions{flex-shrink:0}.json-reference-copy{min-width:0}.sort-trigger{padding-inline:10px}.hero{padding-inline:12px}.hero-actions{flex-wrap:nowrap;gap:5px}.hero-actions .btn{flex:0 1 auto;height:34px;min-height:34px;padding-inline:6px;font-size:11px;gap:3px;--ui-icon-size:12px}}
 
 @media(max-width:350px){.hero-actions .btn{padding-inline:3px;font-size:10px;gap:2px;--ui-icon-size:10px}}
@@ -100,12 +100,12 @@ body.dark :is(.asset-select,.reference-select){--multi-border:var(--ui-small-act
 
 .json-library-summary{color:var(--muted);background:none;border:0;border-radius:0;padding:0;margin:8px 0 12px;white-space:pre-wrap;overflow-wrap:anywhere;display:block;max-height:none;overflow:visible;-webkit-line-clamp:unset}
 .library-outside-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
-.library-outside-actions>div{display:flex;gap:8px;min-width:0}
+.library-outside-actions>div{display:flex;gap:var(--ui-action-gap);min-width:0}
 .library-outside-actions .ui-button{font-size:12px;padding-inline:10px;min-height:36px}
 .library-outside-actions .library-picker-delete{background:transparent!important;border-color:transparent!important;margin-left:auto;padding-inline:5px}
 .library-picker-list{display:grid;gap:8px}.library-picker-list .library-picker-option{width:100%;padding:12px;min-height:64px;gap:10px}
 body.dark .ui-button.top-icon,body.dark .ui-button.project-link{background:#1b293f;color:#e4eaf5;border-color:#34435b}
-@media(max-width:700px){.library-outside-actions{gap:4px}.library-outside-actions>div{gap:4px}.library-outside-actions .ui-button{font-size:11px;padding-inline:8px}.library-picker-copy em{font-size:10px}}
+@media(max-width:700px){.library-outside-actions{gap:4px}.library-outside-actions>div{gap:var(--ui-action-gap)}.library-outside-actions .ui-button{font-size:11px;padding-inline:8px}.library-picker-copy em{font-size:10px}}
 
 .modal:has(.library-switch-modal-body){width:min(560px,calc(100vw - 28px))}.library-switch-modal-body{display:flex;flex-direction:column;gap:10px;min-height:0}.library-switch-list{display:grid;gap:8px;max-height:min(58vh,520px);overflow:auto;padding-right:2px}.library-switch-row{display:flex;align-items:center;gap:4px;padding-right:2px}.library-switch-option{flex:1;min-width:0;min-height:54px;padding:9px 12px;gap:8px;justify-content:flex-start;border:0;background:transparent;color:inherit;text-align:left}.library-switch-option[aria-checked=true]{color:var(--ui-selection-ink);border-radius:10px}.library-switch-copy{flex:1;min-width:0}.library-switch-copy b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.library-switch-check{display:inline-flex;align-items:center;justify-content:center;width:14px;flex:0 0 14px;font-size:12px}.library-switch-delete.ui-button{width:auto;height:44px;min-width:44px;min-height:44px;padding:0 10px;background:transparent;border:0;color:var(--ui-danger-ink);flex:0 0 auto;font-size:12px;font-weight:600;border-radius:8px;transition:background .12s,color .12s}body.dark .library-switch-delete.ui-button{color:var(--ui-danger-ink)}@media(hover:hover){.library-switch-delete.ui-button:not(:disabled):hover{background:var(--ui-danger-bg)}}body .library-switch-delete.ui-button:not(:disabled):active{background:var(--ui-danger-bg)}.library-picker-create{width:100%;margin-top:2px}
 @media(max-width:700px){.modal:has(.library-switch-modal-body){width:min(560px,calc(100vw - 20px));padding:18px}.modal:has(.library-switch-modal-body) .modal-head{margin-bottom:14px}}
@@ -237,9 +237,9 @@ body.dark{--ui-feedback-ink:var(--ui-line-focus)}
 .assets-toolbar [data-feedback="control"]:active:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]){color:var(--ui-feedback-ink)!important}
 /* Natural-width local actions; wrap instead of stretching into equal columns. */
 .json-workspace .library-outside-actions{margin-top:8px}
-.json-workspace .library-outside-actions>div{display:flex;flex-wrap:wrap;width:auto;gap:6px}
+.json-workspace .library-outside-actions>div{display:flex;flex-wrap:wrap;width:auto;gap:var(--ui-action-gap)}
 .json-workspace .library-outside-actions .btn{flex:0 0 auto;width:auto;min-width:0;height:44px;min-height:44px;padding:0 10px;font-size:12px;gap:4px;white-space:nowrap;justify-content:center}
-@media(max-width:360px){.json-workspace .library-outside-actions>div{gap:4px}.json-workspace .library-outside-actions .btn{padding-inline:8px;font-size:11px}.json-workspace-create .ui-icon{width:14px;height:14px;flex-basis:14px}}
+@media(max-width:360px){.json-workspace .library-outside-actions>div{gap:var(--ui-action-gap)}.json-workspace .library-outside-actions .btn{padding-inline:8px;font-size:11px}.json-workspace-create .ui-icon{width:14px;height:14px;flex-basis:14px}}
 /* Pointer focus is not selection. Keyboard focus belongs to the card itself only. */
 .asset-card:not(.selected):not(:focus-visible){outline:none!important}
 .asset-card:focus-visible{outline:2px solid var(--ui-line-focus);outline-offset:2px}
@@ -332,12 +332,12 @@ body .assets-toolbar,body .json-reference-toolbar,body.dark .assets-toolbar,body
 .assets-toolbar>.ui-button,.json-reference-toolbar>.ui-button{flex:0 0 auto;width:auto;min-height:36px;font-size:12px}
 .assets-toolbar>.toolbar-spacer,.json-reference-toolbar>.toolbar-spacer{display:none}
 /* One shared search row and fixed action row for both resource pages. */
-body :is(.assets-toolbar,.json-reference-toolbar),body.dark :is(.assets-toolbar,.json-reference-toolbar){display:grid;grid-template-columns:80px 44px minmax(0,1fr);gap:8px 4px}
+body :is(.assets-toolbar,.json-reference-toolbar),body.dark :is(.assets-toolbar,.json-reference-toolbar){display:grid;grid-template-columns:80px 44px minmax(0,1fr);gap:8px var(--ui-toolbar-action-gap)}
 :is(.assets-toolbar,.json-reference-toolbar)>.inner-search{grid-column:1/-1;width:100%}
 .json-reference-toolbar>[data-role="icons-selection-toolbar"]{display:contents}
 :is(.assets-toolbar,.json-reference-toolbar) [data-action^="select-all"]{grid-column:1;grid-row:2;width:80px;min-height:44px;padding:0 4px;font-size:12px}
 :is(.assets-toolbar,.json-reference-toolbar) [data-action="refresh"]{grid-column:2;grid-row:2;width:44px;min-height:44px;padding:0;font-size:18px}
-:is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions){grid-column:3;grid-row:2;min-width:0;height:44px;display:flex;justify-content:flex-end;gap:10px;align-items:center}
+:is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions){grid-column:3;grid-row:2;min-width:0;height:44px;display:flex;justify-content:flex-end;gap:var(--ui-toolbar-action-gap);align-items:center}
 :is(.asset-bulk-actions,.page-bulk-actions):empty,:is(.asset-bulk-actions,.page-bulk-actions) [aria-hidden="true"]{visibility:hidden;pointer-events:none}
 :is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions) button{flex:0 1 auto;min-width:44px;min-height:44px;font-size:12px;padding-inline:14px;white-space:nowrap}
 :is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions) [data-action="bulk-library"]{background:var(--surface);border:1px solid var(--line);border-radius:var(--ui-radius);color:var(--muted)}
@@ -346,12 +346,12 @@ body .json-reference-toolbar :is([data-action="select-all-icons"],[data-action="
 /* JSON references: horizontal list rows; columns follow real content width. */
 .json-references{container-type:inline-size;container-name:references}
 body .json-reference-list,body.dark .json-reference-list{display:grid;grid-template-columns:minmax(0,1fr);gap:8px 12px;overflow:visible;border:0;border-radius:0;background:transparent}
-body .json-reference-row{position:relative;display:grid;grid-template-columns:44px 48px minmax(0,1fr) 44px 44px;gap:6px!important;align-items:center;min-width:0;padding:6px!important;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:none}
+body .json-reference-row{position:relative;display:grid;grid-template-columns:44px 54px minmax(0,1fr) 44px 44px;gap:6px var(--ui-icon-action-gap)!important;align-items:center;min-width:0;padding:6px!important;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:none}
 body .json-reference-row:last-child{border-bottom:1px solid var(--line)}
-body .json-reference-thumb{grid-column:2;grid-row:1;width:48px;height:48px;padding:4px;border-radius:6px;background:#f4f6ff;display:grid;place-items:center;overflow:hidden}
+body .json-reference-thumb{grid-column:2;grid-row:1;margin-inline-start:6px;width:48px;height:48px;padding:4px;border-radius:6px;background:#f4f6ff;display:grid;place-items:center;overflow:hidden}
 body.dark .json-reference-thumb{background:#e8ecf5}
 body .json-reference-thumb img{display:block;min-width:0;min-height:0;max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain}
-body .json-reference-copy{grid-column:3;grid-row:1;align-self:center;min-width:0}
+body .json-reference-copy{grid-column:3;grid-row:1;align-self:center;min-width:0;padding-inline:6px}
 body .json-reference-copy b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;line-height:1.5;font-weight:600}
 body .json-reference-actions{display:contents!important}
 body .json-reference-row .reference-select{grid-column:1;grid-row:1;position:relative;inset:auto;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;margin:0;border:0!important;border-radius:8px;background:transparent!important;color:transparent;box-shadow:none}
@@ -369,7 +369,7 @@ body .json-reference-list>.empty-state,body .json-empty-navigation{grid-column:1
  @container references (min-width:660px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
  @container references (min-width:1020px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
 }
-@media(max-width:700px){body .json-reference-row{grid-template-columns:44px 40px minmax(0,1fr) 44px 44px;gap:4px!important;padding:4px!important}body .json-reference-thumb{width:40px;height:40px}}
+@media(max-width:700px){body .json-reference-row{grid-template-columns:44px 44px minmax(0,1fr) 44px 44px;gap:4px var(--ui-icon-action-gap)!important;padding:4px!important}body .json-reference-thumb{margin-inline-start:4px;width:40px;height:40px}body .json-reference-copy{padding-inline:4px}}
 /* Both card types use the same left-select / right-copy ordering and touch size. */
 body .asset-card .asset-meta{gap:0;margin-inline:-3px}
 body .asset-card .asset-select{flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;font-size:13px}
@@ -396,7 +396,8 @@ body .asset-card .asset-meta{margin-inline:0}
 /* A 320px three-column card is narrower than two 44px targets plus insets.
    Keep the left target fixed and the right outline inset; only hit boxes overlap. */
 @media(max-width:360px){body .asset-card .asset-copy{margin-left:calc(100% - 88px)}}
-body .json-reference-actions{margin-inline:-6px}
+/* Adjacent 44px icon targets meet: their 5px paint insets yield a 10px visible gap.
+   Non-action columns retain breathing room through thumbnail tracks and text padding. */
 /* Safari paints its native tap overlay on the hit-tested image/descendant too.
    Keep this scoped to image cards; no disabled/loading or keyboard state reset. */
 body .asset-card,body .asset-card :is(.asset-preview,.asset-preview img,.asset-details,.asset-name-row,b,.asset-meta,button){-webkit-tap-highlight-color:transparent}
@@ -428,7 +429,7 @@ body .json-reference-row .reference-select[aria-pressed="true"]::after,body.dark
 #uploadForm .drop-zone{padding:18px}
 .modal :is(.btn,.modal-close,.field-menu-trigger),.settings-card .btn{min-height:44px}
 .modal .modal-close{min-width:44px;width:44px;flex-shrink:0}
-@media(max-width:700px){.modal{padding:20px}.modal-actions{gap:8px}.settings-card .btn{font-size:12px}.modal-head p{font-size:11px}.field-menu .field-menu-trigger{min-height:44px;font-size:12px}}
+@media(max-width:700px){.modal{padding:20px}.modal-actions{gap:var(--ui-action-gap)}.settings-card .btn{font-size:12px}.modal-head p{font-size:11px}.field-menu .field-menu-trigger{min-height:44px;font-size:12px}}
 
 
 /* Library metadata: retain readable description and basename. */
@@ -456,7 +457,7 @@ body.dark .overview-hero::before,body.dark .overview-hero .hero-content::after{b
 body .overview-hero .hero-content{min-width:0;max-width:570px;position:relative;z-index:1}
 body .overview-hero h2{margin:11px 0 12px;max-width:490px;font-size:25px;line-height:1.25;letter-spacing:-.04em;color:#fff}
 body .overview-hero p{margin:0;color:#c5d0f5;font-size:12px;line-height:1.7}
-body .overview-hero .hero-actions{margin-top:25px;gap:9px;flex-wrap:wrap}
+body .overview-hero .hero-actions{margin-top:25px;gap:var(--ui-action-gap);flex-wrap:wrap}
 body .overview-hero .btn{height:44px;min-height:44px;padding-inline:16px;font-size:13px;gap:7px;color:#f4f6ff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);box-shadow:none;--ui-feedback-ink:#fff;--ui-line-focus:#dbe3ff}
 body .overview-hero .hero-actions .btn.btn-primary[data-action="upload"]{color:#273172!important;background:var(--ui-hero-upload-bg)!important;border-color:var(--ui-hero-upload-bg)!important;--ui-feedback-ink:#273172}
 body .overview-hero .hero-actions .btn.btn-primary[data-action="upload"]:active:not(:disabled){color:#273172!important;border-color:var(--ui-hero-upload-active)!important;background:var(--ui-hero-upload-active)!important}
@@ -467,7 +468,7 @@ body.dark .overview-hero{background:radial-gradient(140% 110% at 6% 0%,rgba(114,
 
 /* Authorized soft-colour palette: surfaces stay theme-local, never global opacity. */
 :root{--ui-danger-ink:#d84f67;--ui-danger-line:#f0b5c0;--ui-danger-bg:#fff7f8;--ui-hero-upload-bg:#f7f8fc;--ui-hero-upload-hover:#eef1f7;--ui-hero-upload-active:#e6ebf4}
-body.dark{--ui-danger-ink:#ff9cac;--ui-danger-line:#70434d;--ui-danger-bg:#30212b;--ui-hero-upload-bg:#d6ddea;--ui-hero-upload-hover:#cbd5e5;--ui-hero-upload-active:#c0ccdf}
+body.dark{--ui-danger-ink:#e5a0ad;--ui-danger-line:#70434d;--ui-danger-bg:#30212b;--ui-hero-upload-bg:#d6ddea;--ui-hero-upload-hover:#cbd5e5;--ui-hero-upload-active:#c0ccdf}
 body.dark .overview-hero,body.dark .overview-hero h2{color:#e4e8f0}
 body.dark .overview-hero .btn{--ui-line-focus:#cbd5e5}
 /* The four legacy pale chips are the only bright surface outliers in dark stats. */
@@ -518,3 +519,19 @@ body .library-switch-modal-body .library-picker-create{margin-top:0;min-height:4
  :is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions){flex-wrap:nowrap}
  :is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions) button{padding-inline:6px;flex-shrink:0}
 }
+
+/* Text/list danger entries share one ink, no pointer paint; keyboard focus stays intact. */
+body :is(.library-switch-delete,.library-picker-delete,.group-delete-link){color:var(--ui-danger-ink)!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+body :is(.library-switch-delete,.library-picker-delete,.group-delete-link):active,
+body :is(.library-switch-delete,.library-picker-delete,.group-delete-link):focus{color:var(--ui-danger-ink)!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+@media(hover:hover){body :is(.library-switch-delete,.library-picker-delete,.group-delete-link):hover{color:var(--ui-danger-ink)!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important}}
+body :is(.library-switch-delete,.library-picker-delete,.group-delete-link):focus:not(:focus-visible){outline:none!important}
+/* Image bulk toolbar: equal 4px gaps inside each pair, at least 12px between pairs.
+   Right pair stays end-aligned instead of distributing four controls evenly. */
+body .assets-toolbar .asset-bulk-actions{margin-left:8px}
+/* Picker delete is a readable text danger entry, with the same 12px/44px target. */
+body .library-switch-modal-body .library-switch-delete.ui-button{font-size:12px;font-weight:600}
+
+/* Adjacent text actions, not icon/label or list-row spacing. */
+body :is(.auth-head-actions,.tile-actions,.row-actions,.json-workspace-actions,.section-actions,.repo-settings-actions,.repo-actions,.repository-actions,.asset-detail-actions,.icon-detail-actions,.library-picker-actions),body .groupManageForm .modal-actions{gap:var(--ui-action-gap)!important}
+body .settings-grid>.settings-card:first-child>.btn{margin-inline-end:var(--ui-action-gap)}

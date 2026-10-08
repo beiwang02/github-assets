@@ -1,6 +1,6 @@
 const fs=require('node:fs'),cp=require('node:child_process'),vm=require('node:vm'),assert=require('node:assert/strict');
-const css=fs.readFileSync('ui-refresh.css','utf8'),js=fs.readFileSync('console.js','utf8');
-const allowed=['console.js','console.css','index.html','ui-refresh.css','tests/button-state-audit.cjs','tests/hero-disabled-state.cjs','tests/overview-hero.cjs','tests/overview-no-hero.cjs','tests/repo-gate.cjs','tests/clean-site.cjs','tests/soft-color-contract.cjs','tests/compact-toolbar-empty-library.cjs','tests/json-reference-grid.cjs','tests/information-feedback.cjs','tests/round2-regressions.cjs','tests/library-row-audit.js','tests/popup-webkit.js','tests/soft-blue-feedback.js','tests/outline-text-feedback.js'].sort();
+const css=require('./action-spacing-normalize.cjs').normalizeActionSpacing(fs.readFileSync('ui-refresh.css','utf8')),js=fs.readFileSync('console.js','utf8');
+const allowed=['console.js','console.css','index.html','ui-refresh.css','tests/button-state-audit.cjs','tests/hero-disabled-state.cjs','tests/overview-hero.cjs','tests/overview-no-hero.cjs','tests/repo-gate.cjs','tests/clean-site.cjs','tests/soft-color-contract.cjs','tests/compact-toolbar-empty-library.cjs','tests/json-reference-grid.cjs','tests/information-feedback.cjs','tests/round2-regressions.cjs','tests/library-row-audit.js','tests/popup-webkit.js','tests/soft-blue-feedback.js','tests/outline-text-feedback.js','tests/text-danger-feedback.cjs','tests/action-spacing-normalize.cjs','tests/action-spacing-contract.cjs','tests/horizontal-reference-strips.cjs','tests/library-create-secondary.cjs','tests/library-name-trigger.cjs'].sort();
 const changed=cp.execFileSync('git',['diff','--name-only','a329ce8','--'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
 const untracked=cp.execFileSync('git',['ls-files','--others','--exclude-standard'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
 assert.deepEqual([...new Set([...changed,...untracked])].sort(),allowed,'Fixed release baseline and closed ten-file authorization remain valid after commit');
@@ -27,7 +27,7 @@ const bulkBaseline=':is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk
 assert(css.includes(':is(.assets-toolbar,.json-reference-toolbar) :is(.asset-bulk-actions,.page-bulk-actions) [data-action="bulk-library"]{background:var(--surface)'),'bulk-library restored to a real button');
 const normalizeAuthorized=s=>authorizedMicroPolish.reduce((v,[from,to])=>{
  assert(v.includes(from),'Authorized micro-polish literal must be present: '+from);
- return v.replace(from,to);},s)
+ return v.replace(from,to);},s.replace('--ui-danger-ink:#e5a0ad','--ui-danger-ink:#ff9cac'))
  .replace('border-radius:22px;color:#fff;background:radial-gradient(circle at 84% 8%,rgba(117,139,255,.65)','border-radius:16px;color:#fff;background:radial-gradient(circle at 84% 8%,rgba(117,139,255,.65)').replace('display:flex;justify-content:flex-end;gap:10px;align-items:center}','display:flex;justify-content:flex-end;gap:2px;align-items:center}');
 // The authorized literals must be unique so normalization cannot hit unrelated rules.
 for(const [from,,why] of authorizedMicroPolish)assert.equal(css.split(from).length-1,1,'Authorized literal must occur exactly once: '+why);
@@ -44,6 +44,7 @@ assert.equal(unifyDangerEntries(normalizeAuthorized(css.replace(':is(.assets-too
 const beforeJs=cp.execFileSync('git',['show','a329ce8:console.js'],{encoding:'utf8'});
 /* Round-2 authorized copy: unified danger terms map back to the frozen baseline text. */
 const normalizeDangerCopy=s=>s
+ .replace('title="删除 JSON 库：${escC(lib.name)}" aria-label="删除 JSON 库：${escC(lib.name)}">${uiIconC(\'close\')}</button>','aria-label="删除JSON库${escC(lib.name)}">删除</button>')
  .replace(/aria-label="将 \$\{escC\(icon\.name\)\} 移出此库" title="移出此库"/g,'aria-label="移除 ${escC(icon.name)} 引用" title="移除引用"')
  .replace(/aria-label="移出已选择的 \$\{selected\} 个引用（不影响原图）">移出此库/g,'aria-label="移除已选择的 ${selected} 个引用（不会删除原图）">移除引用')
  .replace(/data-action="bulk-delete">删除图片/g,'data-action="bulk-delete">删除原图')
