@@ -15,5 +15,5 @@ assert(css.includes('.settings-card{box-shadow:none}'));
 assert(css.includes('.modal :is(.btn,.modal-close,.field-menu-trigger),.settings-card .btn{min-height:44px}'));
 assert(!css.includes('modal-inline-create'));
 const html=fs.readFileSync('index.html','utf8');
-for(const file of ['console.js','ui-refresh.css'])assert(html.includes(file+'?v=https-initial-caption-103&amp;revision=clean-ui-release-129'),file+' release cache revision');
+for(const file of ['console.js','ui-refresh.css'])assert(html.includes(file+'?v=https-initial-caption-103&amp;revision=clean-ui-release-'+(file==='console.js'?'130':'129')),file+' release cache revision');
 console.log('PASS clean-site: duplicate removal, no-group and upload flow, settings actions/identity/security, scoped 44px modal targets');
