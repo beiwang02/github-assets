@@ -7,16 +7,16 @@ const expected=`
 /* Settings typography (release 122): stop WebKit inflation locally; preserve pinch zoom. */
 .settings-grid{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .settings-grid .settings-card h3{font-size:clamp(.875rem, .8125rem + .25vw, .9375rem);line-height:1.4}
-.settings-grid .settings-card>p{font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.6;overflow-wrap:anywhere}
-.settings-grid .form-field label{font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.4}
+.settings-grid .settings-card>p{font-size:clamp(.71875rem, .65625rem + .25vw, .75rem);line-height:1.6;overflow-wrap:anywhere}
+.settings-grid .form-field label{font-size:clamp(.71875rem, .65625rem + .25vw, .75rem);line-height:1.4}
 .settings-grid .form-field :is(input,select){min-width:0;width:100%;font-size:clamp(.8125rem, .75rem + .25vw, .875rem);line-height:1.4}
-.settings-grid :is(.field-help,.security-note){font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.6;overflow-wrap:anywhere}
+.settings-grid :is(.field-help,.security-note){font-size:clamp(.71875rem, .65625rem + .25vw, .75rem);line-height:1.6;overflow-wrap:anywhere}
 .settings-grid :is(.info-list,.info-row,.account-panel>div:last-child){min-width:0}
-.settings-grid .info-row{font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.5}
+.settings-grid .info-row{font-size:clamp(.71875rem, .65625rem + .25vw, .75rem);line-height:1.5}
 .settings-grid .info-row>span{flex-shrink:0}
 .settings-grid .info-row>b{white-space:normal;overflow-wrap:anywhere}
 .settings-grid .account-panel b{font-size:clamp(.8125rem, .75rem + .25vw, .875rem);line-height:1.4;overflow-wrap:anywhere}
-.settings-grid .account-panel small{font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.5;overflow-wrap:anywhere}
+.settings-grid .account-panel small{font-size:clamp(.71875rem, .65625rem + .25vw, .75rem);line-height:1.5;overflow-wrap:anywhere}
 ${require('./settings-simplify-normalize.cjs').current}
 `;
 assert.equal(block,expected,'Exact finite whitelist, no blanket exemption');

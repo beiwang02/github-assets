@@ -30,6 +30,6 @@ function assertRootRem(){
 assertRootRem();
 assert(css.includes('white-space:normal!important'),'legacy nowrap overridden only for text-bearing field/group controls');
 assert(!/\.(?:asset-select|reference-select|copy-control-icon|ui-icon)\s*\{/.test(css),'existing 44px targets/34px painted glyph frames untouched');
-assert.equal((html.match(/clean-ui-release-125/g)||[]).length,4,'pending settings cache retained');
+assert.equal((html.match(/clean-ui-release-126/g)||[]).length,4,'settings release cache updated');
 require('./release-123.cjs').normalizeIndex(html);
 console.log('PASS global-responsive: zoom/root freedom, assertRootRem compact settings, equal 84/126/168 picker rows, selection-independent reserved move row, wrapping/dvh, exact palette/glyph and stylesheet authorization');

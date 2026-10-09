@@ -8,15 +8,15 @@
     ""
   ],
   [
-    "  <link rel=\"stylesheet\" href=\"console.css?v=library-initial-latest-100&amp;revision=clean-ui-release-125\" />\n  <link rel=\"stylesheet\" href=\"ui-refresh.css?v=https-initial-caption-103&amp;revision=clean-ui-release-125\" />\n",
+    "  <link rel=\"stylesheet\" href=\"console.css?v=library-initial-latest-100&amp;revision=clean-ui-release-126\" />\n  <link rel=\"stylesheet\" href=\"ui-refresh.css?v=https-initial-caption-103&amp;revision=clean-ui-release-126\" />\n",
     "  <link rel=\"stylesheet\" href=\"console.css?v=library-initial-latest-100&amp;revision=clean-ui-release-122\" />\n  <link rel=\"stylesheet\" href=\"ui-refresh.css?v=https-initial-caption-103&amp;revision=clean-ui-release-122\" />\n"
   ],
   [
-    "  <script src=\"github.js?v=append-display-102&amp;revision=clean-ui-release-125\"></script>\n",
+    "  <script src=\"github.js?v=append-display-102&amp;revision=clean-ui-release-126\"></script>\n",
     "  <script src=\"github.js?v=append-display-102\"></script>\n"
   ],
   [
-    "  <script src=\"console.js?v=https-initial-caption-103&amp;revision=clean-ui-release-125\"></script>\n",
+    "  <script src=\"console.js?v=https-initial-caption-103&amp;revision=clean-ui-release-126\"></script>\n",
     "  <script src=\"console.js?v=https-initial-caption-103&amp;revision=clean-ui-release-122\"></script>\n"
   ]
 ]
