@@ -36,6 +36,6 @@ const typographyOnly=block.replace(require('./settings-simplify-normalize.cjs').
 assert(!/opacity|color:|background:|padding:|gap:|button|\.btn|grid-template/.test(typographyOnly),'No changes outside exact identity-card authorization');
 assert(!block.includes('font-size:16px'),'Responsive inputs stay in 13–14px range at default root; no focus zoom hack');
 assert(!/transform|zoom:|maximum-scale|user-scalable/.test(block));
-const js=require('./release-127-normalize.cjs').normalize(fs.readFileSync('console.js','utf8'),'console.js');const settings=js.slice(js.indexOf('function settingsPage()'),js.indexOf('async function loadAdminPolicy()'));
+const js=fs.readFileSync('console.js','utf8');const settings=js.slice(js.indexOf('function settingsPage()'),js.indexOf('async function loadAdminPolicy()'));
 assert.equal((settings.match(/class="form-field"/g)||[]).length,4);assert(settings.includes('class="settings-grid"')&&settings.includes('class="account-panel"'));
 console.log('PASS settings typography: exact scoped whitelist, unchanged business/UI bytes, correct actual form-field markup, responsive rem+clamp mobile/desktop 13–14px input with zoom enabled, identity-only unruled rows and muted note, identity/path wrapping, cache122');
