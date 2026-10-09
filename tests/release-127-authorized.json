@@ -57,6 +57,10 @@
   ],
   "index.html": [
     [
+      "responsive.css?v=global-responsive-2&amp;revision=clean-ui-release-127\"",
+      "responsive.css?v=global-responsive-2\""
+    ],
+    [
       "  <link rel=\"stylesheet\" href=\"console.css?v=library-initial-latest-100&amp;revision=clean-ui-release-127\" />\n  <link rel=\"stylesheet\" href=\"ui-refresh.css?v=https-initial-caption-103&amp;revision=clean-ui-release-127\" />\n",
       "  <link rel=\"stylesheet\" href=\"console.css?v=library-initial-latest-100&amp;revision=clean-ui-release-126\" />\n  <link rel=\"stylesheet\" href=\"ui-refresh.css?v=https-initial-caption-103&amp;revision=clean-ui-release-126\" />\n"
     ],
