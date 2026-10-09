@@ -122,8 +122,9 @@ const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, BASE);
     if (url.pathname === '/api/auth/me' && req.method === 'GET') {
-      const auth = session(req);
+      let auth = session(req);
       const permission = accessFor(auth?.user?.login);
+      if(auth && !permission.allowed){ sessions.delete(cookies(req).gh_session); auth=null; }
       return json(res, 200, { user:auth?.user || null, csrf:auth?.csrf || null, oauthEnabled:OAUTH_ENABLED, tokenLoginEnabled:TOKEN_LOGIN_ENABLED, repoDelete:DELETE_REPO, adminConfigured:permission.adminConfigured, isAdmin:Boolean(auth && permission.isAdmin), policyConfigured:permission.policyConfigured });
     }
     if (url.pathname === '/api/auth/github' && req.method === 'GET') {
@@ -171,7 +172,7 @@ const server = http.createServer(async (req, res) => {
       try { input = JSON.parse(raw.toString('utf8')); } catch { return json(res, 400, { message:'请求格式错误。' }); }
       if (!input || typeof input.allowAll !== 'boolean' || !Array.isArray(input.allowed) || input.allowed.some(value => typeof value !== 'string' || !/^[a-z0-9-]+$/i.test(value.trim()))) return json(res, 400, { message:'访问策略格式错误。' });
       const allowed = [...new Set(input.allowed.map(value => value.trim().toLowerCase()))];
-      const nextPolicy = { allowAll:Boolean(input?.allowAll), allowed:Array.from(new Set([ADMIN_GITHUB_LOGIN, ...allowed].filter(Boolean))) };
+      const nextPolicy = { allowAll:Boolean(input?.allowAll), allowed };
       await mkdir(dirname(POLICY_FILE), { recursive:true });
       const temporary = `${POLICY_FILE}.${random()}.tmp`;
       try {
@@ -194,7 +195,7 @@ const server = http.createServer(async (req, res) => {
       const token = typeof input?.token === 'string' ? input.token.trim() : '';
       if (token.length < 20 || token.length > 500) return json(res, 400, { message:'GitHub Token 格式不正确。' });
       const userResponse = await github('https://api.github.com/user', { headers:{ Authorization:`Bearer ${token}`, Accept:'application/vnd.github+json', 'User-Agent':'github-image-host-web' } });
-      if (!userResponse.ok) return json(res, 401, { message:'GitHub Token 无效，或 Token 没有访问权限。' });
+      if (!userResponse.ok) return json(res, userResponse.status === 401 ? 401 : 502, { message:userResponse.status === 401 ? 'GitHub Token 无效，或 Token 没有访问权限。' : 'GitHub 暂时不可用，请稍后重试。' });
       const user = await userResponse.json();
       const permission = accessFor(user.login);
       if (!permission.allowed) return json(res, 403, { message:'当前 GitHub 账号暂无访问权限，请联系管理员添加到允许名单。' });

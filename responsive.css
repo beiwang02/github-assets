@@ -11,9 +11,8 @@
 /* Keep approved equal rows: default84, root24=126; typography inherits original cascade. */
 body .library-switch-modal-body .library-switch-option{height:5.25rem;min-height:5.25rem;max-height:5.25rem}
 .modal{max-height:min(700px,92vh);max-height:min(700px,calc(100dvh - 28px));overflow:auto}
-/* Cache123 upload labels were 17px via WebKit inflation of overflowing fields.
-   Preserve that real visual size without retaining the overflow itself. */
-#uploadForm .modal-field>label{font-size:1.0625rem;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* Upload labels only: match the quiet 13px form-label hierarchy without inflation. */
+#uploadForm .modal-field>label{font-size:.8125rem;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 @media(min-width:701px){#uploadForm .drop-zone strong{font-size:1.125rem}}
 @media(max-width:700px){
  .settings-grid .form-field :is(input,select){font-size:clamp(.8125rem,.75rem + .25vw,.875rem)}
