@@ -1,5 +1,5 @@
 const fs=require('node:fs'),assert=require('node:assert/strict'),cp=require('node:child_process');
-const css=require('./action-spacing-normalize.cjs').normalizeActionSpacing(fs.readFileSync('ui-refresh.css','utf8')),js=fs.readFileSync('console.js','utf8');
+const css=require('./action-spacing-normalize.cjs').normalizeActionSpacing(require('./release-127-normalize.cjs').normalize(fs.readFileSync('ui-refresh.css','utf8'),'ui-refresh.css')),js=require('./release-127-normalize.cjs').normalize(fs.readFileSync('console.js','utf8'),'console.js');
 const scope='body :is(.library-switch-delete,.library-picker-delete,.group-delete-link)';
 const paint='color:var(--ui-danger-ink)!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important';
 assert(css.includes(scope+'{'+paint+'}'));

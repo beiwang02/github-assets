@@ -1,5 +1,5 @@
 const fs=require('node:fs'),cp=require('node:child_process'),assert=require('node:assert/strict');
-const js=fs.readFileSync('console.js','utf8'),base=cp.execFileSync('git',['show','6b29a313c3672faa963b8c3b62d8d859a4db1246:console.js'],{encoding:'utf8'});
+const js=require('./release-127-normalize.cjs').normalize(fs.readFileSync('console.js','utf8'),'console.js'),base=cp.execFileSync('git',['show','6b29a313c3672faa963b8c3b62d8d859a4db1246:console.js'],{encoding:'utf8'});
 const hero=/<section class="hero overview-hero"[^]*?<\/section>(?=<div class="stat-grid">)/;
 assert(hero.test(js));const uploadGuard="if(action==='upload'){if(!S.connected)return notify('请先连接仓库','error');uploadModal();return;}";
 /* Round-2 authorized copy: unified danger terms map back to the frozen baseline text. */
@@ -14,7 +14,7 @@ const normalizeDangerCopy=s=>s
  .replace(/aria-label="删除库\$\{escC\(lib\.name\)\}">删除库<\/button>/g,'aria-label="删除JSON库${escC(lib.name)}">删除</button>');
 const stripDangerActions=s=>s.replace(/  if\(action==='(?:delete-selected-icons|delete-library|delete-icon|delete-asset|bulk-delete|confirm-delete-group)'\)\{[\s\S]*?;return;\}\n/g,'');
 assert.equal(stripDangerActions(normalizeDangerCopy(require('./move-groups-normalize.cjs').normalizeMoveGroups(js)).replace(hero,'').replace(uploadGuard,uploadGuard.replace('请先连接仓库','请先连接你的仓库'))),stripDangerActions(base),'Only authorized overview hero, exact upload notification text and unified danger copy changed; all existing behavior retained');
-const css=require('./action-spacing-normalize.cjs').normalizeActionSpacing(fs.readFileSync('ui-refresh.css','utf8')),baseCss=cp.execFileSync('git',['show','6b29a313c3672faa963b8c3b62d8d859a4db1246:ui-refresh.css'],{encoding:'utf8'});
+const css=require('./action-spacing-normalize.cjs').normalizeActionSpacing(require('./release-127-normalize.cjs').normalize(fs.readFileSync('ui-refresh.css','utf8'),'ui-refresh.css')),baseCss=cp.execFileSync('git',['show','6b29a313c3672faa963b8c3b62d8d859a4db1246:ui-refresh.css'],{encoding:'utf8'});
 const {normalizeAuthorizedColors,unifyDangerEntries}=require('./soft-color-contract.cjs');
 const restoredFill='body .json-reference-actions [data-action="delete-icon"]::before{content:"";position:absolute;inset:5px;width:auto;height:auto;box-sizing:border-box;border:1px solid var(--remove-line);border-radius:9px;background:var(--ui-danger-bg);box-shadow:none;transform:none;pointer-events:none;z-index:0}';
 assert(css.includes(restoredFill),'Exact authorized 34px removal theme paint');

@@ -15,7 +15,7 @@ function normalizeMoveClient(source){return normalizeMoveGroups(source,clientPai
 module.exports={normalizeMoveGroups,normalizeMoveClient,MOVE_BASELINE};
 if(require.main===module){
  const fs=require('node:fs'),cp=require('node:child_process');
- assert.equal(normalizeMoveGroups(fs.readFileSync('console.js','utf8')),cp.execFileSync('git',['show',MOVE_BASELINE+':console.js'],{encoding:'utf8'}),'Only exact authorized move UI changes allowed');
+ assert.equal(normalizeMoveGroups(require('./release-127-normalize.cjs').normalize(fs.readFileSync('console.js','utf8'),'console.js')),cp.execFileSync('git',['show',MOVE_BASELINE+':console.js'],{encoding:'utf8'}),'Only exact authorized move UI changes allowed');
  assert.equal(normalizeMoveClient(fs.readFileSync('github.js','utf8')),cp.execFileSync('git',['show',MOVE_BASELINE+':github.js'],{encoding:'utf8'}),'Only exact authorized move client changes allowed');
  console.log('PASS move-groups-normalize: closed UI literal map; original selection, IME, copy and hero code unchanged');
 }

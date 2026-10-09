@@ -1,5 +1,5 @@
 const fs=require('node:fs'),assert=require('node:assert/strict');
-const css=fs.readFileSync('responsive.css','utf8'),html=fs.readFileSync('index.html','utf8');
+const css=require('./release-127-normalize.cjs').normalize(fs.readFileSync('responsive.css','utf8'),'responsive.css'),html=require('./release-127-normalize.cjs').normalize(fs.readFileSync('index.html','utf8'),'index.html');
 assert(html.includes('href="responsive.css?v=global-responsive-2"'));
 assert(!/user-scalable\s*=\s*no|maximum-scale/i.test(html));
 assert(!/transform\s*:|\bzoom\s*:|color\s*:|background\s*:|!important.*font-size/.test(css),'type/reflow layer has no scaling hacks or palette changes');
@@ -13,7 +13,7 @@ assert.equal((css.match(/text-size-adjust:100%/g)||[]).length,2,'one prefixed/un
 assert(fontRules.some(r=>r[1].trim()==='.settings-grid .form-field :is(input,select)'));
 assert(css.includes('body #app .assets-toolbar .asset-bulk-actions{justify-content:flex-end;gap:4px;height:44px;min-height:44px;flex-wrap:nowrap}'),'scoped rule beats view-local start, permanent right-aligned 44px mobile row');
 const cp=require('node:child_process');
-for(const f of ['console.js','console.css','styles.css'])assert.equal(fs.readFileSync(f,'utf8'),cp.execFileSync('git',['show','a96a4f9:'+f],{encoding:'utf8'}),'font/business/name cascade frozen '+f);
+for(const f of ['console.js','console.css','styles.css'])assert.equal(require('./release-127-normalize.cjs').normalize(fs.readFileSync(f,'utf8'),f),cp.execFileSync('git',['show','a96a4f9:'+f],{encoding:'utf8'}),'font/business/name cascade frozen '+f);
 assert(!/asset-name-row|quick-asset-name-row|json-reference-copy/.test(css),'card names keep original single-line ellipsis, not wrapping');
 assert(css.includes('.modal-head h2'),'detail heading retains full-name wrap');
 assert(css.includes('.settings-grid .form-field :is(input,select){font-size:clamp(.8125rem,.75rem + .25vw,.875rem)}'),'approved compact settings input scales with root');

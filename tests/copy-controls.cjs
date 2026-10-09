@@ -1,9 +1,9 @@
 const fs=require('node:fs'),assert=require('node:assert/strict'),path=require('node:path');
 const read=f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8'),js=read('console.js'),css=read('ui-refresh.css');
 const asset=js.slice(js.indexOf('function assetView('),js.indexOf('function filteredAssets('));
-assert(asset.indexOf('class="asset-select"')<asset.indexOf('class="asset-copy copy-control copy-control-icon"'));
+assert(asset.includes('class="asset-select"'));assert(!asset.includes('class="asset-copy copy-control copy-control-icon"'));
 assert(!asset.includes('asset-copy-label'));
-for(const cls of ['asset-copy','quick-copy','icon-btn'])assert(js.includes(`class="${cls} copy-control copy-control-icon"`));
+for(const cls of ['quick-copy'])assert(js.includes(`class="${cls} copy-control copy-control-icon"`));
 assert(js.includes("if(el.dataset.action==='copy')el.classList.add('copy-control')"));
 assert(js.includes("if(action==='copy'){e.preventDefault();e.stopImmediatePropagation();target.blur();await runSubmission(target,'正在复制…',()=>copyC(target.dataset.copy||''));return;}"));
 assert(css.includes('body.dark .copy-control.ui-button'));

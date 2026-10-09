@@ -8,7 +8,7 @@ assert(js.includes("name=\"rememberToken\" ${rememberedToken()?'checked':''}"));
 assert(js.includes('async function bootAuth(retried=false)'));
 assert(js.includes('if(!S.auth&&!retried&&S.tokenLoginEnabled&&rememberedToken()&&await silentTokenLogin()) return bootAuth(true);'));
 /* Invalid or revoked token is dropped instead of retried forever. */
-assert(js.includes("if(response.status===401||response.status===403)localStorage.removeItem('gh-image-remembered-token')"));
+assert(js.includes("if(response.status===401||response.status===403){localStorage.removeItem('gh-image-remembered-token')"));
 /* Mid-session expiry heals transparently on the single API choke point. */
 assert(gh.includes('async request(path, method = \'GET\', body, retried = false)'));
 assert(gh.includes('response.status === 401 && !retried && typeof window.recoverSession === \'function\' && await window.recoverSession()'));

@@ -15,7 +15,7 @@ const unifyDangerEntries=s=>s
  .replaceAll('@media(hover:hover){.group-delete-link:hover { color:var(--ui-danger-ink); background:var(--ui-danger-bg); }}','@media(hover:hover){.group-delete-link:hover { color:var(--ui-danger-ink); background:transparent; }}')
  .replace('.library-switch-delete.ui-button{width:auto;height:44px;min-width:44px;min-height:44px;padding:0 10px;background:transparent;border:0;color:var(--ui-danger-ink);flex:0 0 auto;font-size:12px;font-weight:600;border-radius:8px;transition:background .12s,color .12s}body.dark .library-switch-delete.ui-button{color:var(--ui-danger-ink)}@media(hover:hover){.library-switch-delete.ui-button:not(:disabled):hover{background:var(--ui-danger-bg)}}body .library-switch-delete.ui-button:not(:disabled):active{background:var(--ui-danger-bg)}','.library-switch-delete.ui-button{width:auto;height:44px;min-width:44px;min-height:44px;padding:0 12px;background:transparent;border:0;color:var(--ui-danger-ink);flex:0 0 auto;font-size:12px}body.dark .library-switch-delete.ui-button{color:var(--ui-danger-ink)}');
 exports.unifyDangerEntries=unifyDangerEntries;
-const css=fs.readFileSync('ui-refresh.css','utf8'),consoleCss=fs.readFileSync('console.css','utf8');
+const css=require('./release-127-normalize.cjs').normalize(fs.readFileSync('ui-refresh.css','utf8'),'ui-refresh.css'),consoleCss=fs.readFileSync('console.css','utf8');
 const dangerTokens=['--ui-danger-ink:#d84f67','--ui-danger-line:#f0b5c0','--ui-danger-bg:#fff7f8','--ui-danger-ink:#e5a0ad','--ui-danger-line:#70434d','--ui-danger-bg:#30212b'];
 for(const t of [...dangerTokens,'--ui-hero-upload-bg:#f7f8fc','--ui-hero-upload-bg:#d6ddea'])assert(css.includes(t),t);
 // Approved red literals occur only in the six exact declarations; consumers remain unified.
@@ -38,7 +38,7 @@ console.log('PASS soft colors: closed authorization allowlist, frozen console ge
 assert(css.includes('body.dark .json-reference-row.selected:not(:focus-visible){border-color:#626fa8!important}'));
 assert(css.includes('body.dark .json-reference-row.selected:not(:focus-visible)::after{border-color:#626fa8}'));
 assert(css.includes('body.dark{--ui-line-focus:#7785c8;'));
-const html=fs.readFileSync('index.html','utf8');
+const html=require('./release-127-normalize.cjs').normalize(fs.readFileSync('index.html','utf8'),'index.html');
 assert(html.includes('console.css?v=library-initial-latest-100&amp;revision=clean-ui-release-126'));
 
 // Restore only the 34px JSON removal paint, never fill the 44px touch target.

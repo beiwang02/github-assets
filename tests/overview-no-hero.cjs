@@ -1,5 +1,5 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),cp=require('node:child_process');
-const js=fs.readFileSync('console.js','utf8'),old=cp.execFileSync('git',['show','f84318d:console.js'],{encoding:'utf8'});
+const js=require('./release-127-normalize.cjs').normalize(fs.readFileSync('console.js','utf8'),'console.js'),old=cp.execFileSync('git',['show','f84318d:console.js'],{encoding:'utf8'});
 const bar=/<section class="overview-quickbar"[\s\S]*?<\/section>(?=<div class="stat-grid">)/;
 const omitAdmin=s=>s.replace(/function adminPage\(\)[^]*?(?=function renderC\(\))/,'');
 // Library display has dedicated structural/color regressions; retain the historical

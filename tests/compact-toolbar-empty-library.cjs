@@ -5,7 +5,7 @@ const ctx=vm.createContext({S,uiIconC:()=>'<svg class="ui-icon"></svg>',sortedLi
 vm.runInContext(source.slice(source.indexOf('function librariesView()'),source.indexOf('function groupView()')),ctx);
 let html=ctx.librariesView();assert(html.includes('此JSON库暂无图片引用'));assert(html.includes('data-view="assets">前往图片资源'));assert(!html.includes('data-action="new-icon"'));assert(html.includes('data-action="new-library"'));assert(html.includes('data-action="edit-library"'));
 S.iconQuery='none';html=ctx.librariesView();assert(html.includes('没有匹配的图片引用'));assert(!html.includes('此JSON库暂无图片引用'));
-S.iconQuery='';S.libraries[0].icons=[{name:'Example',url:'https://example.com/image.svg'}];S.selectedIcons.add(0);html=ctx.librariesView();assert(html.includes('json-reference-row selected'));assert(html.includes('data-action="delete-icon"'));assert(html.includes('data-action="delete-selected-icons"'));
+S.iconQuery='';S.libraries[0].icons=[{name:'Example',url:'https://example.com/image.svg'}];S.selectedIcons.add(0);html=ctx.librariesView();assert(html.includes('json-reference-row selected'));assert(!html.includes('data-action="delete-icon"'));assert(html.includes('data-action="delete-selected-icons"'));
 assert(css.includes('padding:0;border:0;border-radius:0;background:transparent'));
 assert(css.includes('grid-column:2;grid-row:2;width:44px'));
 assert(css.includes(':is(.asset-bulk-actions,.page-bulk-actions){grid-column:3;grid-row:2'));

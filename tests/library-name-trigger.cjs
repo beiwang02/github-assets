@@ -1,5 +1,5 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
-const js=fs.readFileSync('console.js','utf8'),css=require('./action-spacing-normalize.cjs').normalizeActionSpacing(fs.readFileSync('ui-refresh.css','utf8'));
+const js=require('./release-127-normalize.cjs').normalize(fs.readFileSync('console.js','utf8'),'console.js'),css=require('./action-spacing-normalize.cjs').normalizeActionSpacing(require('./release-127-normalize.cjs').normalize(fs.readFileSync('ui-refresh.css','utf8'),'ui-refresh.css'));
 const S={connected:true,libraries:[{id:'a',name:'很长的真实库名'.repeat(12),file:'nested/真实.json',count:2,icons:[]}],selectedLibrary:'a',iconQuery:'',selectedIcons:new Set()};
 const ctx=vm.createContext({S,escC:String,uiIconC:()=>'<svg class="ui-icon"></svg>',sortedLibrariesC:x=>x,sortedIconsC:(l,x)=>x,rawLibrary:()=>'/nested/真实.json',emptyC:()=>''});
 vm.runInContext(js.slice(js.indexOf('function librariesView()'),js.indexOf('function groupView()')),ctx);

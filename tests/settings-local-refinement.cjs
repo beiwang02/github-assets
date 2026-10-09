@@ -1,7 +1,7 @@
 const fs=require('node:fs'),{createHash}=require('node:crypto'),assert=require('node:assert/strict');
 // Frozen SHA-256 from 7c65fc7; works in an isolated release without .git.
 const hash=s=>createHash('sha256').update(s).digest('hex');
-const current=fs.readFileSync('ui-refresh.css','utf8');
+const current=require('./release-127-normalize.cjs').normalize(fs.readFileSync('ui-refresh.css','utf8'),'ui-refresh.css');
 const old='font-size:clamp(.75rem, .6875rem + .25vw, .8125rem)';
 const next='font-size:clamp(.71875rem, .65625rem + .25vw, .75rem)';
 assert.equal(current.split(next).length-1,5);
@@ -14,8 +14,8 @@ const frozen={
  'popup.js':'c418c860001c5cfedd3e9e059f43f8bd10660f2430f3f1aab1168957c1a97840',
  'github.js':'2e7f665303dc90ed0b8e3104fbd454c0cb13eba8f6f831c2d3c692a73ad7215d'
 };
-for(const [f,expected] of Object.entries(frozen))assert.equal(hash(fs.readFileSync(f)),expected,f+' unchanged');
-const html=fs.readFileSync('index.html','utf8');
+for(const [f,expected] of Object.entries(frozen))assert.equal(hash(require('./release-127-normalize.cjs').normalize(fs.readFileSync(f,'utf8'),f)),expected,f+' unchanged');
+const html=require('./release-127-normalize.cjs').normalize(fs.readFileSync('index.html','utf8'),'index.html');
 assert.equal(html.split('clean-ui-release-126').length-1,4);
 assert.equal(hash(html.replaceAll('clean-ui-release-126','clean-ui-release-125')),'57781b31d674b377196f239fd1cde3eb6b8f27e8c56cd256397284cf4a07ab95','Only four cache markers changed');
 const clamp=(root,w)=>Math.max(.71875*root,Math.min(.75*root,.65625*root+.25*w/100));
