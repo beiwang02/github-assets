@@ -3,7 +3,7 @@ const css=fs.readFileSync('ui-refresh.css','utf8');
 assert(css.includes('--ui-action-gap:8px;--ui-toolbar-action-gap:4px;--ui-icon-action-gap:0px;'));
 assert(!css.includes('inset-inline-start:4px')&&!css.includes('json-reference-actions{margin-inline:-6px}'));
 assert(css.includes('grid-template-columns:44px 54px minmax(0,1fr);gap:6px var(--ui-icon-action-gap)!important'));
-assert(css.includes('grid-template-columns:44px 44px minmax(0,1fr);gap:4px var(--ui-icon-action-gap)!important'));
+assert(css.includes('grid-template-columns:44px 28px minmax(0,1fr);gap:0!important'));
 assert(css.includes('justify-content:flex-end;gap:var(--ui-toolbar-action-gap);align-items:center'));
 assert(css.includes('.asset-detail-actions,.icon-detail-actions,.library-picker-actions'));
 assert.equal(require('./move-groups-normalize.cjs').normalizeMoveGroups(require('./release-127-normalize.cjs').normalize(fs.readFileSync('console.js','utf8'),'console.js')),cp.execFileSync('git',['show','70aa84d:console.js'],{encoding:'utf8'}),'Only closed move literals authorized; action indexes and other JS remain byte-identical');

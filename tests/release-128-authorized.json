@@ -1,0 +1,40 @@
+{
+  "console.js": [
+    [
+      "function assetView(item) { const picked=S.selected.has(item.id); return `<article class=\"card asset-card ${picked?'selected':''}\" data-action=\"asset-open\" data-id=\"${escC(item.id)}\"><div class=\"asset-preview\"><img src=\"${escC(imageURLC(item))}\" alt=\"${escC(item.name)}\" loading=\"lazy\"></div><div class=\"asset-details\"><div class=\"asset-name-row\"><button class=\"asset-select\" aria-label=\"${picked?'取消选择':'选择'} ${escC(item.name)}\" title=\"${picked?'取消选择':'选择'} ${escC(item.name)}\" aria-pressed=\"${picked}\" data-action=\"asset-select\" data-id=\"${escC(item.id)}\">${picked?'✓':''}</button><b title=\"${escC(item.name)}\" aria-label=\"${escC(item.name)}\">${escC(item.name)}</b></div></div></article>`; }\n",
+      "function assetView(item) { const picked=S.selected.has(item.id); return `<article class=\"card asset-card ${picked?'selected':''}\" data-action=\"asset-open\" data-id=\"${escC(item.id)}\"><div class=\"asset-preview\"><img src=\"${escC(imageURLC(item))}\" alt=\"${escC(item.name)}\" loading=\"lazy\"></div><div class=\"asset-details\"><div class=\"asset-name-row\"><b title=\"${escC(item.name)}\" aria-label=\"${escC(item.name)}\">${escC(item.name)}</b></div><div class=\"asset-meta\"><button class=\"asset-select\" aria-label=\"${picked?'取消选择':'选择'} ${escC(item.name)}\" title=\"${picked?'取消选择':'选择'} ${escC(item.name)}\" aria-pressed=\"${picked}\" data-action=\"asset-select\" data-id=\"${escC(item.id)}\">${picked?'✓':''}</button></div></div></article>`; }\n"
+    ],
+    [
+      "function compatibleRepos() { const ids=new Set((S.projectCandidates||[]).map(r=>`${r.owner}/${r.repo}`.toLowerCase())); const current=S.repo.owner&&S.repo.repo?`${S.repo.owner}/${S.repo.repo}`.toLowerCase():''; if(current)ids.add(current); const repos=S.repos.filter(r=>ids.has(`${r.owner.login}/${r.name}`.toLowerCase())); if(current&&!repos.some(r=>`${r.owner.login}/${r.name}`.toLowerCase()===current))repos.unshift({owner:{login:S.repo.owner},name:S.repo.repo,default_branch:S.repo.branch||'main'}); return repos; }\nasync function refreshRepositoryChoicesC() {\n  const auth=S.auth, client=currentClient();\n  try {\n    const repos=await client.listRepos();\n    const candidates=await client.findProjectRepositories(repos);\n    if(S.auth!==auth)return;\n    // Commit the discovery together; a failed scan keeps existing choices and connection.\n    S.repos=repos; S.projectCandidates=candidates;\n    if(S.view==='settings')renderC();\n  } catch { /* Discovery is optional: preserve the current repository and cached choices. */ }\n}\n",
+      "function compatibleRepos() { const ids=new Set((S.projectCandidates||[]).map(r=>`${r.owner}/${r.repo}`.toLowerCase())); if(S.repo.owner&&S.repo.repo)ids.add(`${S.repo.owner}/${S.repo.repo}`.toLowerCase()); return S.repos.filter(r=>ids.has(`${r.owner.login}/${r.name}`.toLowerCase())); }\n"
+    ],
+    [
+      "      void refreshRepositoryChoicesC();\n",
+      ""
+    ],
+    [
+      "  return `<section class=\"overview-assets-section\"><div class=\"section-row\"><h3>最近图片资源</h3><button class=\"text-link\" data-view=\"assets\">查看全部 →</button></div><div class=\"card quick-assets-grid\">${sortedAssetsC(S.assets,'updated-desc').slice(0,6).map(item=>`<div class=\"quick-asset\" data-action=\"asset-open\" data-id=\"${escC(item.id)}\"><div class=\"quick-asset-image\"><img src=\"${escC(imageURLC(item))}\" alt=\"${escC(item.name)}\" loading=\"lazy\"></div><div class=\"quick-asset-name-row\"><b title=\"${escC(item.name)}\" aria-label=\"${escC(item.name)}\">${escC(item.name)}</b></div><small>${escC(item.group||'根目录')}</small></div>`).join('')}</div></section>`;\n",
+      "  return `<section class=\"overview-assets-section\"><div class=\"section-row\"><h3>最近图片资源</h3><button class=\"text-link\" data-view=\"assets\">查看全部 →</button></div><div class=\"card quick-assets-grid\">${sortedAssetsC(S.assets,'updated-desc').slice(0,6).map(item=>`<div class=\"quick-asset\" data-action=\"asset-open\" data-id=\"${escC(item.id)}\"><div class=\"quick-asset-image\"><img src=\"${escC(imageURLC(item))}\" alt=\"${escC(item.name)}\" loading=\"lazy\"></div><div class=\"quick-asset-name-row\"><b title=\"${escC(item.name)}\" aria-label=\"${escC(item.name)}\">${escC(item.name)}</b><button class=\"quick-copy copy-control copy-control-icon\" data-action=\"copy\" data-copy=\"${escC(item.url)}\" title=\"复制直链\" aria-label=\"复制 ${escC(item.name)} 直链\">⧉</button></div><small>${escC(item.group||'根目录')}</small></div>`).join('')}</div></section>`;\n"
+    ]
+  ],
+  "ui-refresh.css": [
+    [
+      "/* Compact two-column phone references; selection remains an independent 44px target. */\n@media(max-width:700px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body .json-reference-row{grid-template-columns:44px 28px minmax(0,1fr);gap:0!important;padding:2px!important}body .json-reference-thumb{margin-inline-start:0;width:28px;height:32px;padding:2px}body .json-reference-copy{padding-inline:3px}body .json-reference-copy b{font-size:12px}}\n@media(max-width:299px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:minmax(0,1fr)}}\nbody .asset-card .asset-name-row{gap:0;min-height:44px}\nbody .asset-card .asset-details{padding-block:0}\n",
+      "@media(max-width:700px){body .json-reference-row{grid-template-columns:44px 44px minmax(0,1fr);gap:4px var(--ui-icon-action-gap)!important;padding:4px!important}body .json-reference-thumb{margin-inline-start:4px;width:40px;height:40px}body .json-reference-copy{padding-inline:4px}}\n"
+    ]
+  ],
+  "index.html": [
+    [
+      "  <link rel=\"stylesheet\" href=\"console.css?v=library-initial-latest-100&amp;revision=clean-ui-release-128\" />\n  <link rel=\"stylesheet\" href=\"ui-refresh.css?v=https-initial-caption-103&amp;revision=clean-ui-release-128\" />\n  <link rel=\"stylesheet\" href=\"responsive.css?v=global-responsive-2&amp;revision=clean-ui-release-128\" />\n",
+      "  <link rel=\"stylesheet\" href=\"console.css?v=library-initial-latest-100&amp;revision=clean-ui-release-127\" />\n  <link rel=\"stylesheet\" href=\"ui-refresh.css?v=https-initial-caption-103&amp;revision=clean-ui-release-127\" />\n  <link rel=\"stylesheet\" href=\"responsive.css?v=global-responsive-2&amp;revision=clean-ui-release-127\" />\n"
+    ],
+    [
+      "  <script src=\"github.js?v=append-display-102&amp;revision=clean-ui-release-128\"></script>\n",
+      "  <script src=\"github.js?v=append-display-102&amp;revision=clean-ui-release-127\"></script>\n"
+    ],
+    [
+      "  <script src=\"console.js?v=https-initial-caption-103&amp;revision=clean-ui-release-128\"></script>\n",
+      "  <script src=\"console.js?v=https-initial-caption-103&amp;revision=clean-ui-release-127\"></script>\n"
+    ]
+  ]
+}

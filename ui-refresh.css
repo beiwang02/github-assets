@@ -372,7 +372,11 @@ body .json-reference-list>.empty-state,body .json-empty-navigation{grid-column:1
  @container references (min-width:660px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
  @container references (min-width:1020px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
 }
-@media(max-width:700px){body .json-reference-row{grid-template-columns:44px 44px minmax(0,1fr);gap:4px var(--ui-icon-action-gap)!important;padding:4px!important}body .json-reference-thumb{margin-inline-start:4px;width:40px;height:40px}body .json-reference-copy{padding-inline:4px}}
+/* Compact two-column phone references; selection remains an independent 44px target. */
+@media(max-width:700px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body .json-reference-row{grid-template-columns:44px 28px minmax(0,1fr);gap:0!important;padding:2px!important}body .json-reference-thumb{margin-inline-start:0;width:28px;height:32px;padding:2px}body .json-reference-copy{padding-inline:3px}body .json-reference-copy b{font-size:12px}}
+@media(max-width:299px){body .json-reference-list,body.dark .json-reference-list{grid-template-columns:minmax(0,1fr)}}
+body .asset-card .asset-name-row{gap:0;min-height:44px}
+body .asset-card .asset-details{padding-block:0}
 /* Both card types use the same left-select / right-copy ordering and touch size. */
 body .asset-card .asset-meta{gap:0;margin-inline:-3px}
 body .asset-card .asset-select{flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;font-size:13px}
