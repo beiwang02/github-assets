@@ -47,6 +47,7 @@ const assets = new Map([
   ['/fonts/inter-latin-600-normal.woff2','fonts/inter-latin-600-normal.woff2'],
   ['/fonts/OFL.txt','fonts/OFL.txt'],
   ['/','index.html'], ['/index.html','index.html'], ['/styles.css','styles.css'],
+  ['/responsive.css','responsive.css'], ['/source/responsive.css','responsive.css'],
   ['/ui-refresh.css','ui-refresh.css'], ['/source/ui-refresh.css','ui-refresh.css'],
   ['/console.css','console.css'], ['/console.js','console.js'], ['/github.js','github.js'],
   ['/source/index.html','index.html'], ['/source/styles.css','styles.css'], ['/source/console.css','console.css'],

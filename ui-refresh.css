@@ -538,15 +538,18 @@ body .settings-grid>.settings-card:first-child>.btn{margin-inline-end:var(--ui-a
 
 /* Settings typography (release 122): stop WebKit inflation locally; preserve pinch zoom. */
 .settings-grid{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-.settings-grid .settings-card h3{font-size:14px;line-height:1.4}
-.settings-grid .settings-card>p{font-size:12px;line-height:1.6;overflow-wrap:anywhere}
-.settings-grid .form-field label{font-size:12px;line-height:1.4}
-.settings-grid .form-field :is(input,select){min-width:0;width:100%;font-size:14px;line-height:1.4}
-.settings-grid :is(.field-help,.security-note){font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.settings-grid .settings-card h3{font-size:clamp(.875rem, .8125rem + .25vw, .9375rem);line-height:1.4}
+.settings-grid .settings-card>p{font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.6;overflow-wrap:anywhere}
+.settings-grid .form-field label{font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.4}
+.settings-grid .form-field :is(input,select){min-width:0;width:100%;font-size:clamp(.8125rem, .75rem + .25vw, .875rem);line-height:1.4}
+.settings-grid :is(.field-help,.security-note){font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.6;overflow-wrap:anywhere}
 .settings-grid :is(.info-list,.info-row,.account-panel>div:last-child){min-width:0}
-.settings-grid .info-row{font-size:12px;line-height:1.5}
+.settings-grid .info-row{font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.5}
 .settings-grid .info-row>span{flex-shrink:0}
 .settings-grid .info-row>b{white-space:normal;overflow-wrap:anywhere}
-.settings-grid .account-panel b{font-size:13px;line-height:1.4;overflow-wrap:anywhere}
-.settings-grid .account-panel small{font-size:12px;line-height:1.5;overflow-wrap:anywhere}
-@media(max-width:700px){.settings-grid .form-field :is(input,select){font-size:16px}}
+.settings-grid .account-panel b{font-size:clamp(.8125rem, .75rem + .25vw, .875rem);line-height:1.4;overflow-wrap:anywhere}
+.settings-grid .account-panel small{font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.5;overflow-wrap:anywhere}
+/* Identity card only: one account/repository divider, not a ruled table. */
+.settings-grid>.settings-card:nth-child(2)>.info-list{gap:4px;padding:12px 0 0;border-bottom:0}
+.settings-grid>.settings-card:nth-child(2) .info-row{border-bottom:0;padding-block:8px}
+.settings-grid>.settings-card:nth-child(2)>.security-note{padding:0;margin-top:16px;border:0;border-radius:0;background:transparent;color:var(--muted)}

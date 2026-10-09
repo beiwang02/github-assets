@@ -39,7 +39,7 @@ assert(css.includes('body.dark .json-reference-row.selected:not(:focus-visible){
 assert(css.includes('body.dark .json-reference-row.selected:not(:focus-visible)::after{border-color:#626fa8}'));
 assert(css.includes('body.dark{--ui-line-focus:#7785c8;'));
 const html=fs.readFileSync('index.html','utf8');
-assert(html.includes('console.css?v=library-initial-latest-100&amp;revision=clean-ui-release-123'));
+assert(html.includes('console.css?v=library-initial-latest-100&amp;revision=clean-ui-release-124'));
 
 // Restore only the 34px JSON removal paint, never fill the 44px touch target.
 const removal='body .json-reference-actions [data-action="delete-icon"]';
@@ -47,5 +47,5 @@ const rule=s=>{const i=css.indexOf(s+'{');assert(i>=0,s);return css.slice(i+s.le
 assert(rule(removal+'::before').includes('background:var(--ui-danger-bg)'));
 assert(rule(removal+',body.dark .json-reference-actions [data-action="delete-icon"]').includes('background:transparent!important'));
 assert(ratio('#d84f67','#fff7f8')>=3,'Filled light X non-text contrast');
-for(const [file,version] of [['console.css','library-initial-latest-100'],['ui-refresh.css','https-initial-caption-103'],['console.js','https-initial-caption-103']])assert(html.includes(file+'?v='+version+'&amp;revision=clean-ui-release-123'));
+for(const [file,version] of [['console.css','library-initial-latest-100'],['ui-refresh.css','https-initial-caption-103'],['console.js','https-initial-caption-103']])assert(html.includes(file+'?v='+version+'&amp;revision=clean-ui-release-124'));
 assert(!html.includes('clean-ui-release-114'));

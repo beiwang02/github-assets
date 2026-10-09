@@ -6,18 +6,18 @@ const block=css.slice(css.indexOf(marker));
 const expected=`
 /* Settings typography (release 122): stop WebKit inflation locally; preserve pinch zoom. */
 .settings-grid{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-.settings-grid .settings-card h3{font-size:14px;line-height:1.4}
-.settings-grid .settings-card>p{font-size:12px;line-height:1.6;overflow-wrap:anywhere}
-.settings-grid .form-field label{font-size:12px;line-height:1.4}
-.settings-grid .form-field :is(input,select){min-width:0;width:100%;font-size:14px;line-height:1.4}
-.settings-grid :is(.field-help,.security-note){font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.settings-grid .settings-card h3{font-size:clamp(.875rem, .8125rem + .25vw, .9375rem);line-height:1.4}
+.settings-grid .settings-card>p{font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.6;overflow-wrap:anywhere}
+.settings-grid .form-field label{font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.4}
+.settings-grid .form-field :is(input,select){min-width:0;width:100%;font-size:clamp(.8125rem, .75rem + .25vw, .875rem);line-height:1.4}
+.settings-grid :is(.field-help,.security-note){font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.6;overflow-wrap:anywhere}
 .settings-grid :is(.info-list,.info-row,.account-panel>div:last-child){min-width:0}
-.settings-grid .info-row{font-size:12px;line-height:1.5}
+.settings-grid .info-row{font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.5}
 .settings-grid .info-row>span{flex-shrink:0}
 .settings-grid .info-row>b{white-space:normal;overflow-wrap:anywhere}
-.settings-grid .account-panel b{font-size:13px;line-height:1.4;overflow-wrap:anywhere}
-.settings-grid .account-panel small{font-size:12px;line-height:1.5;overflow-wrap:anywhere}
-@media(max-width:700px){.settings-grid .form-field :is(input,select){font-size:16px}}
+.settings-grid .account-panel b{font-size:clamp(.8125rem, .75rem + .25vw, .875rem);line-height:1.4;overflow-wrap:anywhere}
+.settings-grid .account-panel small{font-size:clamp(.75rem, .6875rem + .25vw, .8125rem);line-height:1.5;overflow-wrap:anywhere}
+${require('./settings-simplify-normalize.cjs').current}
 `;
 assert.equal(block,expected,'Exact finite whitelist, no blanket exemption');
 assert.equal(css.replace(expected,''),base,'Every other UI style byte frozen to approved production HEAD');
@@ -32,7 +32,10 @@ for(const f of ['console.js','console.css','styles.css','popup.js','github.js'])
 const html=fs.readFileSync('index.html','utf8');assert.equal(require('./release-123.cjs').normalizeIndex(html).replaceAll('clean-ui-release-122','clean-ui-release-121'),cp.execFileSync('git',['show','360c42a:index.html'],{encoding:'utf8'}));
 assert(!html.includes('user-scalable=no')&&!html.includes('maximum-scale='),'User zoom is retained');
 assert(block.includes('100%')&&!block.includes('text-size-adjust:none'));
-assert(!/opacity|color:|background:|padding:|gap:|button|\.btn|grid-template/.test(block),'No colors, disabled semantics, buttons, spacing, or grid layout changed');
+const typographyOnly=block.replace(require('./settings-simplify-normalize.cjs').current,'');
+assert(!/opacity|color:|background:|padding:|gap:|button|\.btn|grid-template/.test(typographyOnly),'No changes outside exact identity-card authorization');
+assert(!block.includes('font-size:16px'),'Responsive inputs stay in 13–14px range at default root; no focus zoom hack');
+assert(!/transform|zoom:|maximum-scale|user-scalable/.test(block));
 const js=fs.readFileSync('console.js','utf8');const settings=js.slice(js.indexOf('function settingsPage()'),js.indexOf('async function loadAdminPolicy()'));
 assert.equal((settings.match(/class="form-field"/g)||[]).length,4);assert(settings.includes('class="settings-grid"')&&settings.includes('class="account-panel"'));
-console.log('PASS settings typography: exact scoped whitelist, unchanged business/UI bytes, correct actual form-field markup, mobile 16px input with zoom enabled, identity/path wrapping, cache122');
+console.log('PASS settings typography: exact scoped whitelist, unchanged business/UI bytes, correct actual form-field markup, responsive rem+clamp mobile/desktop 13–14px input with zoom enabled, identity-only unruled rows and muted note, identity/path wrapping, cache122');
