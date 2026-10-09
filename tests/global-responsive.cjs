@@ -7,9 +7,9 @@ assert(!/html\s*\{[^}]*font-size/.test(css),'user root font remains unrestricted
 for(const token of ['overflow-wrap:anywhere','calc(100dvh - 28px)','height:5.25rem;min-height:5.25rem;max-height:5.25rem'])assert(css.includes(token),token);
 const fontRules=[...css.matchAll(/([^{}]+)\{([^{}]*font-size[^{}]*)\}/g)];
 assert.equal(fontRules.length,3,'no global fonts; only scoped upload actual-visual preservation and settings exception');
-assert(css.includes('#uploadForm .modal-field>label{font-size:1.0625rem}'));
+assert(css.includes('#uploadForm .modal-field>label{font-size:1.0625rem;-webkit-text-size-adjust:100%;text-size-adjust:100%}'));
 assert(css.includes('@media(min-width:701px){#uploadForm .drop-zone strong{font-size:1.125rem}}'));
-assert(!/text-size-adjust/.test(css),'retain original UA inflation cascade, no global reset');
+assert.equal((css.match(/text-size-adjust:100%/g)||[]).length,2,'one prefixed/unprefixed scoped upload label rule, no global reset');
 assert(fontRules.some(r=>r[1].trim()==='.settings-grid .form-field :is(input,select)'));
 assert(css.includes('body #app .assets-toolbar .asset-bulk-actions{justify-content:flex-end;gap:4px;height:44px;min-height:44px;flex-wrap:nowrap}'),'scoped rule beats view-local start, permanent right-aligned 44px mobile row');
 const cp=require('node:child_process');
