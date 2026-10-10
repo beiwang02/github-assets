@@ -24,17 +24,17 @@
 
 默认不配置 OAuth，仍可使用原 Token 登录和“记住此设备”。在 GitHub **Settings → Developer settings → OAuth Apps → New OAuth App** 创建应用：
 
-- Homepage URL：`https://img.beiwang02.cn`
-- Authorization callback URL：`https://img.beiwang02.cn/api/auth/github/callback`
+- Homepage URL：`https://your-domain.example`
+- Authorization callback URL：`https://your-domain.example/api/auth/github/callback`
 
-仅在服务器 `.env` 中手动填写（不要提交真实密钥）：
+以下 `https://your-domain.example` 仅为占位示例，请将所有出现位置替换为实际部署域名，并保持回调路径 `/api/auth/github/callback` 不变。仅在服务器 `.env` 中手动填写（不要提交真实密钥）：
 
 ```dotenv
-PUBLIC_BASE_URL=https://img.beiwang02.cn
+PUBLIC_BASE_URL=https://your-domain.example
 GITHUB_CLIENT_ID=填写应用的客户端ID
 GITHUB_CLIENT_SECRET=填写应用的客户端密钥
 GITHUB_OAUTH_SCOPE=public_repo
-GITHUB_OAUTH_REDIRECT_URI=https://img.beiwang02.cn/api/auth/github/callback
+GITHUB_OAUTH_REDIRECT_URI=https://your-domain.example/api/auth/github/callback
 ENABLE_TOKEN_LOGIN=true
 ```
 
@@ -44,7 +44,7 @@ ENABLE_TOKEN_LOGIN=true
 
 授权后可直接管理公开资源仓库，无需另填 PAT。`public_repo` 涵盖账号可访问的公开仓库，**并非只授权一个仓库**；组织策略仍可能限制访问。OAuth 令牌只存在服务器内存，不写 localStorage、数据库或业务文件，服务重启后需重新授权；原“记住此设备”仅针对用户主动填写的 Token。可在 GitHub **Settings → Applications → Authorized OAuth Apps** 撤销授权。取消或错误会返回登录页，不会自动循环授权。
 
-应用源码是 `https://github.com/beiwang02/github-assets`，用户图片数据仓库是 `beiwang02/beiwang-assets`；授权登录不改变 Git remote 或用户既有仓库选择，自动识别和允许名单继续生效。
+应用源码是 `https://github.com/beiwang02/github-assets`（真实项目源码链接，不是配置示例），用户图片数据仓库由用户自行选择，例如 `your-github-username/your-assets-repo`；授权登录不改变 Git remote 或用户既有仓库选择，自动识别和允许名单继续生效。
 
 ## GitHub Token 权限
 
@@ -230,7 +230,7 @@ ss -lntp 'sport = :8765'
 管理员配置只用于按需控制网站访问；仓库会按项目规则自动检测，无需额外指定环境变量：
 
 ```env
-ADMIN_GITHUB_LOGIN=你的GitHub用户名
+ADMIN_GITHUB_LOGIN=your-github-username
 ALLOWED_GITHUB_LOGINS=
 ```
 
