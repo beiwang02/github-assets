@@ -572,13 +572,13 @@ body .json-reference-row{min-height:78px;grid-template-columns:44px 66px minmax(
 body .json-reference-thumb{width:60px;height:60px}
 @media(max-width:700px){
  body .json-reference-row{min-height:66px;grid-template-columns:44px 36px minmax(0,1fr)}
- body .json-reference-thumb{width:36px;height:46px}
+ body .json-reference-thumb{width:36px;height:36px}
 }
 /* Release 131: names use all remaining space; only the secondary group is capped.
    Keep each view's typography and controls: differing structures need not truncate
    at an artificially identical width or character count. */
-body .quick-asset .quick-asset-name-row{padding-inline:0;gap:2px}
-body .quick-asset-name-row small{flex:0 1 auto;max-width:28%}
+body .quick-asset .quick-asset-name-row{padding-inline:0 4px;gap:4px}
+body .quick-asset-name-row small{order:-1;flex:0 1 auto;max-width:28%}
 body :is(.asset-name-row,.quick-asset-name-row) b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:700px){
  body .json-reference-copy{padding-inline:1px}

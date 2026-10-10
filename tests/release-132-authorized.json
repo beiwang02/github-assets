@@ -1,0 +1,50 @@
+{
+  "console.js": [
+    [
+      "  const message=problem==='logged_out'?'已退出登录。':(problem==='forbidden'?'当前 GitHub 账号暂无访问权限，请联系管理员添加到允许名单。':(problem==='oauth_denied'?'已取消 GitHub 授权，可重试或使用 Token 登录。':(problem==='oauth_state'?'授权已过期或校验失败，请重新点击 GitHub 授权登录。':(problem?'登录失败，请重试或使用 Token 登录。':'使用 GitHub Personal Access Token 登录'))));\n  return `<div class=\"auth-page\"><div class=\"auth-card\"><div class=\"auth-brand\"><div><strong>GitHub Assets</strong></div><div class=\"auth-head-actions\"><button class=\"top-icon appearance-button auth-theme-button\" data-action=\"toggle-theme\" title=\"跟随系统（点击切换）\" aria-label=\"跟随系统（点击切换）\">◐</button><a class=\"project-link\" href=\"https://github.com/beiwang02/github-assets\" title=\"查看项目源码\" aria-label=\"查看项目源码\"><svg class=\"project-github-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 2.3a9.7 9.7 0 0 0-3.07 18.9c.49.09.67-.21.67-.47v-1.66c-2.73.59-3.31-1.16-3.31-1.16-.44-1.13-1.08-1.43-1.08-1.43-.89-.61.07-.6.07-.6.98.07 1.5 1.01 1.5 1.01.87 1.5 2.28 1.07 2.84.82.09-.63.34-1.07.62-1.32-2.18-.25-4.47-1.09-4.47-4.85 0-1.07.38-1.94 1.01-2.62-.1-.25-.44-1.25.1-2.59 0 0 .82-.26 2.67 1a9.3 9.3 0 0 1 4.86 0c1.85-1.26 2.67-1 2.67-1 .54 1.34.2 2.34.1 2.59.63.68 1.01 1.55 1.01 2.62 0 3.77-2.3 4.59-4.48 4.84.35.3.66.9.66 1.81v2.68c0 .26.18.57.68.47A9.7 9.7 0 0 0 12 2.3Z\"/></svg></a></div></div><p>${escC(message)}</p>${S.oauthEnabled?'<a class=\"btn btn-github\" href=\"/api/auth/github\" data-action=\"oauth-login\">使用 GitHub 授权登录</a><small class=\"auth-note\">授权后直接管理公开仓库，无需另填 Token。public_repo 权限涵盖账号可访问的公开仓库，并非只授权单个仓库；授权令牌仅保存在服务器内存。</small>':''}<form id=\"tokenLoginForm\"><div class=\"modal-field\"><label>GitHub Token</label><div class=\"token-input-wrap\"><input name=\"token\" id=\"mainTokenInput\" type=\"password\" autocomplete=\"off\" placeholder=\"ghp_... 或 github_pat_...\" value=\"${escC(rememberedToken())}\" required><button type=\"button\" class=\"token-eye\" data-action=\"toggle-token\" aria-label=\"显示 Token\" aria-pressed=\"false\">${tokenEyeC(false)}</button></div></div><div class=\"remember-token\"><input type=\"checkbox\" name=\"rememberToken\" ${rememberedToken()?'checked':''}><span>记住此设备</span></div><small class=\"auth-note\">Token 仅临时保存在服务器内存中；勾选“记住此设备”后会存在当前浏览器本地，会话过期或服务重启时自动重新登录，不会写入数据库或 GitHub。</small><button type=\"button\" class=\"token-guide-button\" data-action=\"token-guide\">经典 Token 创建教程</button><button type=\"submit\" class=\"btn btn-github\"><span class=\"github-logo\">●</span> 验证并登录</button></form></div></div>`;\n",
+      "  const message=problem==='logged_out'?'已退出登录。':(problem==='forbidden'?'当前 GitHub 账号暂无访问权限，请联系管理员添加到允许名单。':(problem?'登录失败，请重试。':'使用 GitHub Personal Access Token 登录'));\n  return `<div class=\"auth-page\"><div class=\"auth-card\"><div class=\"auth-brand\"><div><strong>GitHub Assets</strong></div><div class=\"auth-head-actions\"><button class=\"top-icon appearance-button auth-theme-button\" data-action=\"toggle-theme\" title=\"跟随系统（点击切换）\" aria-label=\"跟随系统（点击切换）\">◐</button><a class=\"project-link\" href=\"https://github.com/beiwang02/github-assets\" title=\"查看项目源码\" aria-label=\"查看项目源码\"><svg class=\"project-github-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 2.3a9.7 9.7 0 0 0-3.07 18.9c.49.09.67-.21.67-.47v-1.66c-2.73.59-3.31-1.16-3.31-1.16-.44-1.13-1.08-1.43-1.08-1.43-.89-.61.07-.6.07-.6.98.07 1.5 1.01 1.5 1.01.87 1.5 2.28 1.07 2.84.82.09-.63.34-1.07.62-1.32-2.18-.25-4.47-1.09-4.47-4.85 0-1.07.38-1.94 1.01-2.62-.1-.25-.44-1.25.1-2.59 0 0 .82-.26 2.67 1a9.3 9.3 0 0 1 4.86 0c1.85-1.26 2.67-1 2.67-1 .54 1.34.2 2.34.1 2.59.63.68 1.01 1.55 1.01 2.62 0 3.77-2.3 4.59-4.48 4.84.35.3.66.9.66 1.81v2.68c0 .26.18.57.68.47A9.7 9.7 0 0 0 12 2.3Z\"/></svg></a></div></div><p>${escC(message)}</p><form id=\"tokenLoginForm\"><div class=\"modal-field\"><label>GitHub Token</label><div class=\"token-input-wrap\"><input name=\"token\" id=\"mainTokenInput\" type=\"password\" autocomplete=\"off\" placeholder=\"ghp_... 或 github_pat_...\" value=\"${escC(rememberedToken())}\" required><button type=\"button\" class=\"token-eye\" data-action=\"toggle-token\" aria-label=\"显示 Token\" aria-pressed=\"false\">${tokenEyeC(false)}</button></div></div><div class=\"remember-token\"><input type=\"checkbox\" name=\"rememberToken\" ${rememberedToken()?'checked':''}><span>记住此设备</span></div><small class=\"auth-note\">Token 仅临时保存在服务器内存中；勾选“记住此设备”后会存在当前浏览器本地，会话过期或服务重启时自动重新登录，不会写入数据库或 GitHub。</small><button type=\"button\" class=\"token-guide-button\" data-action=\"token-guide\">经典 Token 创建教程</button><button type=\"submit\" class=\"btn btn-github\"><span class=\"github-logo\">●</span> 验证并登录</button></form></div></div>`;\n"
+    ]
+  ],
+  "server.mjs": [
+    [
+      "const OAUTH_CALLBACK = new URL(OAUTH_REDIRECT_URI, BASE);\nif (OAUTH_CALLBACK.origin !== BASE.origin || OAUTH_CALLBACK.pathname !== '/api/auth/github/callback' || OAUTH_CALLBACK.search || OAUTH_CALLBACK.hash || OAUTH_CALLBACK.username || OAUTH_CALLBACK.password) throw new Error('OAuth 回调必须为 PUBLIC_BASE_URL 同源的 /api/auth/github/callback。');\n",
+      ""
+    ],
+    [
+      "  } catch (error) { if (!res.headersSent && req.url.split('?')[0] === '/api/auth/github/callback') return redirect(res, oauthError('oauth_exchange')); if (!res.headersSent) json(res, error.status || 502, { message:'请求失败，请检查网络或服务配置后重试。' }); else res.end(); }\n",
+      "  } catch (error) { if (!res.headersSent) json(res, error.status || 502, { message:'请求失败，请检查网络或服务配置后重试。' }); else res.end(); }\n"
+    ]
+  ],
+  "ui-refresh.css": [
+    [
+      " body .json-reference-thumb{width:36px;height:36px}\n",
+      " body .json-reference-thumb{width:36px;height:46px}\n"
+    ],
+    [
+      "body .quick-asset .quick-asset-name-row{padding-inline:0 4px;gap:4px}\nbody .quick-asset-name-row small{order:-1;flex:0 1 auto;max-width:28%}\n",
+      "body .quick-asset .quick-asset-name-row{padding-inline:0;gap:2px}\nbody .quick-asset-name-row small{flex:0 1 auto;max-width:28%}\n"
+    ]
+  ],
+  "index.html": [
+    [
+      "  <link rel=\"stylesheet\" href=\"ui-refresh.css?v=https-initial-caption-103&amp;revision=clean-ui-release-132\" />\n",
+      "  <link rel=\"stylesheet\" href=\"ui-refresh.css?v=https-initial-caption-103&amp;revision=clean-ui-release-131\" />\n"
+    ],
+    [
+      "  <script src=\"console.js?v=https-initial-caption-103&amp;revision=clean-ui-release-132\"></script>\n",
+      "  <script src=\"console.js?v=https-initial-caption-103&amp;revision=clean-ui-release-130\"></script>\n"
+    ]
+  ],
+  ".env.example": [
+    [
+      "# 可选 GitHub OAuth App；客户端 ID 和密钥同时配置后才显示授权入口，留空继续使用 Token。\nGITHUB_CLIENT_ID=\n# 应用密钥只填服务器真实 .env，不得提交源码或归档；不是用户的 Personal Access Token。\nGITHUB_CLIENT_SECRET=\n# 默认允许直接管理公开仓库，无需授权后再填 Token；范围为账号可访问的公开仓库，不限单仓库。\nGITHUB_OAUTH_SCOPE=public_repo\n# 留空时由 PUBLIC_BASE_URL 自动生成；北望域名示例：https://img.beiwang02.cn/api/auth/github/callback。\n# 如显式填写，必须与 PUBLIC_BASE_URL 同源且路径严格为 /api/auth/github/callback。\nGITHUB_OAUTH_REDIRECT_URI=\n",
+      ""
+    ]
+  ],
+  "README.md": [
+    [
+      "\n## 可选 GitHub 授权登录配置\n\n默认不配置 OAuth，仍可使用原 Token 登录和“记住此设备”。在 GitHub **Settings → Developer settings → OAuth Apps → New OAuth App** 创建应用：\n\n- Homepage URL：`https://img.beiwang02.cn`\n- Authorization callback URL：`https://img.beiwang02.cn/api/auth/github/callback`\n\n仅在服务器 `.env` 中手动填写（不要提交真实密钥）：\n\n```dotenv\nPUBLIC_BASE_URL=https://img.beiwang02.cn\nGITHUB_CLIENT_ID=填写应用的客户端ID\nGITHUB_CLIENT_SECRET=填写应用的客户端密钥\nGITHUB_OAUTH_SCOPE=public_repo\nGITHUB_OAUTH_REDIRECT_URI=https://img.beiwang02.cn/api/auth/github/callback\nENABLE_TOKEN_LOGIN=true\n```\n\n`GITHUB_OAUTH_REDIRECT_URI` 可留空，由 `PUBLIC_BASE_URL` 自动生成；显式值必须同源且使用上述回调路径。客户端 ID 和密钥都配置后，登录页才显示真实 GitHub 授权入口。HTTPS 根地址决定 Secure Cookie；反向代理须保留正确域名并提供 HTTPS。\n\n修改 `.env` 后在 `/opt/stacks/github-assets` 执行 `docker compose up -d --no-deps --force-recreate github-assets`，普通 restart 不会重新加载 env。若同时更新源码，先 `docker compose build github-assets`。保留 Token 作为回退建议维持 `ENABLE_TOKEN_LOGIN=true`。\n\n授权后可直接管理公开资源仓库，无需另填 PAT。`public_repo` 涵盖账号可访问的公开仓库，**并非只授权一个仓库**；组织策略仍可能限制访问。OAuth 令牌只存在服务器内存，不写 localStorage、数据库或业务文件，服务重启后需重新授权；原“记住此设备”仅针对用户主动填写的 Token。可在 GitHub **Settings → Applications → Authorized OAuth Apps** 撤销授权。取消或错误会返回登录页，不会自动循环授权。\n\n应用源码是 `https://github.com/beiwang02/github-assets`，用户图片数据仓库是 `beiwang02/beiwang-assets`；授权登录不改变 Git remote 或用户既有仓库选择，自动识别和允许名单继续生效。\n",
+      ""
+    ]
+  ]
+}

@@ -1,5 +1,5 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),cp=require('node:child_process');
-const js=fs.readFileSync('console.js','utf8'),html=fs.readFileSync('index.html','utf8');
+const js=require('./release-132-normalize.cjs').normalize(fs.readFileSync('console.js','utf8'),'console.js'),html=require('./release-132-normalize.cjs').normalize(fs.readFileSync('index.html','utf8'),'index.html');
 const baseline=cp.execFileSync('git',['show','b963c8a:console.js'],{encoding:'utf8'});
 assert.equal(js,baseline.replace('<button type="button" class="btn" data-action="retry-auth">重试自动登录</button>','').replace("  if(action==='retry-auth'){await runSubmission(target,'正在重试…',()=>bootAuth());return;}\n",''),'Exactly two business deletions; all recovery/remember/repo/UI code unchanged');
 assert(!js.includes('retry-auth'));

@@ -11,6 +11,8 @@ const OAUTH_CLIENT_ID = String(process.env.GITHUB_CLIENT_ID || '').trim();
 const OAUTH_CLIENT_SECRET = String(process.env.GITHUB_CLIENT_SECRET || '').trim();
 const OAUTH_SCOPE = String(process.env.GITHUB_OAUTH_SCOPE || 'public_repo').trim() || 'public_repo';
 const OAUTH_REDIRECT_URI = String(process.env.GITHUB_OAUTH_REDIRECT_URI || new URL('/api/auth/github/callback', BASE)).trim();
+const OAUTH_CALLBACK = new URL(OAUTH_REDIRECT_URI, BASE);
+if (OAUTH_CALLBACK.origin !== BASE.origin || OAUTH_CALLBACK.pathname !== '/api/auth/github/callback' || OAUTH_CALLBACK.search || OAUTH_CALLBACK.hash || OAUTH_CALLBACK.username || OAUTH_CALLBACK.password) throw new Error('OAuth 回调必须为 PUBLIC_BASE_URL 同源的 /api/auth/github/callback。');
 const OAUTH_ENABLED = Boolean(OAUTH_CLIENT_ID && OAUTH_CLIENT_SECRET);
 const TOKEN_LOGIN_ENABLED = process.env.ENABLE_TOKEN_LOGIN !== 'false';
 const ADMIN_GITHUB_LOGIN = String(process.env.ADMIN_GITHUB_LOGIN || '').trim().toLowerCase();
@@ -228,7 +230,7 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname.startsWith('/source/')) headers['Access-Control-Allow-Origin'] = 'https://github.com';
     res.writeHead(200, headers);
     res.end(await readFile(new URL(file, ROOT)));
-  } catch (error) { if (!res.headersSent) json(res, error.status || 502, { message:'请求失败，请检查网络或服务配置后重试。' }); else res.end(); }
+  } catch (error) { if (!res.headersSent && req.url.split('?')[0] === '/api/auth/github/callback') return redirect(res, oauthError('oauth_exchange')); if (!res.headersSent) json(res, error.status || 502, { message:'请求失败，请检查网络或服务配置后重试。' }); else res.end(); }
 });
 setInterval(() => {
   for (const [id, value] of sessions) if (value.expires < Date.now()) sessions.delete(id);

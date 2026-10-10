@@ -20,6 +20,32 @@
 3. 图片、JSON、分组和 Git 提交全部写入用户自己的 GitHub 仓库。
 4. 服务端重启或用户退出后，会话 Token 失效；不会保存到数据库或业务文件。
 
+## 可选 GitHub 授权登录配置
+
+默认不配置 OAuth，仍可使用原 Token 登录和“记住此设备”。在 GitHub **Settings → Developer settings → OAuth Apps → New OAuth App** 创建应用：
+
+- Homepage URL：`https://img.beiwang02.cn`
+- Authorization callback URL：`https://img.beiwang02.cn/api/auth/github/callback`
+
+仅在服务器 `.env` 中手动填写（不要提交真实密钥）：
+
+```dotenv
+PUBLIC_BASE_URL=https://img.beiwang02.cn
+GITHUB_CLIENT_ID=填写应用的客户端ID
+GITHUB_CLIENT_SECRET=填写应用的客户端密钥
+GITHUB_OAUTH_SCOPE=public_repo
+GITHUB_OAUTH_REDIRECT_URI=https://img.beiwang02.cn/api/auth/github/callback
+ENABLE_TOKEN_LOGIN=true
+```
+
+`GITHUB_OAUTH_REDIRECT_URI` 可留空，由 `PUBLIC_BASE_URL` 自动生成；显式值必须同源且使用上述回调路径。客户端 ID 和密钥都配置后，登录页才显示真实 GitHub 授权入口。HTTPS 根地址决定 Secure Cookie；反向代理须保留正确域名并提供 HTTPS。
+
+修改 `.env` 后在 `/opt/stacks/github-assets` 执行 `docker compose up -d --no-deps --force-recreate github-assets`，普通 restart 不会重新加载 env。若同时更新源码，先 `docker compose build github-assets`。保留 Token 作为回退建议维持 `ENABLE_TOKEN_LOGIN=true`。
+
+授权后可直接管理公开资源仓库，无需另填 PAT。`public_repo` 涵盖账号可访问的公开仓库，**并非只授权一个仓库**；组织策略仍可能限制访问。OAuth 令牌只存在服务器内存，不写 localStorage、数据库或业务文件，服务重启后需重新授权；原“记住此设备”仅针对用户主动填写的 Token。可在 GitHub **Settings → Applications → Authorized OAuth Apps** 撤销授权。取消或错误会返回登录页，不会自动循环授权。
+
+应用源码是 `https://github.com/beiwang02/github-assets`，用户图片数据仓库是 `beiwang02/beiwang-assets`；授权登录不改变 Git remote 或用户既有仓库选择，自动识别和允许名单继续生效。
+
 ## GitHub Token 权限
 
 本项目推荐使用 **经典 Personal Access Token（classic）**。
