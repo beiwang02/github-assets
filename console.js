@@ -45,7 +45,7 @@ window.liveCsrf=()=>S.csrf;
 function loginView() {
   const problem=new URLSearchParams(location.search).get('auth_error');
   const message=problem==='logged_out'?'已退出登录。':(problem==='forbidden'?'当前 GitHub 账号暂无访问权限，请联系管理员添加到允许名单。':(problem==='oauth_denied'?'已取消 GitHub 授权，请重新点击 GitHub 登录。':(problem==='oauth_state'?'授权已过期或校验失败，请重新点击 GitHub 授权登录。':(problem?'登录失败，请重新点击 GitHub 登录。':'使用 GitHub 登录'))));
-  return `<div class="auth-page"><div class="auth-card"><div class="auth-brand"><div><strong>GitHub Assets</strong></div><div class="auth-head-actions"><button class="top-icon appearance-button auth-theme-button" data-action="toggle-theme" title="跟随系统（点击切换）" aria-label="跟随系统（点击切换）">◐</button><a class="project-link" href="https://github.com/beiwang02/github-assets" title="查看项目源码" aria-label="查看项目源码"><svg class="project-github-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.3a9.7 9.7 0 0 0-3.07 18.9c.49.09.67-.21.67-.47v-1.66c-2.73.59-3.31-1.16-3.31-1.16-.44-1.13-1.08-1.43-1.08-1.43-.89-.61.07-.6.07-.6.98.07 1.5 1.01 1.5 1.01.87 1.5 2.28 1.07 2.84.82.09-.63.34-1.07.62-1.32-2.18-.25-4.47-1.09-4.47-4.85 0-1.07.38-1.94 1.01-2.62-.1-.25-.44-1.25.1-2.59 0 0 .82-.26 2.67 1a9.3 9.3 0 0 1 4.86 0c1.85-1.26 2.67-1 2.67-1 .54 1.34.2 2.34.1 2.59.63.68 1.01 1.55 1.01 2.62 0 3.77-2.3 4.59-4.48 4.84.35.3.66.9.66 1.81v2.68c0 .26.18.57.68.47A9.7 9.7 0 0 0 12 2.3Z"/></svg></a></div></div><p>${escC(message)}</p>${S.oauthEnabled?'<a class="btn btn-github" href="/api/auth/github" data-action="oauth-login">使用 GitHub 登录</a>':'<button class="btn btn-github" type="button" disabled>使用 GitHub 登录</button>'}<small class="auth-note">${S.oauthEnabled?'public_repo 权限涵盖账号可访问的公开仓库，并非只授权单个仓库；授权令牌仅保存在服务器内存，服务重启后需重新授权。':'部署者需配置 GitHub OAuth 后才能登录。<a href="https://github.com/settings/applications/new" target="_blank" rel="noopener noreferrer">创建 OAuth App</a>'}</small></div></div>`;
+  return `<div class="auth-page"><div class="auth-card"><div class="auth-brand"><div><strong>GitHub Assets</strong></div><div class="auth-head-actions"><button class="top-icon appearance-button auth-theme-button" data-action="toggle-theme" title="跟随系统（点击切换）" aria-label="跟随系统（点击切换）">◐</button><a class="project-link" href="https://github.com/beiwang02/github-assets" title="查看项目源码" aria-label="查看项目源码"><svg class="project-github-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.3a9.7 9.7 0 0 0-3.07 18.9c.49.09.67-.21.67-.47v-1.66c-2.73.59-3.31-1.16-3.31-1.16-.44-1.13-1.08-1.43-1.08-1.43-.89-.61.07-.6.07-.6.98.07 1.5 1.01 1.5 1.01.87 1.5 2.28 1.07 2.84.82.09-.63.34-1.07.62-1.32-2.18-.25-4.47-1.09-4.47-4.85 0-1.07.38-1.94 1.01-2.62-.1-.25-.44-1.25.1-2.59 0 0 .82-.26 2.67 1a9.3 9.3 0 0 1 4.86 0c1.85-1.26 2.67-1 2.67-1 .54 1.34.2 2.34.1 2.59.63.68 1.01 1.55 1.01 2.62 0 3.77-2.3 4.59-4.48 4.84.35.3.66.9.66 1.81v2.68c0 .26.18.57.68.47A9.7 9.7 0 0 0 12 2.3Z"/></svg></a></div></div><p>${escC(message)}</p>${S.oauthEnabled?'<a class="btn btn-github" href="/api/auth/github" data-action="oauth-login">使用 GitHub 登录</a>':'<button class="btn btn-github" type="button" data-action="oauth-login">使用 GitHub 登录</button>'}</div></div>`;
 }
 
 const collatorC=new Intl.Collator(undefined,{numeric:true,sensitivity:'base'});
@@ -569,6 +569,12 @@ document.addEventListener('click', async e => {
   const view=target.dataset.view;
   if(view) { S.view=view; S.selected.clear(); $c('#sidebar').classList.remove('open'); renderC(); return; }
   const action=target.dataset.action;
+  if(action==='oauth-login'){
+    if(S.oauthEnabled)return;
+    e.preventDefault();
+    openC(`<div class="modal-head"><div><h2>配置 GitHub OAuth</h2><p>需先创建并配置 GitHub OAuth App，才能使用 GitHub 登录。</p></div><button type="button" class="modal-close" data-action="close-modal" aria-label="关闭">×</button></div><div class="modal-body"><p class="field-help">部署者创建 OAuth App 后，请配置 Client ID、Client Secret 和回调地址，再重新加载应用配置。</p></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">关闭</button><a class="btn btn-primary" href="https://github.com/settings/applications/new" target="_blank" rel="noopener noreferrer">创建 OAuth App</a></div>`);
+    return;
+  }
   if(action==='modal-backdrop'){if(e.target===target)closeC();return;}
   if(action==='close-modal'){closeC();return;}
   if(action==='toggle-sidebar'){ $c('#sidebar').classList.toggle('open'); return; }

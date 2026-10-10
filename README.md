@@ -22,7 +22,7 @@
 
 ## GitHub OAuth 登录配置
 
-本项目仅支持 GitHub OAuth 登录。未配置时仍显示禁用的 GitHub 登录按钮，部署者需先配置应用。
+本项目仅支持 GitHub OAuth 登录。登录按钮始终可点击；未配置时点击仅显示可关闭的配置提示及创建 OAuth App 直达链接，配置后点击进入真实 GitHub OAuth 授权流程。
 
 [直接创建 GitHub OAuth App](https://github.com/settings/applications/new)（Settings → Developer settings → OAuth Apps → New OAuth App）：
 
