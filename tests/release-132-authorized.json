@@ -13,6 +13,10 @@
     [
       "  } catch (error) { if (!res.headersSent && req.url.split('?')[0] === '/api/auth/github/callback') return redirect(res, oauthError('oauth_exchange')); if (!res.headersSent) json(res, error.status || 502, { message:'请求失败，请检查网络或服务配置后重试。' }); else res.end(); }\n",
       "  } catch (error) { if (!res.headersSent) json(res, error.status || 502, { message:'请求失败，请检查网络或服务配置后重试。' }); else res.end(); }\n"
+    ],
+    [
+      "  for (const [state, value] of oauthStates) if (value.expires < Date.now()) oauthStates.delete(state);\n",
+      ""
     ]
   ],
   "ui-refresh.css": [

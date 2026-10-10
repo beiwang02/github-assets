@@ -234,5 +234,6 @@ const server = http.createServer(async (req, res) => {
 });
 setInterval(() => {
   for (const [id, value] of sessions) if (value.expires < Date.now()) sessions.delete(id);
+  for (const [state, value] of oauthStates) if (value.expires < Date.now()) oauthStates.delete(state);
 }, 60000).unref();
 server.listen(PORT, HOST, () => console.log(`图床服务已启动：${BASE.origin} · Token 登录模式`));
