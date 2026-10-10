@@ -1,3 +1,4 @@
+require('./historical-133.cjs');
 const fs=require('node:fs'),assert=require('node:assert/strict'),path=require('node:path');
 const read=f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8');const css=read('ui-refresh.css'),js=read('console.js');
 assert(css.includes('#tokenLoginForm .token-guide-button.ui-button{justify-content:flex-start;text-align:left;padding:0;min-height:44px;border:0;background:transparent;font-size:12px;color:var(--primary);text-decoration:none}'));

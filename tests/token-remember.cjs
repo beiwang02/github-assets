@@ -1,3 +1,4 @@
+require('./historical-133.cjs');
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const js=fs.readFileSync('console.js','utf8'),gh=fs.readFileSync('github.js','utf8'),html=fs.readFileSync('index.html','utf8');
 /* Remembered token is read back, not just written. */

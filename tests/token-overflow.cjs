@@ -1,3 +1,4 @@
+require('./historical-133.cjs');
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const css=fs.readFileSync('console.css','utf8'),js=fs.readFileSync('console.js','utf8');
 const rule=css.match(/\.token-input-wrap input \{([^}]+)\}/)?.[1];

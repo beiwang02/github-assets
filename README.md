@@ -4,7 +4,7 @@
 
 ## 功能
 
-- GitHub Token 登录，可选“记住此设备”
+- GitHub OAuth 登录，无需输入或在浏览器记住 Token
 - 自动识别兼容结构的图片仓库，也可创建或手动选择仓库
 - 管理 JSON 库、图片资源和图片分组
 - 上传、改名、删除图片时自动同步 JSON 引用
@@ -15,14 +15,16 @@
 
 ## 数据流
 
-1. 用户在浏览器输入 GitHub Token。
+1. 用户点击 GitHub 登录并在 GitHub 完成 OAuth 授权。
 2. 服务端仅在内存会话中使用 Token 代理 GitHub API 请求。
 3. 图片、JSON、分组和 Git 提交全部写入用户自己的 GitHub 仓库。
 4. 服务端重启或用户退出后，会话 Token 失效；不会保存到数据库或业务文件。
 
-## 可选 GitHub 授权登录配置
+## GitHub OAuth 登录配置
 
-默认不配置 OAuth，仍可使用原 Token 登录和“记住此设备”。在 GitHub **Settings → Developer settings → OAuth Apps → New OAuth App** 创建应用：
+本项目仅支持 GitHub OAuth 登录。未配置时仍显示禁用的 GitHub 登录按钮，部署者需先配置应用。
+
+[直接创建 GitHub OAuth App](https://github.com/settings/applications/new)（Settings → Developer settings → OAuth Apps → New OAuth App）：
 
 - Homepage URL：`https://your-domain.example`
 - Authorization callback URL：`https://your-domain.example/api/auth/github/callback`
@@ -35,27 +37,15 @@ GITHUB_CLIENT_ID=填写应用的客户端ID
 GITHUB_CLIENT_SECRET=填写应用的客户端密钥
 GITHUB_OAUTH_SCOPE=public_repo
 GITHUB_OAUTH_REDIRECT_URI=https://your-domain.example/api/auth/github/callback
-ENABLE_TOKEN_LOGIN=true
 ```
 
-`GITHUB_OAUTH_REDIRECT_URI` 可留空，由 `PUBLIC_BASE_URL` 自动生成；显式值必须同源且使用上述回调路径。客户端 ID 和密钥都配置后，登录页才显示真实 GitHub 授权入口。HTTPS 根地址决定 Secure Cookie；反向代理须保留正确域名并提供 HTTPS。
+`GITHUB_OAUTH_REDIRECT_URI` 可留空，由 `PUBLIC_BASE_URL` 自动生成；显式值必须同源且使用上述回调路径。客户端 ID 和密钥都配置后，GitHub 登录按钮才会启用并跳转真实 `/api/auth/github`。HTTPS 根地址决定 Secure Cookie；反向代理须保留正确域名并提供 HTTPS。
 
-修改 `.env` 后在 `/opt/stacks/github-assets` 执行 `docker compose up -d --no-deps --force-recreate github-assets`，普通 restart 不会重新加载 env。若同时更新源码，先 `docker compose build github-assets`。保留 Token 作为回退建议维持 `ENABLE_TOKEN_LOGIN=true`。
+修改 `.env` 后在 `/opt/stacks/github-assets` 执行 `docker compose up -d --no-deps --force-recreate github-assets`，普通 restart 不会重新加载 env。若同时更新源码，先 `docker compose build github-assets`。OAuth-only 模式强制关闭 Token 登录；旧 `ENABLE_TOKEN_LOGIN` 变量已弃用，即使真实环境仍为 true 也不会启用旧端点。
 
-授权后可直接管理公开资源仓库，无需另填 PAT。`public_repo` 涵盖账号可访问的公开仓库，**并非只授权一个仓库**；组织策略仍可能限制访问。OAuth 令牌只存在服务器内存，不写 localStorage、数据库或业务文件，服务重启后需重新授权；原“记住此设备”仅针对用户主动填写的 Token。可在 GitHub **Settings → Applications → Authorized OAuth Apps** 撤销授权。取消或错误会返回登录页，不会自动循环授权。
+授权后可直接管理公开资源仓库，无需另填 PAT。`public_repo` 涵盖账号可访问的公开仓库，**并非只授权一个仓库**；组织策略仍可能限制访问。OAuth 令牌只存在服务器内存，不写 localStorage、数据库或业务文件，服务重启后需重新授权。旧浏览器记住的 Token 会被定向移除，既有仓库选择不清除；有效 Cookie 会话仍沿用既有校验。可在 GitHub **Settings → Applications → Authorized OAuth Apps** 撤销授权。取消或错误会返回登录页，不会自动循环授权。
 
 应用源码是 `https://github.com/beiwang02/github-assets`（真实项目源码链接，不是配置示例），用户图片数据仓库由用户自行选择，例如 `your-github-username/your-assets-repo`；授权登录不改变 Git remote 或用户既有仓库选择，自动识别和允许名单继续生效。
-
-## GitHub Token 权限
-
-本项目推荐使用 **经典 Personal Access Token（classic）**。
-
-1. GitHub → **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)**。
-2. 选择 **Generate new token (classic)**，设置合理有效期。
-3. 权限仅勾选：`repo → public_repo`。
-4. 其他权限不需要勾选。生成后复制 Token，在网站登录页粘贴使用。
-
-> Token 能修改你授权范围内的公开仓库。请只在 HTTPS 网站和可信设备使用；不再使用时可在 GitHub 立即撤销。
 
 ## 资源仓库结构
 
@@ -176,7 +166,7 @@ volumes:
 
 架构：浏览器 → Nginx / Caddy（HTTPS）→ 容器 `:8765`。服务不依赖 Node、数据库、Redis、OAuth App 或 systemd；以下 systemd 命令仅用于宿主机 Nginx。
 
-如需域名，在 `.env` 设置 `PUBLIC_BASE_URL=https://img.example.com`。`ENABLE_TOKEN_LOGIN=true` 默认启用经典 Token 登录。不要将用户登录 Token 写入 `.env`、Git 仓库或截图。
+如需域名，在 `.env` 设置 `PUBLIC_BASE_URL=https://img.example.com`。仅支持 OAuth，`ENABLE_TOKEN_LOGIN` 已弃用并被忽略。不要将用户登录 Token 写入 `.env`、Git 仓库或截图。
 
 Nginx 示例（需要先安装 Nginx 和 Certbot，并将域名解析到服务器）：
 
@@ -239,7 +229,7 @@ ALLOWED_GITHUB_LOGINS=
 
 ## 文件说明
 
-- `server.mjs`：Token 会话、GitHub API 代理和静态服务
+- `server.mjs`：OAuth 内存会话、GitHub API 代理和静态服务
 - `github.js`：GitHub 仓库读取、图片/JSON/分组操作和原子提交
 - `console.js`：控制台页面交互
 - `compose.yaml`、`Dockerfile`、`install.sh`：Docker Compose 部署

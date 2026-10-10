@@ -1,5 +1,5 @@
 const S = {
-  auth:null, csrf:'', oauthEnabled:false, tokenLoginEnabled:false, adminConfigured:false, isAdmin:false, policyConfigured:false, allowAll:true, allowedUsers:[], connectionError:'', view:'overview', connected:false, loading:false, loginBusy:false,
+  auth:null, csrf:'', oauthEnabled:false,  adminConfigured:false, isAdmin:false, policyConfigured:false, allowAll:true, allowedUsers:[], connectionError:'', view:'overview', connected:false, loading:false, loginBusy:false,
   repo: JSON.parse(localStorage.getItem('gh-image-repo') || 'null') || { owner:'', repo:'', branch:'main', assetsPath:'assets' },
   groups:[], assets:[], libraries:[], repos:[], selected:new Set(), selectedIcons:new Set(), group:'', assetQuery:'', libraryQuery:'', iconQuery:'', librarySort:localStorage.getItem('gh-libraries-sort')||'updated-desc', activity:[], uploadDraft:null, modalConfirm:null
 };
@@ -35,36 +35,17 @@ function setMetaC() {
   document.querySelectorAll('.nav-item[data-view]').forEach(n=>n.classList.toggle('active', n.dataset.view===(S.view==='library-detail'?'libraries':S.view)));
   const login=S.auth?.login||''; const name=S.auth?.name||login||'GitHub 用户'; const avatar=S.auth?.avatar_url||''; document.querySelectorAll('[data-account-name]').forEach(n=>n.innerHTML=`${escC(name)}<small class="account-login">@${escC(login)}</small>`); document.querySelectorAll('[data-account-avatar]').forEach(n=>{ if(avatar)n.innerHTML=`<img src="${escC(avatar)}" alt="${escC(name)}">`; else n.textContent=(name||'G').slice(0,1).toUpperCase(); });
 }
-function rememberedToken(){ try { return localStorage.getItem('gh-image-remembered-token')||''; } catch { return ''; } }
+function clearLegacyCredentialC(){ try { localStorage.removeItem('gh-image-remembered-token'); } catch {} }
+clearLegacyCredentialC();
 function finePointerC(){ try { return window.matchMedia('(pointer:fine)').matches; } catch { return false; } }
 function hoverlessC(){ try { return !window.matchMedia('(hover:hover)').matches; } catch { return false; } }
-async function silentTokenLogin(){
-  const token=rememberedToken(); if(!token)return false;
-  try {
-    const response=await fetch('/api/auth/token',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})});
-    if(!response.ok){
-      if(response.status===401||response.status===403){localStorage.removeItem('gh-image-remembered-token');localStorage.removeItem('gh-image-repo');S.auth=null;S.csrf='';S.connected=false;S.repo={owner:'',repo:'',branch:'main',assetsPath:'assets'};}
-      return false;
-    }
-    const responseMe=await fetch('/api/auth/me',{credentials:'include'});
-    if(!responseMe.ok)return false;
-    const me=await responseMe.json();
-    if(!me?.user||!me?.csrf)return false;
-    S.auth=me.user; S.csrf=me.csrf; return true;
-  } catch { return false; }
-}
-let sessionRecovery=null;
-async function recoverSession(){
-  if(!rememberedToken())return false;
-  if(!sessionRecovery)sessionRecovery=silentTokenLogin().finally(()=>{sessionRecovery=null;});
-  return sessionRecovery;
-}
+async function recoverSession(){ return false; }
 window.recoverSession=recoverSession;
 window.liveCsrf=()=>S.csrf;
 function loginView() {
   const problem=new URLSearchParams(location.search).get('auth_error');
-  const message=problem==='logged_out'?'已退出登录。':(problem==='forbidden'?'当前 GitHub 账号暂无访问权限，请联系管理员添加到允许名单。':(problem==='oauth_denied'?'已取消 GitHub 授权，可重试或使用 Token 登录。':(problem==='oauth_state'?'授权已过期或校验失败，请重新点击 GitHub 授权登录。':(problem?'登录失败，请重试或使用 Token 登录。':'使用 GitHub Personal Access Token 登录'))));
-  return `<div class="auth-page"><div class="auth-card"><div class="auth-brand"><div><strong>GitHub Assets</strong></div><div class="auth-head-actions"><button class="top-icon appearance-button auth-theme-button" data-action="toggle-theme" title="跟随系统（点击切换）" aria-label="跟随系统（点击切换）">◐</button><a class="project-link" href="https://github.com/beiwang02/github-assets" title="查看项目源码" aria-label="查看项目源码"><svg class="project-github-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.3a9.7 9.7 0 0 0-3.07 18.9c.49.09.67-.21.67-.47v-1.66c-2.73.59-3.31-1.16-3.31-1.16-.44-1.13-1.08-1.43-1.08-1.43-.89-.61.07-.6.07-.6.98.07 1.5 1.01 1.5 1.01.87 1.5 2.28 1.07 2.84.82.09-.63.34-1.07.62-1.32-2.18-.25-4.47-1.09-4.47-4.85 0-1.07.38-1.94 1.01-2.62-.1-.25-.44-1.25.1-2.59 0 0 .82-.26 2.67 1a9.3 9.3 0 0 1 4.86 0c1.85-1.26 2.67-1 2.67-1 .54 1.34.2 2.34.1 2.59.63.68 1.01 1.55 1.01 2.62 0 3.77-2.3 4.59-4.48 4.84.35.3.66.9.66 1.81v2.68c0 .26.18.57.68.47A9.7 9.7 0 0 0 12 2.3Z"/></svg></a></div></div><p>${escC(message)}</p>${S.oauthEnabled?'<a class="btn btn-github" href="/api/auth/github" data-action="oauth-login">使用 GitHub 授权登录</a><small class="auth-note">授权后直接管理公开仓库，无需另填 Token。public_repo 权限涵盖账号可访问的公开仓库，并非只授权单个仓库；授权令牌仅保存在服务器内存。</small>':''}<form id="tokenLoginForm"><div class="modal-field"><label>GitHub Token</label><div class="token-input-wrap"><input name="token" id="mainTokenInput" type="password" autocomplete="off" placeholder="ghp_... 或 github_pat_..." value="${escC(rememberedToken())}" required><button type="button" class="token-eye" data-action="toggle-token" aria-label="显示 Token" aria-pressed="false">${tokenEyeC(false)}</button></div></div><div class="remember-token"><input type="checkbox" name="rememberToken" ${rememberedToken()?'checked':''}><span>记住此设备</span></div><small class="auth-note">Token 仅临时保存在服务器内存中；勾选“记住此设备”后会存在当前浏览器本地，会话过期或服务重启时自动重新登录，不会写入数据库或 GitHub。</small><button type="button" class="token-guide-button" data-action="token-guide">经典 Token 创建教程</button><button type="submit" class="btn btn-github"><span class="github-logo">●</span> 验证并登录</button></form></div></div>`;
+  const message=problem==='logged_out'?'已退出登录。':(problem==='forbidden'?'当前 GitHub 账号暂无访问权限，请联系管理员添加到允许名单。':(problem==='oauth_denied'?'已取消 GitHub 授权，请重新点击 GitHub 登录。':(problem==='oauth_state'?'授权已过期或校验失败，请重新点击 GitHub 授权登录。':(problem?'登录失败，请重新点击 GitHub 登录。':'使用 GitHub 登录'))));
+  return `<div class="auth-page"><div class="auth-card"><div class="auth-brand"><div><strong>GitHub Assets</strong></div><div class="auth-head-actions"><button class="top-icon appearance-button auth-theme-button" data-action="toggle-theme" title="跟随系统（点击切换）" aria-label="跟随系统（点击切换）">◐</button><a class="project-link" href="https://github.com/beiwang02/github-assets" title="查看项目源码" aria-label="查看项目源码"><svg class="project-github-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.3a9.7 9.7 0 0 0-3.07 18.9c.49.09.67-.21.67-.47v-1.66c-2.73.59-3.31-1.16-3.31-1.16-.44-1.13-1.08-1.43-1.08-1.43-.89-.61.07-.6.07-.6.98.07 1.5 1.01 1.5 1.01.87 1.5 2.28 1.07 2.84.82.09-.63.34-1.07.62-1.32-2.18-.25-4.47-1.09-4.47-4.85 0-1.07.38-1.94 1.01-2.62-.1-.25-.44-1.25.1-2.59 0 0 .82-.26 2.67 1a9.3 9.3 0 0 1 4.86 0c1.85-1.26 2.67-1 2.67-1 .54 1.34.2 2.34.1 2.59.63.68 1.01 1.55 1.01 2.62 0 3.77-2.3 4.59-4.48 4.84.35.3.66.9.66 1.81v2.68c0 .26.18.57.68.47A9.7 9.7 0 0 0 12 2.3Z"/></svg></a></div></div><p>${escC(message)}</p>${S.oauthEnabled?'<a class="btn btn-github" href="/api/auth/github" data-action="oauth-login">使用 GitHub 登录</a>':'<button class="btn btn-github" type="button" disabled>使用 GitHub 登录</button>'}<small class="auth-note">${S.oauthEnabled?'public_repo 权限涵盖账号可访问的公开仓库，并非只授权单个仓库；授权令牌仅保存在服务器内存，服务重启后需重新授权。':'部署者需配置 GitHub OAuth 后才能登录。<a href="https://github.com/settings/applications/new" target="_blank" rel="noopener noreferrer">创建 OAuth App</a>'}</small></div></div>`;
 }
 
 const collatorC=new Intl.Collator(undefined,{numeric:true,sensitivity:'base'});
@@ -221,7 +202,6 @@ function renderC() {
   restoreSubmissionC();
 }
 function openC(html) { resetLibraryPickerC(false); disposeImageSaveC(); closeSortMenus(); $c('#modalRoot').innerHTML=`<div class="modal-backdrop" data-action="modal-backdrop"><div class="modal">${html}</div></div>`; }
-function tokenGuideModal() { openC(`<div class="modal-head"><div><h2>经典 Token 创建教程</h2></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body token-guide-body"><ol><li>打开 GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)。</li><li>点击 Generate new token (classic)，设置有效期。</li><li>权限列表只勾选 <b>repo → public_repo</b>。</li><li>其他权限不要勾选，生成后复制 Token 粘贴到登录框。</li></ol></div>`); }
 function closeC() { resetLibraryPickerC(true); disposeImageSaveC(); closeSortMenus(); S.modalConfirm=null; if($c('#groupCreateForm')&&S.uploadDraft){const draft=S.uploadDraft;S.uploadDraft=null;uploadModal(draft);return;} S.uploadDraft=null; $c('#modalRoot').innerHTML=''; }
 function confirmC(title,message,run,label='永久删除') { S.modalConfirm=run; openC(`<div class="modal-head"><div><h2>${escC(title)}</h2><p>${escC(message)}</p></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><p class="field-help">此操作不可恢复，请确认后继续。</p></div><div class="modal-actions"><button type="button" class="btn" data-action="close-modal">取消</button><button type="button" class="btn btn-danger" data-action="confirm-exec">${escC(label)}</button></div>`); }
 function confirmRepositoryDeletion() {
@@ -530,11 +510,10 @@ async function runSubmission(scope,label,run) {
 }
 async function formSubmit(e) {
   e.preventDefault(); const form=e.target;
-  const labels={tokenLoginForm:'正在验证…',createRepoForm:'正在创建…',repoForm:'正在读取仓库…',uploadForm:'正在上传并提交…'};
+  const labels={createRepoForm:'正在创建…',repoForm:'正在读取仓库…',uploadForm:'正在上传并提交…'};
   const finish=beginSubmission(form,labels[form.id]||'正在保存…'); if(!finish)return;
   try {
     if(form.id==='adminPolicyForm') return await saveAdminPolicy(form);
-    if(form.id==='tokenLoginForm') { const data=new FormData(form), token=String(data.get('token')||'').trim(); if(!token) throw new Error('请先输入 GitHub Token。'); const submit=form.querySelector('[type="submit"]'); if(submit){submit.disabled=true;submit.textContent='正在验证…';} const response=await fetch('/api/auth/token',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})}); const result=await response.json().catch(()=>({})); if(!response.ok) throw new Error(result.message||`Token 登录失败（HTTP ${response.status}）`); if(data.get('rememberToken')==='on') localStorage.setItem('gh-image-remembered-token',token); else localStorage.removeItem('gh-image-remembered-token'); sessionStorage.setItem('gh-login-success','1'); location.reload(); return; }
     if(form.id==='createRepoForm') return await createRepositoryFromModal(form);
     if(form.id==='repoForm') return await readRepo(form);
     if(form.id==='uploadForm') { const group=String(form.elements.group.value||'').trim(); if(!group)return notify('当前没有图片分组，请先到图片资源页面新建分组。','error'); const result=await currentClient().upload(form.elements.file.files[0],form.elements.name.value,group,form.elements.library.value); closeC(); await refreshCommittedC(); notify(`已上传“${result.name}”，并提交到 GitHub`); return; }
@@ -577,7 +556,7 @@ async function createRepositoryFromModal(form) {
   const repo=await currentClient().createRepository(name,description); S.repo={owner:repo.owner.login,repo:repo.name,branch:repo.default_branch||'main',assetsPath:'assets'}; localStorage.setItem('gh-image-repo',JSON.stringify(S.repo)); closeC(); await readRepo({elements:{owner:{value:S.repo.owner},repo:{value:S.repo.repo},branch:{value:S.repo.branch},assetsPath:{value:S.repo.assetsPath}}});
 }
 
-async function bootAuth(retried=false) { if(location.protocol!=='http:'&&location.protocol!=='https:'){ renderC(); return; } try { const r=await fetch('/api/auth/me',{credentials:'include'}); if(!r.ok)throw new Error('会话检查暂时失败'); const data=await r.json(); S.auth=data.user||null; S.csrf=data.csrf||''; S.oauthEnabled=Boolean(data.oauthEnabled); S.tokenLoginEnabled=Boolean(data.tokenLoginEnabled); S.adminConfigured=Boolean(data.adminConfigured); S.isAdmin=Boolean(data.isAdmin); S.policyConfigured=Boolean(data.policyConfigured); if(!S.auth&&!retried&&S.tokenLoginEnabled&&rememberedToken()&&await silentTokenLogin()) return bootAuth(true); if(S.auth) { await loadAdminPolicy(); renderC(); if(sessionStorage.getItem('gh-login-success')==='1'){ sessionStorage.removeItem('gh-login-success'); notify('已登录'); } if(S.repo.owner&&S.repo.repo) {
+async function bootAuth(retried=false) { if(location.protocol!=='http:'&&location.protocol!=='https:'){ renderC(); return; } try { const r=await fetch('/api/auth/me',{credentials:'include'}); if(!r.ok)throw new Error('会话检查暂时失败'); const data=await r.json(); S.auth=data.user||null; S.csrf=data.csrf||''; S.oauthEnabled=Boolean(data.oauthEnabled); S.adminConfigured=Boolean(data.adminConfigured); S.isAdmin=Boolean(data.isAdmin); S.policyConfigured=Boolean(data.policyConfigured); if(S.auth) { await loadAdminPolicy(); renderC(); if(sessionStorage.getItem('gh-login-success')==='1'){ sessionStorage.removeItem('gh-login-success'); notify('已登录'); } if(S.repo.owner&&S.repo.repo) {
       void refreshRepositoryChoicesC();
       await readRepo({elements:Object.fromEntries(Object.entries(S.repo).map(([key,value])=>[key,{value}]))});
     } else await autoSelectRepository();
@@ -590,8 +569,6 @@ document.addEventListener('click', async e => {
   const view=target.dataset.view;
   if(view) { S.view=view; S.selected.clear(); $c('#sidebar').classList.remove('open'); renderC(); return; }
   const action=target.dataset.action;
-  if(action==='token-guide'){ tokenGuideModal(); return; }
-  if(action==='toggle-token'){ const input=$c('#mainTokenInput'); if(input){input.type=input.type==='password'?'text':'password'; const visible=input.type==='text';target.innerHTML=tokenEyeC(visible);target.setAttribute('aria-label',visible?'隐藏 Token':'显示 Token');target.setAttribute('aria-pressed',String(visible));} return; }
   if(action==='modal-backdrop'){if(e.target===target)closeC();return;}
   if(action==='close-modal'){closeC();return;}
   if(action==='toggle-sidebar'){ $c('#sidebar').classList.toggle('open'); return; }
@@ -603,7 +580,6 @@ document.addEventListener('click', async e => {
   if(action==='toggle-theme'){cycleAppearance();target.blur();return;}
   if(action==='choose-sort'){const kind=target.dataset.sortKind,value=target.dataset.sortValue;const map={assets:['assetSort','gh-assets-sort'],libraries:['librarySort','gh-libraries-sort'],icons:['iconSort','gh-icons-sort']},pair=map[kind];if(!pair)return;S[pair[0]]=value;localStorage.setItem(pair[1],value);closeSortMenus();if(kind==='libraries')libraryPickerModal();else renderC();document.querySelector(`[data-sort-menu="${kind}"] .sort-trigger`)?.focus({preventScroll:true});return;}
   if(action==='account-menu'){accountMenu();return;}
-  if(action==='forget-token'){localStorage.removeItem('gh-image-remembered-token');closeC();notify('已清除此设备记住的 Token，当前会话保留');return;}
   if(action==='page-back'){if(history.state?.ghView&&history.state.depth>0)history.back();else{S.view='overview';renderC();}return;}
   if(action==='logout'){await runSubmission(target,'正在退出…',logoutC);return;}
   if(action==='create-repo'){if(!S.auth)return notify('请先登录 GitHub','error');createRepoModal();return;}
@@ -673,19 +649,6 @@ document.addEventListener('keydown',()=>{
 /* Pick-once controls release focus as soon as the value is committed, so a hoverless device
    never keeps a field looking active; text fields keep their focus, exactly like any site. */
 document.addEventListener('change',e=>{const t=e.target;if(!t||!t.matches||!t.matches('select,input[type=file],input[type=checkbox],input[type=radio]')||!hoverlessC())return;t.blur();});
-/* Tapping the token field shows the caret at the end immediately, before the token
-   can be edited, instead of leaving it hidden behind the overflow ellipsis.
-   iOS skips repainting the caret for JS-prefilled password values; reassigning the
-   same value forces the repaint, then place the caret at the end repeatedly. */
-document.addEventListener('focusin',e=>{
-  const t=e.target;if(!t?.matches?.('#mainTokenInput')||t.readOnly||t.disabled)return;
-  const len=t.value.length;
-  const place=()=>{try{t.setSelectionRange(len,len);t.scrollLeft=t.scrollWidth;}catch{}};
-  const repaint=()=>{try{if(t.value)t.value=t.value;}catch{};place();};
-  place();
-  requestAnimationFrame(repaint);
-  [120,250,400].forEach(ms=>setTimeout(repaint,ms));
-});
 const composingSearchC=new WeakSet();
 function updateSearchC(e){
  if(pendingSubmission)return;
@@ -755,7 +718,7 @@ function accountMenu() {
   const login=S.auth?.login||'当前账号';
   const displayName=S.auth?.name||login;
   const avatar=S.auth?.avatar_url||'';
-  openC(`<div class="modal-head"><div class="account-modal-head">${avatar?`<img src="${escC(avatar)}" alt="">`:''}<div><h2>${escC(displayName)}</h2><p>@${escC(login)}</p></div></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body choice-menu">${S.tokenLoginEnabled?'<button class="btn" data-action="forget-token">清除此设备记住的 Token</button>':''}<button class="btn" data-action="logout">退出并返回登录页</button></div>`);
+  openC(`<div class="modal-head"><div class="account-modal-head">${avatar?`<img src="${escC(avatar)}" alt="">`:''}<div><h2>${escC(displayName)}</h2><p>@${escC(login)}</p></div></div><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body choice-menu"><button class="btn" data-action="logout">退出并返回登录页</button></div>`);
 }
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyAppearance);
 applyAppearance();
@@ -776,9 +739,6 @@ renderC=function(){
 window.addEventListener('popstate',e=>{if(pendingSubmission)return;closeC();if(e.state?.ghView){S.view=e.state.ghView;S.selectedLibrary=e.state.lib;lastRoute=S.view+'|'+(S.selectedLibrary||'');renderC();window.scrollTo(0,0);}});
 renderC();
 
-function tokenEyeC(visible){
-  return visible?'◎':'◉';
-}
 // Native component adapter; existing business event delegation is unchanged.
 function uiIconC(name){
   if(name==='system')return '<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3a9 9 0 0 0 0 18Z" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="9" fill="none"/></svg>';

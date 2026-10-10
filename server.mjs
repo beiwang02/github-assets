@@ -14,7 +14,7 @@ const OAUTH_REDIRECT_URI = String(process.env.GITHUB_OAUTH_REDIRECT_URI || new U
 const OAUTH_CALLBACK = new URL(OAUTH_REDIRECT_URI, BASE);
 if (OAUTH_CALLBACK.origin !== BASE.origin || OAUTH_CALLBACK.pathname !== '/api/auth/github/callback' || OAUTH_CALLBACK.search || OAUTH_CALLBACK.hash || OAUTH_CALLBACK.username || OAUTH_CALLBACK.password) throw new Error('OAuth 回调必须为 PUBLIC_BASE_URL 同源的 /api/auth/github/callback。');
 const OAUTH_ENABLED = Boolean(OAUTH_CLIENT_ID && OAUTH_CLIENT_SECRET);
-const TOKEN_LOGIN_ENABLED = process.env.ENABLE_TOKEN_LOGIN !== 'false';
+// OAuth-only: legacy ENABLE_TOKEN_LOGIN is intentionally ignored.
 const ADMIN_GITHUB_LOGIN = String(process.env.ADMIN_GITHUB_LOGIN || '').trim().toLowerCase();
 const ALLOWED_GITHUB_LOGINS = new Set(String(process.env.ALLOWED_GITHUB_LOGINS || '').split(',').map(value => value.trim().toLowerCase()).filter(Boolean));
 let accessPolicy = { allowAll: ALLOWED_GITHUB_LOGINS.size === 0, allowed: [...ALLOWED_GITHUB_LOGINS] };
@@ -127,7 +127,7 @@ const server = http.createServer(async (req, res) => {
       let auth = session(req);
       const permission = accessFor(auth?.user?.login);
       if(auth && !permission.allowed){ sessions.delete(cookies(req).gh_session); auth=null; }
-      return json(res, 200, { user:auth?.user || null, csrf:auth?.csrf || null, oauthEnabled:OAUTH_ENABLED, tokenLoginEnabled:TOKEN_LOGIN_ENABLED, repoDelete:DELETE_REPO, adminConfigured:permission.adminConfigured, isAdmin:Boolean(auth && permission.isAdmin), policyConfigured:permission.policyConfigured });
+      return json(res, 200, { user:auth?.user || null, csrf:auth?.csrf || null, oauthEnabled:OAUTH_ENABLED, tokenLoginEnabled:false, repoDelete:DELETE_REPO, adminConfigured:permission.adminConfigured, isAdmin:Boolean(auth && permission.isAdmin), policyConfigured:permission.policyConfigured });
     }
     if (url.pathname === '/api/auth/github' && req.method === 'GET') {
       if (!OAUTH_ENABLED) return redirect(res, oauthError('oauth_not_configured'));
@@ -186,24 +186,7 @@ const server = http.createServer(async (req, res) => {
       return json(res, 200, { allowAll:accessPolicy.allowAll, allowed:[...accessPolicy.allowed] });
     }
     if (url.pathname === '/api/auth/token' && req.method === 'POST') {
-      if (req.headers.origin) {
-        const expectedOrigin = requestOrigin(req);
-        if (req.headers.origin !== expectedOrigin) return json(res, 403, { message:'来源验证失败，请从当前网站页面重新提交。' });
-      }
-      const raw = await readBody(req);
-      let input;
-      try { input = JSON.parse(raw.toString('utf8')); } catch { return json(res, 400, { message:'请求格式错误。' }); }
-      if (!TOKEN_LOGIN_ENABLED) return json(res, 404, { message:'Token 登录已关闭，请使用 GitHub 登录。' });
-      const token = typeof input?.token === 'string' ? input.token.trim() : '';
-      if (token.length < 20 || token.length > 500) return json(res, 400, { message:'GitHub Token 格式不正确。' });
-      const userResponse = await github('https://api.github.com/user', { headers:{ Authorization:`Bearer ${token}`, Accept:'application/vnd.github+json', 'User-Agent':'github-image-host-web' } });
-      if (!userResponse.ok) return json(res, userResponse.status === 401 ? 401 : 502, { message:userResponse.status === 401 ? 'GitHub Token 无效，或 Token 没有访问权限。' : 'GitHub 暂时不可用，请稍后重试。' });
-      const user = await userResponse.json();
-      const permission = accessFor(user.login);
-      if (!permission.allowed) return json(res, 403, { message:'当前 GitHub 账号暂无访问权限，请联系管理员添加到允许名单。' });
-      const sid = createSession(token, user);
-      res.setHeader('Set-Cookie', cookie('gh_session', sid, 8 * 60 * 60, isSecureRequest(req)));
-      return json(res, 200, { ok:true, user:{ login:user.login, name:user.name, avatar_url:user.avatar_url } });
+      return json(res, 410, { message:'Token 登录已禁用，请使用 GitHub OAuth 登录。' });
     }
     if (url.pathname === '/api/auth/logout' && req.method === 'POST') {
       const auth = session(req);

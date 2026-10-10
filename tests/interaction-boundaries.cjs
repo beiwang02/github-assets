@@ -1,3 +1,4 @@
+require('./historical-133.cjs');
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const s=fs.readFileSync(require('node:path').join(__dirname,'../console.js'),'utf8');
 let ok=false,removed=0,notifications=0,redirects=0,disposed=0;

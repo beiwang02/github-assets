@@ -1,3 +1,4 @@
+require('./historical-133.cjs');
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const js=fs.readFileSync('console.js','utf8');
 function setup({remember='consented-fixture',user=null,failure='',invalid=0}={}){
